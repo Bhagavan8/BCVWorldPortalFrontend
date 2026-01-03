@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo/logo.png';
 import '../assets/css/Footer.css';
 
 const Footer = () => {
@@ -8,6 +9,12 @@ const Footer = () => {
   return (
     <footer className="site-footer">
       <div className="container">
+        <div className="footer-top d-flex flex-column align-items-center justify-content-center mb-4">
+           <div className="d-flex align-items-center mb-3">
+             <img src={logo} alt="BCVWORLD" className="rounded-circle me-3" style={{ height: '60px', width: '60px', objectFit: 'cover' }} />
+             <span className="fw-bold fs-3 text-white">BCV<span style={{ color: '#4fc3f7' }}>WORLD</span></span>
+           </div>
+        </div>
         <div className="footer-bottom">
           <div className="footer-legal-links">
              <span>&copy; {currentYear} BCV World. All Rights Reserved.</span>

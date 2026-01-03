@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BiCalculator, BiRupee, BiTime, BiMoney, BiTable, BiDownload, BiBarChartAlt2 } from 'react-icons/bi';
 import '../assets/css/FinanceCalculators.css';
+import SEO from '../components/SEO';
 
 const FinanceCalculators = () => {
   const [activeTab, setActiveTab] = useState('emi');
@@ -839,6 +840,7 @@ const FinanceCalculators = () => {
 
   return (
     <div className="finance-calculators-page min-h-screen bg-gray-50 pt-40 pb-12 px-4 sm:px-6 lg:px-8">
+      <SEO title="Finance Calculators" description="Calculate your EMI, Tax, Salary, and Investments with BCVWORLD's finance tools." />
       <div className="max-w-7xl mx-auto">
         
         {/* Page Header */}

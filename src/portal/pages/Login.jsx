@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+import SEO from '../components/SEO';
+import logo from '../assets/logo/logo.png';
 import { 
   Eye, 
   EyeOff, 
@@ -113,6 +115,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen w-full flex bg-white overflow-hidden">
+      <SEO 
+        title="Login" 
+        description="Login to your BCVWORLD account to access job referrals, mentoring, and financial tools." 
+        keywords="login, sign in, bcvworld login, career portal, job portal login"
+      />
       {/* Left Panel - Brand & Content */}
       <div className="hidden lg:flex w-1/2 bg-indigo-900 text-white p-12 flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
@@ -123,7 +130,7 @@ export default function Login() {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center space-x-2 text-white mb-12">
-            <span className="text-3xl font-bold tracking-tight">BCV<span className="text-blue-400">World</span></span>
+            <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover bg-white rounded-full p-1" />
           </Link>
           
           <motion.div 
@@ -188,7 +195,7 @@ export default function Login() {
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
             <Link to="/" className="flex items-center space-x-2">
-              <span className="text-3xl font-bold tracking-tight text-indigo-900">BCV<span className="text-blue-600">World</span></span>
+              <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover rounded-full" />
             </Link>
           </div>
 

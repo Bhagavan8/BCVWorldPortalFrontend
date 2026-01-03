@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AuthService from '../services/AuthService';
+import logo from '../../portal/assets/logo/logo.png';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     const location = useLocation();
@@ -32,9 +33,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     return (
         <aside className={`sidebar ${isOpen ? 'active' : ''}`}>
             <div className="sidebar-header">
-                <div className="logo-wrapper">
-                    <i className="bi bi-briefcase-fill logo-icon"></i>
-                    <h1 className="logo-text">Jobs<span> Admin</span></h1>
+                <div className="logo-wrapper d-flex align-items-center justify-content-center w-100">
+                    <img src={logo} alt="BCVWORLD" className="rounded-circle me-2" style={{ height: '40px', width: '40px', objectFit: 'cover' }} />
+                    <span className="fw-bold fs-5 text-white">BCV<span style={{ color: '#4fc3f7' }}>WORLD</span></span>
                 </div>
                 <button className="sidebar-toggle d-lg-none" onClick={toggleSidebar}>
                     <i className="bi bi-x-lg"></i>

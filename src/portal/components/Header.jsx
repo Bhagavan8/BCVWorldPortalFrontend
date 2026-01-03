@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BiChevronDown, BiMenu, BiUser, BiLogIn, BiLogOut, BiGridAlt, BiBriefcase, BiEnvelope } from 'react-icons/bi';
+import logo from '../assets/logo/logo.png';
 
 export default function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -67,8 +68,9 @@ export default function Header() {
           <div className="flex justify-between items-center h-20">
             
             {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-800">BCVWorld</h1>
+            <Link to="/" className="flex items-center space-x-3">
+              <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover rounded-full" />
+              <span className="text-xl font-bold text-gray-900 tracking-tight">BCV<span className="text-blue-600">WORLD</span></span>
             </Link>
 
             {/* Desktop Navigation */}

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import SEO from '../components/SEO';
+import logo from '../assets/logo/logo.png';
 import { 
   Eye, 
   EyeOff, 
@@ -176,8 +178,13 @@ export default function Register() {
 
   return (
     <div className="min-h-screen w-full flex bg-white overflow-hidden">
-      {/* Left Panel - Brand Content */}
-      <div className="hidden lg:flex w-1/2 bg-indigo-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+      <SEO 
+        title="Register" 
+        description="Create a BCVWORLD account to unlock job referrals, mentoring, and exclusive career resources." 
+        keywords="register, sign up, create account, bcvworld registration, career growth, job alerts"
+      />
+      {/* Left Panel - Brand & Benefits */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-12 flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[100px]"></div>
@@ -186,7 +193,7 @@ export default function Register() {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center space-x-2 text-white mb-12">
-            <span className="text-3xl font-bold tracking-tight">BCV<span className="text-blue-400">World</span></span>
+            <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover bg-white rounded-full p-1" />
           </Link>
           
           <motion.div 
@@ -257,6 +264,13 @@ export default function Register() {
       {/* Right Panel - Registration Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-y-auto">
         <div className="w-full max-w-xl">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <Link to="/" className="flex items-center space-x-2">
+              <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover rounded-full" />
+            </Link>
+          </div>
+
           <div className="mb-6 text-center lg:text-left">
             <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
             <p className="text-gray-600 text-base mt-2">Fill in your details to get started</p>

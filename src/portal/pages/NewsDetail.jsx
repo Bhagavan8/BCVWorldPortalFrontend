@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import NewsService from '../services/NewsService';
 import '../assets/css/News.css';
 import { FaCalendarAlt, FaUser, FaTag, FaArrowLeft } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -43,6 +44,7 @@ const NewsDetail = () => {
 
     return (
         <div className="news-detail-page bg-white pb-5">
+            <SEO title={news.title} description={news.content && news.content[0]?.text ? news.content[0].text.substring(0, 150) : "Latest news from BCVWORLD"} />
             {/* Hero Image Section */}
             <div className="container py-5">
                 <div className="row justify-content-center">
@@ -78,9 +80,10 @@ const NewsDetail = () => {
 
                         <div className="news-detail-image-wrapper" data-aos="zoom-in">
                             <img 
-                                src={news.imageUrl || 'https://via.placeholder.com/1200x600'} 
+                                src={news.imageUrl || '/assets/images/news/story.webp'} 
                                 alt={news.title} 
                                 className="news-detail-image"
+                                onError={(e) => { e.target.onerror = null; e.target.src = '/assets/images/news/story.webp'; }}
                             />
                         </div>
 

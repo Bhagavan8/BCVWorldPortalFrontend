@@ -1,6 +1,7 @@
 // AboutUs.jsx
 import React, { useState, useEffect } from 'react';
 import '../assets/css/AboutUs.css';
+import SEO from '../components/SEO';
 
 const AboutUs = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
@@ -62,6 +63,7 @@ const AboutUs = () => {
 
   return (
     <div className="about-us">
+      <SEO title="About Us" description="Learn about BCVWORLD's mission to empower careers through free job referrals, mentoring, and financial tools." />
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-background-pattern"></div>

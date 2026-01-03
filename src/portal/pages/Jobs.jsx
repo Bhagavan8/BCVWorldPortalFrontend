@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { BiSearch, BiFilter, BiBriefcase, BiMap, BiBuilding, BiCalendar, BiX, BiXCircle, BiArrowBack, BiUser, BiTime, BiFolder } from 'react-icons/bi';
 
 import { toast } from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -32,6 +33,7 @@ export default function Jobs() {
   
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   // Derived lists for filters
   const [uniqueCompanies, setUniqueCompanies] = useState([]);
@@ -280,12 +282,28 @@ export default function Jobs() {
 
   return (
     <div className="pt-32 pb-12 bg-white min-h-screen font-sans">
+      <SEO 
+        title="Jobs" 
+        description="Browse thousands of job opportunities in IT, Banking, Government, and more. Find your next career move with BCVWORLD." 
+        keywords="jobs, recruitment, vacancies, hiring, IT jobs, government jobs, bank jobs, freshers, experienced"
+      />
       <div className="w-full px-4 md:px-8">
         
+        {/* Mobile Filter Toggle */}
+        <div className="lg:hidden mb-4">
+          <button 
+            onClick={() => setShowMobileFilter(!showMobileFilter)}
+            className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg font-semibold shadow-md"
+          >
+            <BiFilter className="text-xl" />
+            {showMobileFilter ? 'Hide Filters' : 'Show Filters'}
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* LEFT SIDEBAR: Jobs By Category */}
-          <div className="hidden lg:block lg:col-span-2">
+          <div className={`${showMobileFilter ? 'block' : 'hidden'} lg:block lg:col-span-2`}>
             <div className="mb-4">
               <h6 className="font-bold mb-3 pb-2 border-b-2 border-blue-600 text-sm text-gray-800">
                 Jobs By Category
@@ -511,10 +529,21 @@ export default function Jobs() {
                       {/* Logo Wrapper */}
                       <div className="shrink-0 w-20 md:w-[100px] flex items-center justify-center">
                            {logo ? (
-                             <img src={logo} alt={compName} className="max-w-full h-auto object-contain max-h-[60px] md:max-h-[80px]" onError={(e) => {e.target.onerror=null; e.target.src='https://via.placeholder.com/64?text=' + (compName ? compName.charAt(0) : 'C')}} />
-                           ) : (
-                             <BiBuilding className={`${(job.jobCategory || '').toLowerCase() === 'government' ? 'text-red-600' : 'text-blue-600'} text-[32px]`} />
-                           )}
+                             <img 
+                               loading="lazy" 
+                               src={logo} 
+                               alt={compName} 
+                               className="max-w-full h-auto object-contain max-h-[60px] md:max-h-[80px]" 
+                               onError={(e) => {
+                                 e.target.style.display = 'none';
+                                 e.target.nextSibling.style.display = 'block';
+                               }} 
+                             />
+                           ) : null}
+                           <BiBuilding 
+                             className={`${(job.jobCategory || '').toLowerCase() === 'government' ? 'text-red-600' : 'text-blue-600'} text-[32px]`} 
+                             style={{ display: logo ? 'none' : 'block' }}
+                           />
                       </div>
 
                       {/* Content Wrapper */}

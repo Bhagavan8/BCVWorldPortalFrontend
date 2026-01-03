@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import AuthService from '../services/AuthService';
+import logo from '../../portal/assets/logo/logo.png';
 import './AuthPages.css';
 
 const BCVWorldAuth = () => {
@@ -128,8 +129,8 @@ const BCVWorldAuth = () => {
       <div className="brand-panel">
         <div className="brand-content">
           <div className="logo-container">
-            <h1 className="logo">BCV<span className="logo-accent">World</span></h1>
-            <p className="tagline">Your Complete Career Growth Partner</p>
+            <img src={logo} alt="BCVWORLD" className="logo rounded-circle" style={{ height: '60px', width: '60px', objectFit: 'cover' }} />
+            <h1 style={{ color: 'white', marginTop: '10px', fontSize: '24px', fontWeight: 'bold' }}>BCV<span className="logo-accent">WORLD</span></h1>
           </div>
           
           <div className="services-highlight">

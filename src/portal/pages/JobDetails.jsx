@@ -1,6 +1,7 @@
  import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 import './JobDetails.css';
 
 export default function JobDetails() {
@@ -432,6 +433,12 @@ export default function JobDetails() {
 
   return (
     <>
+      <SEO 
+        title={job ? job.jobTitle : "Job Details"} 
+        description={job ? `Apply for ${job.jobTitle} at ${job.companyName || 'BCVWORLD'}. View details, salary, and eligibility.` : "Job Details"}
+        keywords={job ? `${job.jobTitle}, ${job.companyName}, ${job.jobCategory}, jobs in ${job.locations ? job.locations.join(' ') : ''}, hiring, vacancy` : "jobs, hiring, vacancy"}
+        image={job ? (job.companyLogoUrl || undefined) : undefined}
+      />
       {/* Reading Progress Bar */}
       <div id="readingProgress" className="reading-progress-bar"></div>
 

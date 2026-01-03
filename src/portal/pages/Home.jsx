@@ -8,6 +8,7 @@ import {
   BiTime, BiTachometer, BiBell, BiShield, BiChat, BiDevices, 
   BiMap, BiPhone, BiEnvelope, BiChevronRight, BiChevronDown, BiStar
 } from 'react-icons/bi';
+import SEO from '../components/SEO';
 
 
 export default function Home() {
@@ -82,6 +83,11 @@ export default function Home() {
 
   return (
     <div className="pt-20">
+      <SEO 
+        title="Home" 
+        description="Unlock your career potential with BCVWORLD's comprehensive services - job referrals, mentoring, and financial planning."
+        keywords="career growth, job referrals, mentoring, financial planning, resume building, bcvworld, jobs, career guidance"
+      />
       
       {/* Hero Section */}
       <section id="hero" className="py-12 md:py-20 lg:py-24 hero-bg-custom relative">

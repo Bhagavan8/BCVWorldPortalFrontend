@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { BiSend, BiLogoWhatsapp, BiHelpCircle, BiSearchAlt } from 'react-icons/bi';
+import SEO from '../components/SEO';
 import '../assets/css/Suggestion.css';
 
 // Import WhatsApp QR if available, otherwise use placeholder or text
@@ -112,6 +113,7 @@ const Suggestion = () => {
 
   return (
     <div className="suggestion-page">
+      <SEO title="Suggestions" description="Help us improve BCVWORLD. Share your feedback, request job roles, or ask for career guidance." />
       <div className="suggestion-container">
         
         <div className="suggestion-header">
@@ -244,15 +246,14 @@ const Suggestion = () => {
                 Scan the QR code or click the button below to reach us directly for guidance and referrals.
               </p>
               
-              {/* QR Code Placeholder - Replace with actual image path if available */}
+              {/* QR Code Placeholder */}
               <div className="qr-placeholder">
                  <img 
                    src="/assets/images/whatsapp-qr.png" 
                    alt="WhatsApp QR Code" 
                    className="qr-img"
                    onError={(e) => {
-                     e.target.onerror = null; 
-                     e.target.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/917013765836';
+                     e.target.style.display = 'none'; // Hide if fails, don't use external API
                    }}
                  />
               </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import NewsService from '../services/NewsService';
 import '../assets/css/News.css';
 import { FaCalendarAlt, FaArrowRight, FaTag } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 const NewsList = () => {
     const [newsList, setNewsList] = useState([]);
@@ -35,6 +36,7 @@ const NewsList = () => {
 
     return (
         <div className="news-page bg-light py-5">
+            <SEO title="News & Insights" description="Stay informed with the latest career news, technology updates, and announcements from BCVWORLD." />
             <div className="container">
                 <div className="text-center mb-5" data-aos="fade-up">
                     <h6 className="text-primary fw-bold text-uppercase letter-spacing-2">Latest Updates</h6>
@@ -51,9 +53,10 @@ const NewsList = () => {
                                 <div className="news-card-img-wrapper">
                                     <span className="news-badge">{news.category}</span>
                                     <img 
-                                        src={news.imageUrl || 'https://via.placeholder.com/400x250'} 
+                                        src={news.imageUrl || '/assets/images/news/story.webp'} 
                                         alt={news.title} 
                                         className="news-card-img"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/images/news/story.webp'; }}
                                     />
                                 </div>
                                 <div className="news-card-body">
