@@ -20,6 +20,7 @@ import NewsList from './portal/pages/NewsList';
 import NewsDetail from './portal/pages/NewsDetail';
 import AboutUs from './portal/pages/AboutUs';
 import Suggestion from './portal/pages/Suggestion';
+import FinanceCalculators from './portal/pages/FinanceCalculators';
 import Login from './portal/pages/Login';
 import Register from './portal/pages/Register';
 import JobManagement from './admin/pages/JobManagement';
@@ -127,6 +128,7 @@ function App() {
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/suggestion" element={<Suggestion />} />
+            <Route path="/calculators" element={<FinanceCalculators />} />
             <Route path="/contact" element={<Home />} />
         </Route>
         

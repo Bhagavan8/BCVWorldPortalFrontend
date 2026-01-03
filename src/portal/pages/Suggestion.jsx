@@ -12,9 +12,34 @@ const Suggestion = () => {
     jobType: '',
     helpRequired: '',
     suggestion: '',
+    email: '',
+    whatsapp: '',
     agreed: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const jobTypes = [
+    "Fresher / Entry Level",
+    "Java Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Data Analyst",
+    "QA / Testing",
+    "DevOps Engineer",
+    "Business Analyst",
+    "Other"
+  ];
+
+  const helpOptions = [
+    "Resume Review",
+    "Mock Interview",
+    "Career Guidance",
+    "Job Referral",
+    "Technical Doubts",
+    "Course / Certification Advice",
+    "Other"
+  ];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,6 +51,28 @@ const Suggestion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Custom Validation
+    if (!formData.jobType) {
+      toast.error('Please select a job type.');
+      return;
+    }
+    if (!formData.helpRequired) {
+      toast.error('Please select the type of help required.');
+      return;
+    }
+    if (!formData.suggestion.trim()) {
+      toast.error('Please provide your suggestion or feedback.');
+      return;
+    }
+    if (!formData.email.trim()) {
+      toast.error('Please provide your email address.');
+      return;
+    }
+    if (!formData.whatsapp.trim()) {
+      toast.error('Please provide your WhatsApp number.');
+      return;
+    }
     if (!formData.agreed) {
       toast.error('Please agree to receive updates to proceed.');
       return;
@@ -33,27 +80,34 @@ const Suggestion = () => {
 
     setIsSubmitting(true);
 
-    try {
-      // POST to our backend API
-      const response = await axios.post('/api/suggestion', formData);
-      
-      if (response.data.success) {
-        toast.success('Thank you! Your suggestion has been received.');
+    const submitPromise = axios.post('/api/suggestion', formData)
+      .then(response => {
+        if (!response.data.success) {
+          throw new Error('Something went wrong. Please try again.');
+        }
+        return response;
+      });
+
+    await toast.promise(submitPromise, {
+      loading: 'Submitting your suggestion...',
+      success: () => {
         setFormData({
           jobType: '',
           helpRequired: '',
           suggestion: '',
+          email: '',
+          whatsapp: '',
           agreed: false
         });
-      } else {
-        toast.error('Something went wrong. Please try again.');
+        return 'Thank you! Your suggestion has been received.';
+      },
+      error: (err) => {
+        console.error('Submission error:', err);
+        return 'Failed to submit. Please check your connection.';
       }
-    } catch (error) {
-      console.error('Submission error:', error);
-      toast.error('Failed to submit. Please check your connection.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -61,8 +115,11 @@ const Suggestion = () => {
       <div className="suggestion-container">
         
         <div className="suggestion-header">
-          <h1 className="suggestion-title">Help Us Improve</h1>
-          <p className="suggestion-subtitle">Your feedback shapes the future of BCVWorld.</p>
+          <h1 className="suggestion-title">Shape the Future of BCVWorld</h1>
+          <p className="suggestion-subtitle">
+            Your voice matters! Use this form to request specific job roles, suggest new features, 
+            or ask for personalized career guidance. We review every suggestion to make our platform better for you.
+          </p>
         </div>
 
         <div className="suggestion-content">
@@ -75,30 +132,34 @@ const Suggestion = () => {
                 <label className="form-label">
                   What kind of jobs are you looking for?
                 </label>
-                <input
-                  type="text"
+                <select
                   name="jobType"
                   value={formData.jobType}
                   onChange={handleChange}
-                  placeholder="e.g. Java Developer, Data Analyst, Fresher..."
                   className="form-input"
-                  required
-                />
+                >
+                  <option value="" disabled>Select Job Type</option>
+                  {jobTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">
                 <label className="form-label">
                   What help is required?
                 </label>
-                <input
-                  type="text"
+                <select
                   name="helpRequired"
                   value={formData.helpRequired}
                   onChange={handleChange}
-                  placeholder="e.g. Resume review, Mock interview..."
                   className="form-input"
-                  required
-                />
+                >
+                  <option value="" disabled>Select Help Required</option>
+                  {helpOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">
@@ -111,8 +172,35 @@ const Suggestion = () => {
                   onChange={handleChange}
                   placeholder="Tell us how we can serve you better..."
                   className="form-textarea"
-                  required
                 ></textarea>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your.email@example.com"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  WhatsApp Number
+                </label>
+                <input
+                  type="tel"
+                  name="whatsapp"
+                  value={formData.whatsapp}
+                  onChange={handleChange}
+                  placeholder="+91 9876543210"
+                  className="form-input"
+                />
               </div>
 
               <div className="checkbox-group">
@@ -164,14 +252,14 @@ const Suggestion = () => {
                    className="qr-img"
                    onError={(e) => {
                      e.target.onerror = null; 
-                     e.target.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/919876543210';
+                     e.target.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/917013765836';
                    }}
                  />
               </div>
 
               <div>
                 <a 
-                  href="https://wa.me/919876543210" 
+                  href="https://wa.me/917013765836" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="wa-btn"
@@ -182,11 +270,16 @@ const Suggestion = () => {
             </div>
 
             <div className="info-card">
-              <h3><BiHelpCircle className="text-blue-600" /> Why Feedback Matters?</h3>
+              <h3><BiHelpCircle className="text-blue-600" /> How We Use Your Feedback?</h3>
               <p>
-                We read every suggestion personally. Your input helps us prioritize new features, 
-                add relevant job categories, and improve our study resources.
+                Every suggestion is reviewed by our core team within 24 hours. We use your inputs to:
               </p>
+              <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '10px', color: '#64748b' }}>
+                <li>Add new job categories that match your skills.</li>
+                <li>Develop study materials for requested topics.</li>
+                <li>Improve website features and user experience.</li>
+                <li>Organize community events and webinars.</li>
+              </ul>
             </div>
 
           </div>

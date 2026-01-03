@@ -188,7 +188,7 @@ export default function Header() {
               <Link to="/about" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">About</Link>
               <Link to="/jobs" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Jobs</Link>
               <Link to="/suggestion" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Suggestion</Link>
-              <Link to="/calculators" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Calculators</Link>
+              <Link to="/calculators" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Finance Calculators</Link>
               <div className="pl-4 border-l-2 border-gray-200 ml-3">
                 <span className="block px-3 py-2 text-sm font-semibold text-gray-500">Blogs</span>
                 <Link to="/infosys-prep" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Infosys SP Prep</Link>
