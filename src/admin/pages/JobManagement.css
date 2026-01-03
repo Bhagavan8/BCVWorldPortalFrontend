@@ -1,0 +1,119 @@
+/* JobManagement.css - Custom styles for Job Management Page */
+
+/* 
+   Most styles are handled by Bootstrap 5 classes in the JSX 
+   and the global AdminLayout styles.
+   Only add component-specific overrides here.
+*/
+
+.table th {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom-width: 1px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+/* Ensure actions column doesn't wrap awkwardly */
+.table .d-flex.gap-2 {
+    min-width: 80px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    transform: translateY(-2px);
+}
+
+.custom-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.02) !important;
+}
+
+.search-bar {
+    width: 300px;
+    max-width: 100%;
+}
+
+.search-bar .form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+.search-bar .input-group-text {
+    border-right: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table tbody, 
+    .table tr, 
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background: #fff;
+    }
+
+    .table td {
+        padding: 0.5rem 0;
+        text-align: right;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+        justify-content: flex-end;
+        padding-top: 1rem;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: #6c757d;
+        text-align: left;
+    }
+    
+    /* Hide headers in mobile view but keep accessibility */
+    .table td.ps-4 {
+        padding-left: 0 !important;
+        text-align: left;
+        display: block;
+    }
+    
+    .table td.ps-4::before {
+        display: none;
+    }
+}

@@ -1,0 +1,125 @@
+/* Custom styles for News Upload form */
+.news-upload-container .form-label {
+    font-weight: 500;
+}
+
+.news-upload-container .card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.news-upload-container .card-header {
+    background-color: #f8f9fa;
+    font-weight: 500;
+}
+
+.news-upload-container textarea {
+    resize: vertical;
+}
+
+.paragraph-item {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.subpoints-container {
+    padding-left: 1.5rem;
+    border-left: 2px solid #e9ecef;
+    margin-top: 0.5rem;
+}
+
+.subpoint-item {
+    margin-bottom: 0.5rem;
+}
+
+.subpoint-item .input-group-text {
+    background-color: #fff;
+    border-right: none;
+}
+
+.subpoint-item .form-control {
+    border-left: none;
+}
+
+.subpoint-item .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.preview-image {
+    max-width: 200px;
+    border-radius: 4px;
+    margin-top: 10px;
+    border: 1px solid #dee2e6;
+    padding: 4px;
+}
+
+/* Action Buttons */
+.news-action-btn {
+    min-width: 120px;
+    height: 46px !important; /* Force height */
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border-width: 1px !important; /* Ensure border width is identical */
+    border-style: solid !important;
+    margin: 0;
+    box-shadow: none !important; /* Remove bootstrap shadows to ensure flat alignment */
+}
+
+.news-action-btn.btn-light {
+    background-color: #ffffff;
+    border-color: #dee2e6;
+    color: #495057;
+}
+
+.news-action-btn.btn-light:hover {
+    background-color: #f8f9fa;
+    border-color: #caced1;
+}
+
+.news-action-btn.btn-primary {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+    color: #ffffff;
+}
+
+.news-action-btn.btn-primary:hover {
+    background-color: #4338ca;
+    border-color: #4338ca;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .paragraph-item {
+        padding: 0.75rem;
+    }
+    
+    .subpoints-container {
+        padding-left: 0.75rem;
+        border-left-width: 2px;
+    }
+    
+    .news-action-btn {
+        width: 100%; /* Full width on mobile */
+        min-width: unset;
+    }
+
+    /* Adjust subpoint input group for very small screens */
+    .subpoint-item .input-group-text {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .subpoint-item .btn {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}

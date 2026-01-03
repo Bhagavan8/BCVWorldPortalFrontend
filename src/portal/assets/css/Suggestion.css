@@ -1,0 +1,274 @@
+/* Suggestion.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.suggestion-page {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding-top: 120px; /* Space for fixed header */
+  padding-bottom: 60px;
+}
+
+.suggestion-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.suggestion-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.suggestion-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.suggestion-subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.suggestion-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Left Side - Form */
+.suggestion-form-wrapper {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1e293b;
+  transition: all 0.3s;
+  background-color: #f8fafc;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.checkbox-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.submit-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.submit-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Right Side - WhatsApp & Info */
+.info-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.whatsapp-card {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  padding: 40px;
+  border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(37, 211, 102, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsapp-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.wa-icon-large {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.wa-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.wa-desc {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.qr-placeholder {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+
+.qr-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.wa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  color: #128c7e;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.wa-btn:hover {
+  transform: scale(1.05);
+}
+
+.info-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-card p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 992px) {
+  .suggestion-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .info-sidebar {
+    order: -1; /* Show WhatsApp first on mobile if desired, or keep default */
+  }
+}
+
+@media (max-width: 768px) {
+  .suggestion-page {
+    padding-top: 100px;
+  }
+
+  .suggestion-title {
+    font-size: 2rem;
+  }
+
+  .suggestion-form-wrapper {
+    padding: 25px;
+  }
+
+  .whatsapp-card {
+    padding: 30px 20px;
+  }
+
+  .wa-title {
+    font-size: 1.5rem;
+  }
+}
