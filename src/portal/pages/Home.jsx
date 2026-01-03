@@ -81,7 +81,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="pt-20 overflow-x-hidden">
+    <div className="pt-20">
       
       {/* Hero Section */}
       <section id="hero" className="py-12 md:py-20 lg:py-24 hero-bg-custom relative">

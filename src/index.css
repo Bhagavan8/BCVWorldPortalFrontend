@@ -6,6 +6,23 @@
   --accent-color: #2563eb;
 }
 
+/* Hide Scrollbar Completely */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure smooth scrolling doesn't conflict */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
 /* Global Overrides to fix Bootstrap Conflicts */
 a, nav a, .nav-link, header a {
   text-decoration: none !important;
