@@ -48,7 +48,6 @@ class JobService {
         const formData = new FormData();
         formData.append('file', file);
         const headers = { 
-            'Content-Type': 'multipart/form-data',
             ...this.getAuthHeader()
         };
         return axios.post(`${COMPANY_API}/upload-logo`, formData, { headers });

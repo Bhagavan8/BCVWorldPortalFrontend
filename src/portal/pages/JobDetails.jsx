@@ -67,20 +67,29 @@ export default function JobDetails() {
     (async () => {
       try {
         let url = `${API_BASE}/api/jobs/${id}`;
-        // Re-add user check logic here properly since we replaced it
+        
+        // Add auth header if token exists
         const userStr = localStorage.getItem('user');
+        const headers = {};
         if (userStr) {
-          try {
-            const u = JSON.parse(userStr);
-            if (u.id) {
-              url += `?userId=${u.id}`;
+            try {
+                const u = JSON.parse(userStr);
+                let token = u.token || u.data?.token || u.user?.token || u.access_token;
+                if (token) {
+                    if (token.startsWith('Bearer ')) {
+                        token = token.replace('Bearer ', '');
+                    }
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                if (u.id) {
+                    url += `?userId=${u.id}`;
+                }
+            } catch(e) {
+                console.error('Error parsing user for auth', e);
             }
-          } catch(e) {
-            console.error('Error parsing user for view tracking', e);
-          }
         }
 
-        const response = await fetch(url);
+        const response = await fetch(url, { headers });
         if (response.ok) {
           const rawData = await response.json();
           // Normalize data to match component expectations (same as Jobs.jsx)
