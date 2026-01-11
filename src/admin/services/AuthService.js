@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = '/api/admin/auth';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+const API_URL = `${API_BASE_URL}/api/admin/auth`;
 
 class AuthService {
     constructor() {
@@ -40,9 +41,35 @@ class AuthService {
         return JSON.parse(localStorage.getItem('user'));
     }
 
-    isAdmin() {
+    getRole() {
         const user = this.getCurrentUser();
-        return user && (user.role === 'ADMIN' || user.role === 'admin');
+        if (!user) return null;
+        // Check for role in various nested structures
+        if (user.role) return user.role;
+        if (user.user && user.user.role) return user.user.role;
+        if (user.data && user.data.role) return user.data.role;
+        // Fallback or default
+        return null;
+    }
+
+    getToken() {
+        const user = this.getCurrentUser();
+        if (!user) return null;
+        
+        let token = user.token;
+        if (!token && user.data?.token) token = user.data.token;
+        if (!token && user.user?.token) token = user.user.token;
+        if (!token && user.access_token) token = user.access_token;
+
+        if (token && token.startsWith('Bearer ')) {
+            token = token.replace('Bearer ', '');
+        }
+        return token;
+    }
+
+    isAdmin() {
+        const role = this.getRole();
+        return role === 'ADMIN' || role === 'admin';
     }
 
     setUser(user) {

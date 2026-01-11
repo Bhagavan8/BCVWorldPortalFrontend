@@ -24,7 +24,7 @@
 
 /* Base Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--app-font);
     background-color: #f5f7fb;
     color: var(--dark-color);
     overflow-x: hidden;

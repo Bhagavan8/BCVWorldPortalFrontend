@@ -1,28 +1,19 @@
 import axios from 'axios';
 import AuthService from './AuthService';
 
-const API_URL = '/api/jobs';
-const ADMIN_API_URL = '/api/admin/jobs';
-const COMPANY_API = '/api/companies';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+const API_URL = `${API_BASE_URL}/api/jobs`;
+const ADMIN_API_URL = `${API_BASE_URL}/api/admin/jobs`;
+const COMPANY_API = `${API_BASE_URL}/api/companies`;
 
 class JobService {
     getAuthHeader() {
-        const user = AuthService.getCurrentUser();
-        // Check for nested token structures (e.g. user.data.token, user.token)
-        let token = user?.token;
-        if (!token && user?.data?.token) token = user.data.token;
-        if (!token && user?.user?.token) token = user.user.token;
-        if (!token && user?.access_token) token = user.access_token;
-
+        const token = AuthService.getToken();
         if (token) {
-            // Remove 'Bearer ' prefix if it's already in the token string to avoid double prefixing
-            if (token.startsWith('Bearer ')) {
-                token = token.replace('Bearer ', '');
-            }
             console.log('JobService: Attaching auth token:', token.substring(0, 10) + '...');
             return { Authorization: `Bearer ${token}` };
         }
-        console.warn('JobService: No token found in user object:', user);
+        console.warn('JobService: No token found via AuthService');
         return {};
     }
 

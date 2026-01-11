@@ -1,21 +1,14 @@
 import axios from 'axios';
 import AuthService from './AuthService';
 
-const ADMIN_NEWS_API_URL = '/api/admin/news';
-const UPLOAD_API_URL = '/api/upload'; // Assuming a general upload controller or specific one
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+const ADMIN_NEWS_API_URL = `${API_BASE_URL}/api/admin/news`;
+const UPLOAD_API_URL = `${API_BASE_URL}/api/upload`; // Assuming a general upload controller or specific one
 
 class NewsService {
     getAuthHeader() {
-        const user = AuthService.getCurrentUser();
-        let token = user?.token;
-        if (!token && user?.data?.token) token = user.data.token;
-        if (!token && user?.user?.token) token = user.user.token;
-        if (!token && user?.access_token) token = user.access_token;
-
+        const token = AuthService.getToken();
         if (token) {
-            if (token.startsWith('Bearer ')) {
-                token = token.replace('Bearer ', '');
-            }
             return { Authorization: `Bearer ${token}` };
         }
         return {};

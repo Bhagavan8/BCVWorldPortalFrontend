@@ -140,8 +140,9 @@ export default function Register() {
     try {
       // Exclude confirmPassword from payload
       const { confirmPassword, ...payload } = formData;
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

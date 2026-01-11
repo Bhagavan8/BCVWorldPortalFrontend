@@ -81,7 +81,9 @@ const Suggestion = () => {
 
     setIsSubmitting(true);
 
-    const submitPromise = axios.post('/api/suggestion', formData)
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+
+    const submitPromise = axios.post(`${API_BASE_URL}/api/suggestion`, formData)
       .then(response => {
         if (!response.data.success) {
           throw new Error('Something went wrong. Please try again.');

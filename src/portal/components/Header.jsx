@@ -64,7 +64,7 @@ export default function Header() {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 justify-center pt-6 px-4 pointer-events-none ${isJobDetailsPage ? 'hidden min-[769px]:flex' : 'flex'}`}>
       <div className={`w-full max-w-7xl bg-white shadow-xl pointer-events-auto transition-all duration-300 ${isMobileNavOpen ? 'rounded-3xl' : 'rounded-full'}`}>
-        <div className="px-8 sm:px-12">
+        <div className="px-4 sm:px-8 md:px-12">
           <div className="flex justify-between items-center h-20">
             
             {/* Logo */}
@@ -104,9 +104,9 @@ export default function Header() {
               <div className="relative" ref={authRef}>
                 <button 
                   onClick={() => setIsAuthOpen(!isAuthOpen)}
-                    className="flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                    className="flex items-center px-3 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
                   >
-                    <span className="mr-2">Account</span>
+                    <span className="mr-2 hidden md:inline">Account</span>
                     <BiChevronDown />
                   </button>
                   

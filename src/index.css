@@ -4,6 +4,7 @@
 
 :root {
   --accent-color: #2563eb;
+  --app-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 /* Hide Scrollbar Completely */
@@ -21,6 +22,7 @@ body {
   overflow-x: hidden;
   width: 100%;
   position: relative;
+  font-family: var(--app-font);
 }
 
 /* Global Overrides to fix Bootstrap Conflicts */

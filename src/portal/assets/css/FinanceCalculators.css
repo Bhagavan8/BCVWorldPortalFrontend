@@ -1,72 +1,314 @@
-.finance-calculators-page {
-    font-family: 'Inter', sans-serif;
+/* FinanceCalculators.css */
+:root {
+  --emi-primary: #16a085;
+  --emi-accent: #f39c12;
+  --emi-muted: #6c757d;
 }
 
-/* Custom Scrollbar for Table */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+body {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, "Noto Sans", sans-serif;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
+.emi-page {
+  max-width: none;
+  width: 100%;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
+.emi-page .card {
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+.emi-page .card-header {
+  border-bottom: 0;
+  background: #fff;
+  padding: 1rem 1.25rem;
 }
 
-/* Range Input Styling */
-input[type=range] {
-    -webkit-appearance: none;
-    background: transparent;
+.emi-amount {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
 }
 
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    background: #2563eb;
-    cursor: pointer;
-    margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: transform 0.1s;
+.form-range {
+  accent-color: var(--emi-primary);
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
 }
 
-input[type=range]::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
+.input-group-text {
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  color: #495057;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 6px;
-    cursor: pointer;
-    background: #e2e8f0;
-    border-radius: 3px;
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.donut {
+  transform: rotate(-90deg);
+  max-width: 100%;
+  height: auto;
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
+.donut-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 16;
 }
 
-/* Hide scrollbar for tab navigation */
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
+.donut-seg {
+  fill: none;
+  stroke-width: 16;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s ease;
 }
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+
+.donut-seg.principal {
+  stroke: var(--emi-primary);
+}
+
+.donut-seg.interest {
+  stroke: var(--emi-accent);
+}
+
+.legend {
+  margin-top: 1.5rem;
+  padding: 0;
+}
+
+.legend li {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.legend .legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.legend .legend-dot.principal {
+  background: var(--emi-primary);
+}
+
+.legend .legend-dot.interest {
+  background: var(--emi-accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .emi-amount {
+    font-size: 1.8rem;
+  }
+  
+  .donut {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .emi-page .card-header .btn-group {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .emi-page .card-header .btn-group .btn {
+    flex: 1 0 auto;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .emi-amount {
+    font-size: 1.6rem;
+  }
+  
+  .donut {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .emi-page {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .emi-page .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Table responsive styles */
+.table-responsive {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  background: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.table td, .table th {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Form controls */
+input[type="number"] {
+  text-align: right;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: auto;
+}
+
+/* Button groups */
+.btn-group .btn {
+  transition: all 0.2s ease;
+}
+
+.btn-group .btn.active {
+  background-color: var(--emi-primary);
+  border-color: var(--emi-primary);
+  color: white;
+}
+
+.btn-group .btn:hover:not(.active) {
+  background-color: #f8f9fa;
+}
+
+/* SEO Section */
+.seo-section {
+  margin-top: 2rem;
+}
+
+.seo-section h2,
+.faq-section h2 {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.seo-section p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.seo-section ul {
+  padding-left: 1rem;
+}
+
+.seo-section li {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-top: 2rem;
+}
+
+.faq-section .accordion-button {
+  font-weight: 600;
+  background-color: #f8f9fa;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.faq-section .accordion-button:not(.collapsed) {
+  background-color: #e9f7f4;
+  color: var(--emi-primary);
+}
+
+.faq-section .accordion-body {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: none;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item a {
+  color: var(--emi-primary);
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
+  color: var(--emi-muted);
+}
+
+/* Calculator buttons */
+.calc-btn {
+  padding: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.calc-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure all elements are properly spaced on mobile */
+@media (max-width: 576px) {
+  .row.g-4 {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .row.g-4 > * {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .seo-section,
+  .faq-section {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
+/* Touch-friendly form controls */
+.form-range,
+.form-control,
+.btn {
+  touch-action: manipulation;
+}
+
+/* Prevent text selection on interactive elements */
+.btn,
+.form-check-label,
+.form-range {
+  user-select: none;
 }

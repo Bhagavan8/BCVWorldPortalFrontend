@@ -1,8 +1,7 @@
 /* AboutUs.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 .about-us {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--app-font);
   color: #1e293b;
   overflow-x: hidden;
   padding-top: 80px;
@@ -316,7 +315,7 @@
   color: #cbd5e1;
   font-weight: 300;
   margin-top: 30px;
-  font-family: serif;
+  font-family: var(--app-font);
   font-style: italic;
 }
 

@@ -37,8 +37,9 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
       // Use relative path - Vite proxy will handle the rest
-      await axios.post('/api/contact', formData);
+      await axios.post(`${API_BASE_URL}/api/contact`, formData);
       toast.success('Message sent successfully!');
       setFormData({
         name: '',

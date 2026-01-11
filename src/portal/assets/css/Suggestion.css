@@ -1,8 +1,7 @@
 /* Suggestion.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 .suggestion-page {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--app-font);
   background-color: #f8fafc;
   min-height: 100vh;
   padding-top: 120px; /* Space for fixed header */

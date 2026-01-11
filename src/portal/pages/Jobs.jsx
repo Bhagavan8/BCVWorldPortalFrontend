@@ -12,7 +12,7 @@ export default function Jobs() {
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [companyMap, setCompanyMap] = useState({});
-  const rawBase = import.meta.env.VITE_API_BASE_URL || '';
+  const rawBase = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
   const API_BASE = (typeof rawBase === 'string' ? rawBase.trim() : '');
   
   // Filter States

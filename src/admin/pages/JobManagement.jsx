@@ -37,10 +37,10 @@ const JobManagement = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const currentUser = AuthService.getCurrentUser();
-      const token = currentUser?.token;
+      const token = AuthService.getToken();
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 
-      const response = await axios.get(`/api/admin/jobs/management`, {
+      const response = await axios.get(`${API_BASE_URL}/api/admin/jobs/management`, {
         params: {
           page: currentPage - 1,
           size: ITEMS_PER_PAGE,
@@ -70,9 +70,10 @@ const JobManagement = () => {
 
   const confirmDelete = async (id) => {
     try {
-      const currentUser = AuthService.getCurrentUser();
-      await axios.delete(`/api/admin/jobs/${id}`, {
-          headers: { 'Authorization': `Bearer ${currentUser?.token}` }
+      const token = AuthService.getToken();
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+      await axios.delete(`${API_BASE_URL}/api/admin/jobs/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
       });
       toast.success('Job deleted successfully');
       fetchJobs();

@@ -4,7 +4,7 @@ import AuthService from '../admin/services/AuthService';
 export const RoleGuard = ({ children, allowedRoles }) => {
   const location = useLocation();
   const user = AuthService.getCurrentUser();
-  const userRole = user?.role || 'EMPLOYEE'; // Default to EMPLOYEE if no role
+  const userRole = AuthService.getRole() || 'EMPLOYEE'; // Default to EMPLOYEE if no role
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
