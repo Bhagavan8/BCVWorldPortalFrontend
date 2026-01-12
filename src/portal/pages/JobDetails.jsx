@@ -22,6 +22,9 @@ export default function JobDetails() {
   const [nextJob, setNextJob] = useState(null);
   const [postingComment, setPostingComment] = useState(false);
   const [user, setUser] = useState(null);
+  const [relatedJobs, setRelatedJobs] = useState([]);
+  const [showLeftAd, setShowLeftAd] = useState(true);
+  const [showRightAd, setShowRightAd] = useState(true);
   const hasViewed = useRef(false);
 
   useEffect(() => {
@@ -123,6 +126,39 @@ export default function JobDetails() {
       }
     })();
   }, [id, API_BASE]);
+
+  useEffect(() => {
+    if (job && job.companyName) {
+      (async () => {
+        try {
+          const res = await fetch(`${API_BASE}/api/jobs`);
+          if (res.ok) {
+            let allJobs = await res.json();
+            allJobs = Array.isArray(allJobs) ? allJobs : [];
+            
+            // Filter by SAME COMPANY instead of Category
+            const filtered = allJobs.filter(j => {
+                const cName = j.company || j.companyName;
+                const jId = j.id;
+                return cName && cName.toLowerCase() === job.companyName.toLowerCase() && String(jId) !== String(job.id);
+            });
+
+            const mapped = filtered.slice(0, 3).map(j => ({
+                id: j.id,
+                jobTitle: j.title || j.jobTitle,
+                companyName: j.company || j.companyName,
+                locations: j.location ? (typeof j.location === 'string' ? j.location.split(',').map(s => s.trim()) : []) : (j.locations || []),
+                companyLogoUrl: j.logoUrl || j.companyLogoUrl,
+                postedDate: j.postedDate
+            }));
+            setRelatedJobs(mapped);
+          }
+        } catch (e) {
+          console.error('Error fetching company jobs', e);
+        }
+      })();
+    }
+  }, [job, API_BASE]);
 
   // Fetch Comments and Neighbor Jobs
   useEffect(() => {
@@ -452,7 +488,7 @@ export default function JobDetails() {
       <div id="readingProgress" className="reading-progress-bar"></div>
 
       {/* Mobile Header */}
-      <div className="mobile-header">
+      <div className="mobile-header font-sans">
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <i className="bi bi-list"></i>
         </button>
@@ -467,7 +503,7 @@ export default function JobDetails() {
       {/* Mobile Sidebar & Overlay */}
       <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
       
-      <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
         <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>
           <i className="bi bi-x-lg"></i>
         </button>
@@ -530,20 +566,34 @@ export default function JobDetails() {
       </div>
 
       {/* Main Container - Full Width */}
-      <div className="job-details-page page-wrapper">
-        <div className="ad-column ad-left">
-          <div className="ad-sidebar">
-            <div className="ad-content">Left Ad</div>
+      <div className="job-details-page page-wrapper font-sans">
+        
+        {/* Left Ad */}
+        {showLeftAd && (
+          <div className="ad-column ad-left">
+            <div className="ad-sidebar">
+              <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
+                <i className="bi bi-x-lg"></i>
+              </button>
+              <div className="ad-content">Left Ad</div>
+            </div>
           </div>
-        </div>
-        <div className="ad-column ad-right">
-          <div className="ad-sidebar">
-            <div className="ad-content">Right Ad</div>
+        )}
+
+        {/* Right Ad */}
+        {showRightAd && (
+          <div className="ad-column ad-right">
+            <div className="ad-sidebar">
+              <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
+                <i className="bi bi-x-lg"></i>
+              </button>
+              <div className="ad-content">Right Ad</div>
+            </div>
           </div>
-        </div>
+        )}
         
         {/* Main Content Area */}
-        <div className="main-content-area">
+        <div className={`main-content-area ${showLeftAd ? 'has-left-ad' : ''} ${showRightAd ? 'has-right-ad' : ''}`}>
           
           {/* Back Navigation */}
           <div className="back-navigation-bar">
@@ -729,37 +779,29 @@ export default function JobDetails() {
               </div>
             </section>
 
-            {/* Company Info */}
-            <section className="content-section company-section">
-              <div className="section-title-bar">
-                <i className="bi bi-building"></i>
-                <h3>About Company</h3>
-              </div>
-              <div className="company-info-grid">
-                <div className="company-logo-large">
-                  <img 
-                    src={job.companyLogoUrl || company?.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.companyName || company?.name || 'Company')}&background=random&size=120`} 
-                    alt={job.companyName || company?.name || ''}
-                  />
+            {/* About Company Section - Unique Design */}
+            {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
+              <section className="content-section company-info-section">
+                <div className="company-info-header">
+                   <div className="company-info-brand">
+                      <div className="company-info-logo">
+                         <img src={job.companyLogoUrl || company?.logoUrl} alt={job.companyName || company?.name} />
+                      </div>
+                      <div className="company-info-text">
+                        <h4>{job.companyName || company?.name}</h4>
+                        {(job.companyWebsite || company?.website) && (
+                           <a href={job.companyWebsite || company?.website} target="_blank" rel="noopener noreferrer" className="company-website-link">
+                              <i className="bi bi-link-45deg"></i> Visit Website
+                           </a>
+                        )}
+                      </div>
+                   </div>
                 </div>
-                <div className="company-details">
-                  <h4>{job.companyName || company?.name}</h4>
-                  <p className="company-description">
-                    {job.aboutCompany || company?.about || ''}
-                  </p>
-                  {(job.companyWebsite || company?.website) && (
-                    <a
-                      href={job.companyWebsite || company?.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline"
-                    >
-                      View Company Profile
-                    </a>
-                  )}
+                <div className="company-info-body">
+                   <p>{job.aboutCompany || company?.about}</p>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             <section className="community-section">
               <h3 className="community-title"><i className="bi bi-people"></i> Join Our Community</h3>
@@ -835,39 +877,70 @@ export default function JobDetails() {
               </div>
             </section>
 
+            {relatedJobs.length > 0 && (
+              <section className="content-section company-jobs-section">
+                <div className="section-title-bar">
+                  <i className="bi bi-briefcase"></i>
+                  <h3>More from {job.companyName}</h3>
+                </div>
+                <div className="company-jobs-list">
+                  {relatedJobs.map(rJob => (
+                    <Link 
+                      to={`/job?job_id=${rJob.id}`} 
+                      key={rJob.id} 
+                      className="company-job-item" 
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    >
+                      <div className="company-job-details">
+                        <h4 className="company-job-title">{rJob.jobTitle}</h4>
+                        <div className="company-job-meta">
+                          {rJob.locations && rJob.locations.length > 0 && (
+                             <span className="company-job-location"><i className="bi bi-geo-alt"></i> {rJob.locations[0]}</span>
+                          )}
+                          <span className="company-job-date">Posted {rJob.postedDate ? new Date(rJob.postedDate).toLocaleDateString() : 'Recently'}</span>
+                        </div>
+                      </div>
+                      <div className="company-job-arrow">
+                        <i className="bi bi-chevron-right"></i>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <section className="job-link-section">
                {(() => {
                   const method = (job.applicationMethod || '').toLowerCase();
                   const isEmail = method === 'email' || (job.applicationEmail && !job.applicationLink);
                   
                   if (isEmail) {
-                    return (
-                      <div className="job-link-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
-                        <span className="job-link-label" style={{ fontWeight: '600', color: '#333' }}>Job Link:</span>
-                        <a 
-                          href={`mailto:${job.applicationEmail}`}
-                          className="email-apply-link"
-                          style={{ textDecoration: 'none', color: '#0d6efd', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' }}
-                        >
-                          <i className="bi bi-envelope"></i> {job.applicationEmail}
-                        </a>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div className="job-link-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
-                        <span className="job-link-label" style={{ fontWeight: '600', color: '#333' }}>Job Link:</span>
-                        <a
-                          href={job.applicationLink || getApplyHref(job.applicationLinkOrEmail)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary"
-                        >
-                          <i className="bi bi-box-arrow-up-right"></i> Click here to Apply Now
-                        </a>
-                      </div>
-                    );
-                  }
+                return (
+                  <div className="job-link-row">
+                    <span className="job-link-label">Job Link:</span>
+                    <a 
+                      href={`mailto:${job.applicationEmail}`}
+                      className="email-apply-link"
+                    >
+                      <i className="bi bi-envelope"></i> {job.applicationEmail}
+                    </a>
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="job-link-row">
+                    <span className="job-link-label">Job Link:</span>
+                    <a
+                      href={job.applicationLink || getApplyHref(job.applicationLinkOrEmail)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary"
+                    >
+                      <i className="bi bi-box-arrow-up-right"></i> Click here to Apply Now
+                    </a>
+                  </div>
+                );
+              }
                })()}
             </section>
 
@@ -922,13 +995,7 @@ export default function JobDetails() {
 
           </div>
 
-          {/* Footer */}
-          <footer className="page-footer">
-            <p>
-              <i className="bi bi-info-circle"></i>
-              BCV World connects job seekers with opportunities. Apply with caution and verify company details before proceeding.
-            </p>
-          </footer>
+          {/* Footer removed as requested */}
         </div>
       </div>
 

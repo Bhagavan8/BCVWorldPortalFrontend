@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BiSearch, BiFilter, BiBriefcase, BiMap, BiBuilding, BiCalendar, BiX, BiXCircle, BiArrowBack, BiUser, BiTime, BiFolder } from 'react-icons/bi';
+import { BiSearch, BiFilter, BiBriefcase, BiMap, BiBuilding, BiCalendar, BiX, BiXCircle, BiArrowBack, BiUser, BiTime, BiFolder, BiShow } from 'react-icons/bi';
 
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
@@ -81,7 +81,8 @@ export default function Jobs() {
             referralCode: j.jobCode || j.referralCode,
             companyLogoUrl: j.logoUrl || j.companyLogoUrl, // Map logoUrl to companyLogoUrl
             lastDateToApply: j.lastDateToApply || null, 
-            postedDate: j.postedDate || getTodayString()
+            postedDate: j.postedDate || getTodayString(),
+            views: j.views || j.viewCount || 0
         }});
 
         setJobs(data);
@@ -217,7 +218,7 @@ export default function Jobs() {
     setLocation('all');
     setCompanyFilter('All');
     setExperience({ fresher: false, experienced: false });
-    setDateFilter(getTodayString()); // Reset to today
+    setDateFilter(''); // Reset to empty
     setSelectedCategory('All');
     setSearchParams({});
     // filteredJobs will update via useEffect
@@ -226,6 +227,7 @@ export default function Jobs() {
   const handleSearchChange = (e) => {
     const val = e.target.value;
     setSearchTerm(val);
+    if (val) setDateFilter(''); // Clear date filter when searching
     
     if (val.length >= 3) {
       const lowerVal = val.toLowerCase();
@@ -271,14 +273,29 @@ export default function Jobs() {
   const handleCategoryClick = (cat) => {
     setSelectedCategory(cat);
     setSearchParams({ category: cat });
+    setDateFilter(''); // Clear date filter when changing category
   };
 
-  const handleLocationClick = (loc) => {
-    setLocation(loc);
+  const handleLocationChange = (val) => {
+    setLocation(val);
+    setDateFilter(''); // Clear date filter when changing location
+  };
+
+  const handleCompanyChange = (val) => {
+      setCompanyFilter(val);
+      setDateFilter(''); // Clear date filter when changing company
+  };
+
+  const handleExperienceChange = (newExp) => {
+      setExperience(newExp);
+      setDateFilter(''); // Clear date filter when changing experience
   };
 
   const categories = ['IT', 'Government', 'Bank', 'BPO', 'Core', 'Civil', 'Mechanical'];
   const locations = ['Andhra Pradesh', 'Bangalore', 'Chennai', 'Delhi', 'Gurgaon', 'Hyderabad', 'Mumbai', 'NCR', 'Noida', 'Pune'];
+
+  // Derived lists for Sidebars
+  const mostViewedJobs = [...jobs].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
 
   return (
     <div className="pt-32 pb-12 bg-white min-h-screen font-sans">
@@ -302,30 +319,9 @@ export default function Jobs() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* LEFT SIDEBAR: Jobs By Category */}
-          <div className={`${showMobileFilter ? 'block' : 'hidden'} lg:block lg:col-span-2`}>
-            <div className="mb-4">
-              <h6 className="font-bold mb-3 pb-2 border-b-2 border-blue-600 text-sm text-gray-800">
-                Jobs By Category
-              </h6>
-              <div className="flex flex-col">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => handleCategoryClick(cat)}
-                    className={`text-left px-0 py-1 text-sm text-gray-500 hover:text-blue-600 transition ${selectedCategory === cat ? 'font-bold text-blue-600' : ''}`}
-                  >
-                    {cat} Jobs
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            
-          </div>
 
           {/* MAIN CONTENT AREA */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-9">
             
             {/* Filter Section Card */}
             <div className="bg-white rounded-lg shadow-sm mb-4 border border-gray-200">
@@ -378,7 +374,7 @@ export default function Jobs() {
                       <select 
                         className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-700"
                         value={companyFilter}
-                        onChange={(e) => setCompanyFilter(e.target.value)}
+                        onChange={(e) => handleCompanyChange(e.target.value)}
                       >
                         <option value="All">All Companies</option>
                         {uniqueCompanies.map(c => <option key={c} value={c}>{c}</option>)}
@@ -391,7 +387,7 @@ export default function Jobs() {
                       <select 
                         className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-700"
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        onChange={(e) => handleLocationChange(e.target.value)}
                       >
                         <option value="all">All Locations</option>
                         {uniqueLocations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
@@ -407,7 +403,7 @@ export default function Jobs() {
                              type="checkbox" 
                              className="hidden" 
                              checked={experience.fresher}
-                             onChange={() => setExperience({...experience, fresher: !experience.fresher})}
+                             onChange={() => handleExperienceChange({...experience, fresher: !experience.fresher})}
                            />
                            Fresher
                          </label>
@@ -416,7 +412,7 @@ export default function Jobs() {
                              type="checkbox" 
                              className="hidden"
                              checked={experience.experienced}
-                             onChange={() => setExperience({...experience, experienced: !experience.experienced})}
+                             onChange={() => handleExperienceChange({...experience, experienced: !experience.experienced})}
                            />
                            Experienced
                          </label>
@@ -603,28 +599,44 @@ export default function Jobs() {
 
           </div>
 
-          {/* RIGHT SIDEBAR: Jobs By Location */}
-          <div className="hidden lg:block lg:col-span-2">
-            <div className="mb-4">
-              <h6 className="font-bold mb-3 pb-2 border-b-2 border-cyan-500 text-sm text-gray-800">
-                Jobs By Location
-              </h6>
-              <div className="flex flex-col">
-                {uniqueLocations.length > 0 ? uniqueLocations.map((loc) => (
-                  <button
-                    key={loc}
-                    onClick={() => handleLocationClick(loc)}
-                    className={`text-left px-0 py-1 text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition ${location === loc ? 'font-bold text-cyan-600' : ''}`}
-                  >
-                    Jobs in {loc}
-                  </button>
-                )) : (
-                   <span className="text-sm text-gray-400">No locations found</span>
-                )}
+          {/* RIGHT SIDEBAR: Most Viewed Jobs */}
+          <div className="hidden lg:block lg:col-span-3">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-4 py-3 border-b-2 border-blue-600 flex justify-between items-center">
+                 <h6 className="font-bold text-sm text-gray-800 m-0">Most Viewed Jobs</h6>
+                 <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{mostViewedJobs.length}</span>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {mostViewedJobs.map((job, idx) => {
+                   const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                   const slug = `${clean(job.jobTitle)}-${clean(job.companyName)}-${clean(job.locations?.[0])}`;
+                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
+                   
+                   return (
+                   <div key={job.id} className="p-3 hover:bg-gray-50 transition relative">
+                     <Link to={jobUrl} className="block pl-2">
+                       <div className="flex justify-between items-start mb-1">
+                          <h4 className="text-sm font-medium text-gray-900 line-clamp-1 pr-6" title={job.jobTitle}>
+                            {job.jobTitle}
+                          </h4>
+                          <span className="absolute top-3 right-3 flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-[10px] font-bold rounded-full">
+                            #{idx + 1}
+                          </span>
+                       </div>
+                       <div className="text-xs text-gray-500 mb-1 line-clamp-1">{job.companyName}</div>
+                       <div className="flex justify-between items-center mt-2">
+                         <span className="text-xs text-gray-600 line-clamp-1 max-w-[60%]">{job.locations?.[0] || 'Remote'}</span>
+                         <span className="text-xs text-gray-500 flex items-center gap-1 font-semibold">
+                           <BiShow /> {job.views || 0}
+                         </span>
+                       </div>
+                     </Link>
+                   </div>
+                   );
+                })}
+                {mostViewedJobs.length === 0 && <div className="p-4 text-xs text-gray-400 text-center">No viewed jobs</div>}
               </div>
             </div>
-
-            
           </div>
 
         </div>

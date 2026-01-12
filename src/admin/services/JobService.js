@@ -47,10 +47,19 @@ class JobService {
     uploadCompanyLogo(file) {
         const formData = new FormData();
         formData.append('file', file);
-        const headers = { 
-            ...this.getAuthHeader()
+        
+        // Get headers from helper but ensure Content-Type is NOT set for FormData
+        const authHeaders = this.getAuthHeader();
+        const headers = {
+            ...authHeaders
+            // Content-Type is left undefined to let the browser set it with the boundary
         };
-        return axios.post(`${COMPANY_API}/upload-logo`, formData, { headers });
+        
+        // Switching to the company endpoint as requested by the user
+        const uploadUrl = `${COMPANY_API}/upload-logo`;
+
+        console.log('Uploading logo to:', uploadUrl);
+        return axios.post(uploadUrl, formData, { headers });
     }
 
     searchCompanies(q) {
