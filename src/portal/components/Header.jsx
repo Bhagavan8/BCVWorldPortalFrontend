@@ -4,6 +4,7 @@ import { BiChevronDown, BiMenu, BiUser, BiLogIn, BiLogOut, BiGridAlt, BiBriefcas
 import logo from '../assets/logo/logo.png';
 
 export default function Header() {
+  const location = useLocation();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
