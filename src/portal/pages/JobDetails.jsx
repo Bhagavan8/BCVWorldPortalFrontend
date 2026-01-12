@@ -1,6 +1,7 @@
  import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
 import SEO from '../components/SEO';
 import './JobDetails.css';
 
@@ -460,7 +461,9 @@ export default function JobDetails() {
 
   const handleShare = (platform) => {
     const url = window.location.href;
-    const text = `Check out this job: ${job?.jobTitle} at ${(job?.companyName || company?.name || '')}`;
+    const title = job?.jobTitle || 'Job Opportunity';
+    const companyName = job?.companyName || company?.name || 'BCVWORLD';
+    const text = `Check out this job: ${title} at ${companyName}`;
     
     let shareUrl = '';
     switch(platform) {
@@ -507,42 +510,8 @@ export default function JobDetails() {
   const isApplyMailto = /^mailto:/i.test(applyHref);
   const applyDisplayValue = isApplyMailto ? applyHref.replace(/^mailto:/i, '') : applyTargetValue;
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="spinner"></div>
-        <p>Loading job details...</p>
-      </div>
-    );
-  }
-
-  if (!job) {
-    return (
-      <div className="not-found-container">
-        <div className="not-found-content">
-          <h2>Job Not Found</h2>
-          <p>The job you are looking for does not exist or has been removed.</p>
-          <p className="text-muted small mb-4">Redirecting to jobs page in 5 seconds...</p>
-          <Link to="/jobs" className="btn-primary">
-            Browse All Jobs Now
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  return (
+  const mobileNav = (
     <>
-      <SEO 
-        title={job ? job.jobTitle : "Job Details"} 
-        description={job ? `Apply for ${job.jobTitle} at ${job.companyName || 'BCVWORLD'}. View details, salary, and eligibility.` : "Job Details"}
-        keywords={job ? `${job.jobTitle}, ${job.companyName}, ${job.jobCategory}, jobs in ${job.locations ? job.locations.join(' ') : ''}, hiring, vacancy` : "jobs, hiring, vacancy"}
-        image={job ? (job.companyLogoUrl || undefined) : undefined}
-      />
-      {/* Reading Progress Bar */}
-      <div id="readingProgress" className="reading-progress-bar"></div>
-
-      {/* Mobile Header */}
       <div className="mobile-header font-sans">
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <i className="bi bi-list"></i>
@@ -555,7 +524,6 @@ export default function JobDetails() {
         </button>
       </div>
 
-      {/* Mobile Sidebar & Overlay */}
       <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
       
       <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
@@ -619,6 +587,51 @@ export default function JobDetails() {
           )}
         </div>
       </div>
+    </>
+  );
+
+  if (loading) {
+    return (
+      <>
+        {mobileNav}
+        <div className="loading-screen">
+          <div className="spinner"></div>
+          <p>Loading job details...</p>
+        </div>
+      </>
+    );
+  }
+
+  if (!job) {
+    return (
+      <>
+        {mobileNav}
+        <div className="not-found-container">
+          <div className="not-found-content">
+            <h2>Job Not Found</h2>
+            <p>The job you are looking for does not exist or has been removed.</p>
+            <p className="text-muted small mb-4">Redirecting to jobs page in 5 seconds...</p>
+            <Link to="/jobs" className="btn-primary">
+              Browse All Jobs Now
+            </Link>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <SEO 
+        title={job ? job.jobTitle : "Job Details"} 
+        description={job ? `Apply for ${job.jobTitle} at ${job.companyName || 'BCVWORLD'}. View details, salary, and eligibility.` : "Job Details"}
+        keywords={job ? `${job.jobTitle}, ${job.companyName}, ${job.jobCategory}, jobs in ${job.locations ? job.locations.join(' ') : ''}, hiring, vacancy` : "jobs, hiring, vacancy"}
+        image={job ? (job.companyLogoUrl || undefined) : undefined}
+      />
+      {/* Reading Progress Bar */}
+      <div id="readingProgress" className="reading-progress-bar"></div>
+
+      {mobileNav}
 
       {/* Main Container - Full Width */}
       <div className="job-details-page page-wrapper font-sans">
@@ -865,10 +878,10 @@ export default function JobDetails() {
             <section className="community-section">
               <h3 className="community-title"><i className="bi bi-people"></i> Join Our Community</h3>
               <div className="community-actions">
-                <a href={job.whatsappLink || '#'} target="_blank" rel="noopener noreferrer" className="community-btn btn-whatsapp">
+                <a href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o" target="_blank" rel="noopener noreferrer" className="community-btn btn-whatsapp">
                   <i className="bi bi-whatsapp"></i> Join WhatsApp Group
                 </a>
-                <a href={job.telegramLink || '#'} target="_blank" rel="noopener noreferrer" className="community-btn btn-telegram">
+                <a href="https://t.me/bcvworld" target="_blank" rel="noopener noreferrer" className="community-btn btn-telegram">
                   <i className="bi bi-telegram"></i> Join Telegram Channel
                 </a>
               </div>
@@ -1055,14 +1068,24 @@ export default function JobDetails() {
       {/* Mobile Bottom Action Bar */}
       <div className="mobile-bottom-bar">
         <div className="bottom-bar-content">
-          <button className={`bottom-btn save-btn ${isSaved ? 'active' : ''}`} onClick={handleSaveJob}>
-            <i className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i>
-            <span>{isSaved ? 'Saved' : 'Save'}</span>
-          </button>
-          <button className="bottom-btn share-btn" onClick={() => setSidebarOpen(true)}>
-            <i className="bi bi-share"></i>
-            <span>Share</span>
-          </button>
+          <a 
+            href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bottom-btn"
+          >
+            <FaWhatsapp size={20} color="#25D366" />
+            <span>WhatsApp</span>
+          </a>
+          <a 
+            href="https://t.me/bcvworld"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bottom-btn"
+          >
+            <FaTelegram size={20} color="#0088cc" />
+            <span>Telegram</span>
+          </a>
           <a 
             href={applyHref}
             target={isApplyMailto ? undefined : "_blank"}
