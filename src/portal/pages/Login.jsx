@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
@@ -25,6 +25,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get('returnTo') || '/';
 
   useEffect(() => {
     // Check for remembered email
@@ -59,7 +61,7 @@ export default function Login() {
       toast.success(`${provider} login successful!`);
 
       setTimeout(() => {
-        navigate('/');
+        navigate(returnTo);
       }, 1200);
 
     } catch (err) {
@@ -101,7 +103,8 @@ export default function Login() {
       toast.success('Login successful! Redirecting...');
 
       setTimeout(() => {
-        navigate(data.role === 'ADMIN' ? '/admin' : '/');
+        const dest = data.role === 'ADMIN' ? '/admin' : returnTo;
+        navigate(dest);
       }, 1200);
 
     } catch (err) {

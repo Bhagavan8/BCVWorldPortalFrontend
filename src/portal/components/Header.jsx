@@ -112,10 +112,10 @@ export default function Header() {
                   
                   {isAuthOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100">
-                      <Link to="/login" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <BiLogIn className="mr-2" /> Sign In
                       </Link>
-                      <Link to="/register" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <BiUser className="mr-2" /> Sign Up
                       </Link>
                     </div>

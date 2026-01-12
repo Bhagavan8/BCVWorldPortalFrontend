@@ -28,7 +28,6 @@ export default function JobDetails() {
   const hasViewed = useRef(false);
 
   useEffect(() => {
-    // Reset view tracking when id changes
     hasViewed.current = false;
   }, [id]);
 
@@ -37,13 +36,60 @@ export default function JobDetails() {
       hasViewed.current = true;
       const trackView = async () => {
         try {
-          const userStr = localStorage.getItem('user');
-          let u = null;
-          if (userStr) {
-            try { u = JSON.parse(userStr); } catch (e) {}
+          const w = window;
+          if (!w.__bcvworldViewLoadId) {
+            w.__bcvworldViewLoadId =
+              (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? crypto.randomUUID()
+                : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
           }
-          
-          const url = `${API_BASE}/api/jobs/${id}/view${u && u.id ? `?userId=${u.id}` : ''}`;
+
+          const loadKey = `job_view_load_${id}`;
+          const loadId = w.__bcvworldViewLoadId;
+          if (sessionStorage.getItem(loadKey) === loadId) return;
+          sessionStorage.setItem(loadKey, loadId);
+
+          const userStr = localStorage.getItem('user');
+          if (!userStr || userStr === 'undefined') {
+            const url = `${API_BASE}/api/jobs/${id}/view`;
+            await fetch(url, { method: 'POST' });
+            return;
+          }
+
+          let parsed;
+          try {
+            parsed = JSON.parse(userStr);
+          } catch {
+            const url = `${API_BASE}/api/jobs/${id}/view`;
+            await fetch(url, { method: 'POST' });
+            return;
+          }
+
+          const userId =
+            parsed?.id ??
+            parsed?.userId ??
+            parsed?.uid ??
+            parsed?._id ??
+            parsed?.user?.id ??
+            parsed?.user?.userId ??
+            parsed?.user?.uid ??
+            parsed?.user?._id ??
+            parsed?.data?.id ??
+            parsed?.data?.userId ??
+            parsed?.data?.uid ??
+            parsed?.data?._id;
+
+          if (!userId) {
+            const url = `${API_BASE}/api/jobs/${id}/view`;
+            await fetch(url, { method: 'POST' });
+            return;
+          }
+
+          const viewKey = `job_view_${String(userId)}_${id}`;
+          if (localStorage.getItem(viewKey)) return;
+
+          localStorage.setItem(viewKey, '1');
+          const url = `${API_BASE}/api/jobs/${id}/view?userId=${encodeURIComponent(String(userId))}`;
           await fetch(url, { method: 'POST' });
         } catch (error) {
           console.error('Error tracking view:', error);
@@ -446,11 +492,20 @@ export default function JobDetails() {
   const getApplyHref = (val) => {
     if (!val) return '#';
     const s = String(val).trim();
+    if (!s) return '#';
+    if (/^(mailto|tel):/i.test(s)) return s;
+    if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) return s;
     if (/^https?:\/\//i.test(s)) return s;
-    if (s.includes('@')) return `mailto:${s}`;
+    if (s.includes('@') && !s.includes('/')) return `mailto:${s}`;
     if (s.startsWith('www.')) return `https://${s}`;
+    if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(s)) return `https://${s}`;
     return s;
   };
+
+  const applyTargetValue = job?.applicationLink || job?.applicationEmail || job?.applicationLinkOrEmail;
+  const applyHref = getApplyHref(applyTargetValue);
+  const isApplyMailto = /^mailto:/i.test(applyHref);
+  const applyDisplayValue = isApplyMailto ? applyHref.replace(/^mailto:/i, '') : applyTargetValue;
 
   if (loading) {
     return (
@@ -552,11 +607,11 @@ export default function JobDetails() {
             </>
           ) : (
             <>
-              <Link to="/login" className="info-item" onClick={() => setSidebarOpen(false)}>
+              <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
                 <span><i className="bi bi-box-arrow-in-right"></i> Login</span>
                 <i className="bi bi-chevron-right"></i>
               </Link>
-              <Link to="/register" className="info-item" onClick={() => setSidebarOpen(false)}>
+              <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
                 <span><i className="bi bi-person-plus"></i> Register</span>
                 <i className="bi bi-chevron-right"></i>
               </Link>
@@ -661,6 +716,13 @@ export default function JobDetails() {
                           <span className="meta-value">{likeCount}</span>
                         </div>
                       </div>
+                      <div className="meta-item meta-ref-id">
+                        <i className="bi bi-hash"></i>
+                        <div>
+                          <span className="meta-label">Ref ID</span>
+                          <span className="meta-value">{job.referralCode || '—'}</span>
+                        </div>
+                      </div>
                       {job.salary && (
                         <div className="meta-item">
                           <i className="bi bi-cash"></i>
@@ -673,9 +735,6 @@ export default function JobDetails() {
                     </div>
                     
                     <div className="action-buttons-row">
-                      <span className="job-id-display">
-                        <i className="bi bi-hash"></i> Ref ID: {job.referralCode || '—'}
-                      </span>
                       <div className="action-buttons">
                         <button 
                           className="btn-primary" 
@@ -910,38 +969,32 @@ export default function JobDetails() {
             )}
 
             <section className="job-link-section">
-               {(() => {
-                  const method = (job.applicationMethod || '').toLowerCase();
-                  const isEmail = method === 'email' || (job.applicationEmail && !job.applicationLink);
-                  
-                  if (isEmail) {
-                return (
-                  <div className="job-link-row">
-                    <span className="job-link-label">Job Link:</span>
-                    <a 
-                      href={`mailto:${job.applicationEmail}`}
-                      className="email-apply-link"
-                    >
-                      <i className="bi bi-envelope"></i> {job.applicationEmail}
-                    </a>
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="job-link-row">
-                    <span className="job-link-label">Job Link:</span>
-                    <a
-                      href={job.applicationLink || getApplyHref(job.applicationLinkOrEmail)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-primary"
-                    >
-                      <i className="bi bi-box-arrow-up-right"></i> Click here to Apply Now
-                    </a>
-                  </div>
-                );
-              }
-               })()}
+              {isApplyMailto ? (
+                <div className="job-link-row">
+                  <span className="job-link-label">Job Link:</span>
+                  <a href={applyHref} className="email-apply-link">
+                    <i className="bi bi-envelope"></i> {applyDisplayValue}
+                  </a>
+                </div>
+              ) : (
+                <div className="job-link-row">
+                  <span className="job-link-label">Job Link:</span>
+                  <a
+                    href={applyHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary"
+                    onClick={(e) => {
+                      if (applyHref === '#') {
+                        e.preventDefault();
+                        toast.error('Application link not available');
+                      }
+                    }}
+                  >
+                    <i className="bi bi-box-arrow-up-right"></i> Click here to Apply Now
+                  </a>
+                </div>
+              )}
             </section>
 
             <div className="job-navigation-section">
@@ -1011,10 +1064,16 @@ export default function JobDetails() {
             <span>Share</span>
           </button>
           <a 
-            href={getApplyHref(job.applicationLinkOrEmail)} 
-            target="_blank" 
-            rel="noopener noreferrer"
+            href={applyHref}
+            target={isApplyMailto ? undefined : "_blank"}
+            rel={isApplyMailto ? undefined : "noopener noreferrer"}
             className="bottom-btn apply-btn"
+            onClick={(e) => {
+              if (applyHref === '#') {
+                e.preventDefault();
+                toast.error('Application link not available');
+              }
+            }}
           >
             <i className="bi bi-box-arrow-up-right"></i>
             <span>Apply Now</span>

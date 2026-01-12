@@ -421,24 +421,25 @@ export default function Jobs() {
                   </div>
 
                   <div className="flex flex-col md:flex-row justify-between items-stretch gap-3 mt-4">
-                    <div className="flex-grow md:flex-grow-0">
-                       <div className="flex rounded border border-gray-300 overflow-hidden h-[31px]">
-                         <span className="px-3 bg-gray-100 border-r border-gray-300 text-gray-500 flex items-center">
+                    <div className="flex-grow md:flex-grow-0 w-full md:w-auto">
+                       <div className="flex rounded border border-gray-300 overflow-hidden h-[36px] w-full">
+                         <span className="px-3 bg-gray-100 border-r border-gray-300 text-gray-500 flex items-center shrink-0">
                            <BiCalendar />
                          </span>
                          <input 
                            type="date" 
-                           className="px-3 text-sm outline-none bg-white text-gray-600"
+                           className="px-3 text-sm outline-none bg-white text-gray-600 w-full min-w-0"
                            value={dateFilter}
                            onChange={(e) => setDateFilter(e.target.value)}
                          />
-                         <button 
-                           onClick={() => setDateFilter('')}
-                           className="px-2 bg-white border-l border-gray-300 text-gray-500 hover:text-red-500 flex items-center"
-                           title="Clear date filter"
-                         >
-                           <BiX size={16} />
-                         </button>
+                         {dateFilter && (
+                           <button 
+                             onClick={() => setDateFilter('')}
+                             className="px-2 bg-white border-l border-gray-300 text-gray-500 hover:text-red-500 flex items-center shrink-0"
+                           >
+                             <BiX />
+                           </button>
+                         )}
                        </div>
                     </div>
                     <div className="grid grid-cols-2 gap-2 md:flex">

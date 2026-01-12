@@ -257,7 +257,7 @@ export default function Register() {
         <div className="relative z-10">
           <div className="flex items-center space-x-2 text-sm text-gray-400">
             <span>Already have an account?</span>
-            <Link to="/login" className="text-white hover:text-blue-400 font-medium transition-colors">Sign in here</Link>
+            <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-white hover:text-blue-400 font-medium transition-colors">Sign in here</Link>
           </div>
         </div>
       </div>
@@ -554,7 +554,7 @@ export default function Register() {
           <div className="mt-4 text-center lg:hidden">
              <p className="text-xs text-gray-600">
                Already have an account?{' '}
-               <Link to="/login" className="text-blue-600 font-medium hover:underline">Sign in</Link>
+               <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-blue-600 font-medium hover:underline">Sign in</Link>
              </p>
           </div>
         </div>

@@ -209,11 +209,11 @@ const JobManagement = () => {
                       </td>
                       <td className="text-center" data-label="Status">
                         <span className={`badge rounded-pill px-3 py-2 ${
-                          (job.active === true || job.active === 'true') ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'
+                          (job.isActive === true || job.isActive === 'true') ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'
                         }`}>
                           <span className="d-flex align-items-center gap-1">
-                            <span className={`d-inline-block rounded-circle ${(job.active === true || job.active === 'true') ? 'bg-success' : 'bg-danger'}`} style={{width: '6px', height: '6px'}}></span>
-                            {(job.active === true || job.active === 'true') ? 'Active' : 'Inactive'}
+                            <span className={`d-inline-block rounded-circle ${(job.isActive === true || job.isActive === 'true') ? 'bg-success' : 'bg-danger'}`} style={{width: '6px', height: '6px'}}></span>
+                            {(job.isActive === true || job.isActive === 'true') ? 'Active' : 'Inactive'}
                           </span>
                         </span>
                       </td>

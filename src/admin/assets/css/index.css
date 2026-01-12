@@ -149,6 +149,10 @@ body {
     transform: rotate(180deg);
 }
 
+.sidebar .dropdown-toggle::after {
+    display: none !important;
+}
+
 .sub-menu {
     padding-left: 2.5rem;
     margin-top: 0.5rem;
