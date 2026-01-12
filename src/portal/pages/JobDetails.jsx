@@ -915,9 +915,11 @@ export default function JobDetails() {
                 </div>
                 {/* Mobile View */}
                 <div className="block min-[769px]:hidden">
-                  <p style={{ color: '#0066cc', fontWeight: '700', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                    {job.skills.split(',').map(s => s.trim()).join(', ')}
-                  </p>
+                  <div className="skills-grid">
+                    {job.skills.split(',').map((skill, index) => (
+                      <span key={index} className="skill-item">{skill.trim()}</span>
+                    ))}
+                  </div>
                 </div>
               </section>
             )}
