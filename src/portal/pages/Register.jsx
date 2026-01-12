@@ -109,6 +109,19 @@ export default function Register() {
     });
   };
 
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -162,7 +175,21 @@ export default function Register() {
 
       if (response.ok) {
         toast.success('Registration successful! Redirecting to home...');
-        localStorage.setItem('user', JSON.stringify(data));
+
+        let userData = data;
+        // Ensure ID is present by extracting from token if missing
+        if ((!userData.id && !userData.userId && !userData.uid) && (userData.token || userData.access_token)) {
+          const token = userData.token || userData.access_token;
+          const decoded = parseJwt(token);
+          if (decoded) {
+            const userId = decoded.id || decoded.userId || decoded.uid || decoded.sub;
+            if (userId) {
+              userData = { ...userData, id: userId };
+            }
+          }
+        }
+
+        localStorage.setItem('user', JSON.stringify(userData));
         setTimeout(() => {
           window.location.href = '/';
         }, 1500);

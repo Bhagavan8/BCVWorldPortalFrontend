@@ -19,9 +19,9 @@ const Footer = () => {
           <div className="footer-legal-links">
              <span>&copy; {currentYear} BCV World. All Rights Reserved.</span>
              <span className="separator">|</span>
-             <a href="/disclaimer">Disclaimer</a>
+             <Link to="/disclaimer">Disclaimer</Link>
              <span className="separator">|</span>
-             <a href="/ads-disclosure">Ads Disclosure</a>
+             <Link to="/ads-disclosure">Ads Disclosure</Link>
           </div>
           <div className="footer-disclaimer-text">
             <p><strong>Disclaimer:</strong> This website provides job updates, finance, and news content for informational purposes only. We do not guarantee job placements or financial outcomes. Content should not be considered financial, legal, or professional advice. We do not charge any fees—any payment requests claiming association with us are fraudulent.</p>

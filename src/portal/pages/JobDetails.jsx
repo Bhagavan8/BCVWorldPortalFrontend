@@ -286,6 +286,88 @@ export default function JobDetails() {
     }
   }, [id, API_BASE]);
 
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const formatDateDDMMMYYYY = (dateString) => {
+    if (!dateString) return '';
+    let date;
+    
+    // Handle YYYY-MM-DD manually to prevent timezone shifts
+    if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        const [y, m, d] = dateString.split('-');
+        date = new Date(y, parseInt(m) - 1, d);
+    } else {
+        date = new Date(dateString);
+    }
+    
+    if (isNaN(date.getTime())) return dateString;
+    
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('en-GB', { month: 'short' });
+    const year = date.getFullYear();
+    
+    return `${day}-${month}-${year}`;
+  };
+
+  const highlightContent = (htmlContent) => {
+    if (!htmlContent) return '';
+    
+    // 1. Identify keywords
+    const keywords = [
+        'fresher', 'freshers', 
+        'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'note', 'salary', 'location', 'job description', 'key skills', 'qualifications', 'education', 'benefits', 'about', 'summary',
+        ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
+    ];
+    
+    // Common Tech Stack (Hardcoded for better coverage)
+    const techStack = [
+        'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker', 'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel', 'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API', 'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
+    ];
+    
+    const allKeywords = [...new Set([...keywords, ...techStack])].filter(k => k && k.length > 1);
+    
+    // Sort by length to match longest first
+    allKeywords.sort((a, b) => b.length - a.length);
+    
+    // Escape regex characters
+    const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    
+    let processed = htmlContent;
+    
+    // Helper to safely replace text outside HTML tags
+    const safeReplace = (text, pattern, replacement) => {
+        try {
+            // (?![^<]*>) checks that there is no closing > without an opening < before it (not inside tag)
+            const regex = new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
+            return text.replace(regex, replacement);
+        } catch (e) {
+            return text;
+        }
+    };
+
+    // 1. Highlight Keywords
+    const keywordPattern = `\\b(${allKeywords.map(escapeRegExp).join('|')})\\b`;
+    processed = safeReplace(processed, keywordPattern, '<b>$1</b>');
+    
+    // 2. Highlight Numbers (digits, optional decimals, optional +)
+    // Avoid matching inside hex colors (#123) or entities (&#123;) or specific styles
+    const numberPattern = `(?<![&#\\w])\\b\\d+(\\.\\d+)?\\+?\\b`;
+    processed = safeReplace(processed, numberPattern, '<b>$1</b>');
+    
+    return processed;
+  };
+
   const handlePostComment = async () => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
@@ -307,8 +389,19 @@ export default function JobDetails() {
     }
 
     const actualUser = userObj.data || userObj.user || userObj;
-    const userId = actualUser.id || actualUser.userId || actualUser.uid;
+    let userId = actualUser.id || actualUser.userId || actualUser.uid;
+
+    // Fallback: Extract ID from token if missing
+    if (!userId && (actualUser.token || actualUser.access_token)) {
+      const token = actualUser.token || actualUser.access_token;
+      const decoded = parseJwt(token);
+      if (decoded) {
+        userId = decoded.id || decoded.userId || decoded.uid || decoded.sub;
+      }
+    }
+
     const userName = actualUser.name || actualUser.username || (actualUser.email ? actualUser.email.split('@')[0] : 'User');
+    const userEmail = actualUser.email || '';
 
     if (!userId) {
       console.error('User ID missing in object:', userObj);
@@ -328,6 +421,7 @@ export default function JobDetails() {
           userId: userId,
           user_id: userId,
           userName: userName,
+          email: userEmail,
           content: commentText
         })
       });
@@ -372,10 +466,34 @@ export default function JobDetails() {
       });
 
       if (response.ok) {
-        const updatedJob = await response.json();
-        setLikeCount(updatedJob.likeCount || 0);
-        setIsLiked(updatedJob.isLiked);
-        toast.success(updatedJob.isLiked ? 'Job liked!' : 'Job unliked');
+        const data = await response.json();
+        
+        // Handle boolean response (if backend returns just true/false)
+        if (typeof data === 'boolean') {
+          setIsLiked(data);
+          setLikeCount(prev => data ? prev + 1 : Math.max(0, prev - 1));
+          toast.success(data ? 'Job liked!' : 'Job unliked');
+        } 
+        // Handle object response (Job object or custom DTO)
+        else if (data && typeof data === 'object') {
+          // Determine liked status: look for isLiked, liked, or infer from logic if missing
+          // If the backend returns the Job object without isLiked, we might be in trouble unless we track it.
+          // But assuming if it's an object, it might have 'liked' or 'isLiked'
+          const newStatus = data.isLiked ?? data.liked;
+          
+          if (newStatus !== undefined) {
+            setIsLiked(newStatus);
+            toast.success(newStatus ? 'Job liked!' : 'Job unliked');
+          }
+          
+          // Update like count
+          if (data.likeCount !== undefined) {
+            setLikeCount(data.likeCount);
+          } else if (newStatus !== undefined) {
+             // Fallback if count not in response
+             setLikeCount(prev => newStatus ? prev + 1 : Math.max(0, prev - 1));
+          }
+        }
       } else {
         toast.error('Failed to update like status');
       }
@@ -712,7 +830,7 @@ export default function JobDetails() {
                         <i className="bi bi-calendar3"></i>
                         <div>
                           <span className="meta-label">Posted</span>
-                          <span className="meta-value">{job.postedDate}</span>
+                          <span className="meta-value">{formatDateDDMMMYYYY(job.postedDate)}</span>
                         </div>
                       </div>
                       <div className="meta-item">
@@ -775,7 +893,7 @@ export default function JobDetails() {
                 <i className="bi bi-file-text-fill"></i>
                 <h3>Job Description</h3>
               </div>
-              <div className="section-content" dangerouslySetInnerHTML={{ __html: job.description }} />
+              <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.description) }} />
             </section>
 
             
@@ -787,10 +905,19 @@ export default function JobDetails() {
                   <i className="bi bi-tools"></i>
                   <h3>Required Skills</h3>
                 </div>
-                <div className="skills-grid">
-                  {job.skills.split(',').map((skill, index) => (
-                    <span key={index} className="skill-item">{skill.trim()}</span>
-                  ))}
+                {/* Desktop View */}
+                <div className="hidden min-[769px]:block">
+                  <div className="skills-grid">
+                    {job.skills.split(',').map((skill, index) => (
+                      <span key={index} className="skill-item">{skill.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+                {/* Mobile View */}
+                <div className="block min-[769px]:hidden">
+                  <p style={{ color: '#0066cc', fontWeight: '700', fontSize: '1.1rem', lineHeight: '1.6' }}>
+                    {job.skills.split(',').map(s => s.trim()).join(', ')}
+                  </p>
                 </div>
               </section>
             )}
@@ -802,7 +929,7 @@ export default function JobDetails() {
                   <i className="bi bi-check-circle-fill"></i>
                   <h3>Qualifications</h3>
                 </div>
-                <div className="section-content" dangerouslySetInnerHTML={{ __html: job.qualifications }} />
+                <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.qualifications) }} />
               </section>
             )}
 
@@ -813,7 +940,7 @@ export default function JobDetails() {
                   <i className="bi bi-info-circle-fill"></i>
                   <h3>Additional Details</h3>
                 </div>
-                <div className="section-content" dangerouslySetInnerHTML={{ __html: job.details }} />
+                <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.details) }} />
               </section>
             )}
 
@@ -854,6 +981,10 @@ export default function JobDetails() {
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
               <section className="content-section company-info-section">
+                <div className="section-title-bar">
+                  <i className="bi bi-building"></i>
+                  <h3>About the Company</h3>
+                </div>
                 <div className="company-info-header">
                    <div className="company-info-brand">
                       <div className="company-info-logo">
@@ -969,7 +1100,7 @@ export default function JobDetails() {
                           {rJob.locations && rJob.locations.length > 0 && (
                              <span className="company-job-location"><i className="bi bi-geo-alt"></i> {rJob.locations[0]}</span>
                           )}
-                          <span className="company-job-date">Posted {rJob.postedDate ? new Date(rJob.postedDate).toLocaleDateString() : 'Recently'}</span>
+                          <span className="company-job-date">Posted {rJob.postedDate ? formatDateDDMMMYYYY(rJob.postedDate) : 'Recently'}</span>
                         </div>
                       </div>
                       <div className="company-job-arrow">

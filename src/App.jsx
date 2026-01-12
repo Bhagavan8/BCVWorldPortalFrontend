@@ -24,6 +24,8 @@ import FinanceCalculators from './portal/pages/FinanceCalculators';
 import Login from './portal/pages/Login';
 import Register from './portal/pages/Register';
 import JobManagement from './admin/pages/JobManagement';
+import Disclaimer from './portal/pages/Disclaimer';
+import AdsDisclosure from './portal/pages/AdsDisclosure';
 
 // Admin Pages
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
@@ -130,6 +132,8 @@ function App() {
             <Route path="/suggestion" element={<Suggestion />} />
             <Route path="/calculators" element={<FinanceCalculators />} />
             <Route path="/contact" element={<Home />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/ads-disclosure" element={<AdsDisclosure />} />
         </Route>
         
         {/* Pages without Header (Login/Register) */}

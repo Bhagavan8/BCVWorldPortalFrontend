@@ -210,8 +210,8 @@
 /* Side Ads - Clean & Transparent */
   .ad-column {
     position: fixed;
-    top: 120px;
-    z-index: 100;
+    top: 160px;
+    z-index: 40;
   }
   
   .ad-left { left: 20px; }
