@@ -26,6 +26,7 @@ import Register from './portal/pages/Register';
 import JobManagement from './admin/pages/JobManagement';
 import Disclaimer from './portal/pages/Disclaimer';
 import AdsDisclosure from './portal/pages/AdsDisclosure';
+import Profile from './portal/pages/Profile';
 
 // Admin Pages
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
@@ -134,6 +135,7 @@ function App() {
             <Route path="/contact" element={<Home />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/ads-disclosure" element={<AdsDisclosure />} />
+            <Route path="/profile" element={<Profile />} />
         </Route>
         
         {/* Pages without Header (Login/Register) */}

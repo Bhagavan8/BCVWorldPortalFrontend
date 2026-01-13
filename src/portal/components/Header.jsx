@@ -80,19 +80,7 @@ export default function Header() {
               <Link to="/about" className="text-gray-700 hover:text-blue-600 font-medium">About</Link>
               <Link to="/jobs" className="text-gray-700 hover:text-blue-600 font-medium">Jobs</Link>
               <Link to="/suggestion" className="text-gray-700 hover:text-blue-600 font-medium">Suggestion</Link>
-              <Link to="/calculators" className="text-gray-700 hover:text-blue-600 font-medium">Calculators</Link>
               
-              <div className="relative group">
-                <button className="flex items-center text-gray-700 hover:text-blue-600 font-medium">
-                  Blogs <BiChevronDown className="ml-1" />
-                </button>
-                <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100">
-                  <Link to="/infosys-prep" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Infosys SP Prep 2025</Link>
-                  <Link to="/java-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Java Resources</Link>
-                  <Link to="/file-tools" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">File Tools</Link>
-                  <Link to="/news" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">News</Link>
-                </div>
-              </div>
 
               <Link to="/#contact" className="text-gray-700 hover:text-blue-600 font-medium">Contact</Link>
             </nav>
@@ -156,9 +144,6 @@ export default function Header() {
                        <Link to="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <BiUser className="mr-2" /> My Profile
                        </Link>
-                       <Link to="/applications" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                          <BiBriefcase className="mr-2" /> My Applications
-                       </Link>
                        <button onClick={() => {
                            localStorage.removeItem('user');
                            setUser(null);
@@ -191,14 +176,7 @@ export default function Header() {
               <Link to="/about" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">About</Link>
               <Link to="/jobs" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Jobs</Link>
               <Link to="/suggestion" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Suggestion</Link>
-              <Link to="/calculators" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Finance Calculators</Link>
-              <div className="pl-4 border-l-2 border-gray-200 ml-3">
-                <span className="block px-3 py-2 text-sm font-semibold text-gray-500">Blogs</span>
-                <Link to="/infosys-prep" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Infosys SP Prep</Link>
-                <Link to="/java-resources" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Java Resources</Link>
-                <Link to="/file-tools" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">File Tools</Link>
-                <Link to="/news" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">News</Link>
-              </div>
+              
               <Link to="/#contact" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Contact</Link>
             </div>
           </div>

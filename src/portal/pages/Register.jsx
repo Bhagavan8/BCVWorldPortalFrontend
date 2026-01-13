@@ -117,7 +117,7 @@ export default function Register() {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       return JSON.parse(jsonPayload);
-    } catch (e) {
+    } catch {
       return null;
     }
   };
@@ -189,6 +189,30 @@ export default function Register() {
           }
         }
 
+        (() => {
+          try {
+            const actual = userData.user || userData.data || userData;
+            let created =
+              actual.createdAt ||
+              actual.createdAT ||
+              actual.created_at ||
+              actual.joinDate ||
+              actual.registeredAt ||
+              actual.registrationDate;
+            if (!created && (userData.token || userData.access_token)) {
+              const token = userData.token || userData.access_token;
+              const decoded = parseJwt(token);
+              if (decoded && decoded.iat) {
+                created = new Date(decoded.iat * 1000).toISOString();
+              }
+            }
+            if (!created) created = new Date().toISOString();
+            if (created && !userData.createdAt) {
+              userData = { ...userData, createdAt: created };
+            }
+          } catch { void 0; }
+        })();
+        try { localStorage.setItem('user_first_seen', new Date().toISOString()); } catch { void 0; }
         localStorage.setItem('user', JSON.stringify(userData));
         setTimeout(() => {
           window.location.href = '/';
