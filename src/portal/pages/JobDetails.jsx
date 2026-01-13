@@ -26,6 +26,7 @@ export default function JobDetails() {
   const [relatedJobs, setRelatedJobs] = useState([]);
   const [showLeftAd, setShowLeftAd] = useState(true);
   const [showRightAd, setShowRightAd] = useState(true);
+  const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
   const hasViewed = useRef(false);
 
   useEffect(() => {
@@ -323,49 +324,80 @@ export default function JobDetails() {
   const highlightContent = (htmlContent) => {
     if (!htmlContent) return '';
     
-    // 1. Identify keywords
     const keywords = [
-        'fresher', 'freshers', 
-        'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'note', 'salary', 'location', 'job description', 'key skills', 'qualifications', 'education', 'benefits', 'about', 'summary',
-        ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
+      'fresher', 'freshers', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
+      'job description', 'key skills', 'qualifications', 'education', 'benefits', 'summary', 'engineer', 'bachelor', 'computer science',
+      'communication skills', 'analytical', 'healthcare', 'compliance', 'security', 'regulatory',
+      'software testing', 'automation testing', 'manual testing', 'test cases', 'test scenarios', 'qa', 'api',
+      'front-end', 'front end', 'back-end', 'back end', 'database', 'unix', 'linux', 'sql', 'ai', 'istqb',
+      ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
     ];
     
-    // Common Tech Stack (Hardcoded for better coverage)
     const techStack = [
-        'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker', 'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel', 'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API', 'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
+      'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker',
+      'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel',
+      'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API',
+      'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
     ];
     
     const allKeywords = [...new Set([...keywords, ...techStack])].filter(k => k && k.length > 1);
-    
-    // Sort by length to match longest first
     allKeywords.sort((a, b) => b.length - a.length);
-    
-    // Escape regex characters
     const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
     let processed = htmlContent;
-    
-    // Helper to safely replace text outside HTML tags
     const safeReplace = (text, pattern, replacement) => {
-        try {
-            // (?![^<]*>) checks that there is no closing > without an opening < before it (not inside tag)
-            const regex = new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
-            return text.replace(regex, replacement);
-        } catch (e) {
-            return text;
-        }
+      try {
+        const regex = new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
+        return text.replace(regex, replacement);
+      } catch {
+        return text;
+      }
     };
-
-    // 1. Highlight Keywords
+    
     const keywordPattern = `\\b(${allKeywords.map(escapeRegExp).join('|')})\\b`;
     processed = safeReplace(processed, keywordPattern, '<b>$1</b>');
     
-    // 2. Highlight Numbers (digits, optional decimals, optional +)
-    // Avoid matching inside hex colors (#123) or entities (&#123;) or specific styles
     const numberPattern = `(?<![&#\\w])\\b\\d+(\\.\\d+)?\\+?\\b`;
-    processed = safeReplace(processed, numberPattern, '<b>$1</b>');
+    processed = safeReplace(processed, numberPattern, '<b>$&</b>');
+    
+    const linkify = (html) => {
+      const parts = html.split(/(<[^>]+>)/g);
+      const linked = parts.map(seg => {
+        if (seg.startsWith('<')) return seg;
+        let s = seg;
+        s = s.replace(/(https?:\/\/[^\s<]+)/gi, '<a href="$1" target="_blank" rel="noopener noreferrer" class="inline-link">$1</a>');
+        s = s.replace(/\bwww\.[^\s<]+/gi, (m) => `<a href="https://${m}" target="_blank" rel="noopener noreferrer" class="inline-link">${m}</a>`);
+        s = s.replace(/(?:^|\s)((?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s<]*)?)/g, (match, p1) => {
+          return match.replace(p1, `<a href="https://${p1}" target="_blank" rel="noopener noreferrer" class="inline-link">${p1}</a>`);
+        });
+        return s;
+      }).join('');
+      return linked;
+    };
+    processed = linkify(processed);
     
     return processed;
+  };
+
+  const renderEnhancedContent = (htmlContent) => {
+    if (!htmlContent) return '';
+    const hasBlocks = /<(p|ul|ol|table|br)[^>]*>/i.test(htmlContent);
+    if (hasBlocks) {
+      return highlightContent(htmlContent);
+    }
+    const plain = htmlContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const sentences = plain.split(/(?<=[.!?])\s+/).filter(Boolean);
+    if (sentences.length <= 2) {
+      return highlightContent(`<p>${plain}</p>`);
+    }
+    const targetParas = Math.min(3, Math.ceil(sentences.length / 3));
+    const per = Math.ceil(sentences.length / targetParas);
+    const paras = [];
+    for (let i = 0; i < sentences.length; i += per) {
+      paras.push(sentences.slice(i, i + per).join(' '));
+    }
+    const html = paras.map(p => `<p>${p}</p>`).join('');
+    return highlightContent(html);
   };
 
   const handlePostComment = async () => {
@@ -563,6 +595,8 @@ export default function JobDetails() {
       const scrolled = total > 0 ? (doc.scrollTop / total) * 100 : 0;
       const bar = document.getElementById('readingProgress');
       if (bar) bar.style.width = `${scrolled}%`;
+      const isMobile = window.innerWidth <= 640;
+      setShowMobileBottomBar(isMobile && scrolled >= 90);
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -893,7 +927,7 @@ export default function JobDetails() {
                 <i className="bi bi-file-text-fill"></i>
                 <h3>Job Description</h3>
               </div>
-              <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.description) }} />
+              <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.description) }} />
             </section>
 
             
@@ -931,7 +965,7 @@ export default function JobDetails() {
                   <i className="bi bi-check-circle-fill"></i>
                   <h3>Qualifications</h3>
                 </div>
-                <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.qualifications) }} />
+                <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.qualifications) }} />
               </section>
             )}
 
@@ -942,7 +976,7 @@ export default function JobDetails() {
                   <i className="bi bi-info-circle-fill"></i>
                   <h3>Additional Details</h3>
                 </div>
-                <div className="section-content" dangerouslySetInnerHTML={{ __html: highlightContent(job.details) }} />
+                <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.details) }} />
               </section>
             )}
 
@@ -1002,8 +1036,7 @@ export default function JobDetails() {
                       </div>
                    </div>
                 </div>
-                <div className="company-info-body">
-                   <p>{job.aboutCompany || company?.about}</p>
+                <div className="company-info-body" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.aboutCompany || company?.about) }}>
                 </div>
               </section>
             )}
@@ -1198,44 +1231,46 @@ export default function JobDetails() {
         </div>
       </div>
 
-      {/* Mobile Bottom Action Bar */}
-      <div className="mobile-bottom-bar">
-        <div className="bottom-bar-content">
-          <a 
-            href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bottom-btn"
-          >
-            <FaWhatsapp size={20} color="#25D366" />
-            <span>WhatsApp</span>
-          </a>
-          <a 
-            href="https://t.me/bcvworld"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bottom-btn"
-          >
-            <FaTelegram size={20} color="#0088cc" />
-            <span>Telegram</span>
-          </a>
-          <a 
-            href={applyHref}
-            target={isApplyMailto ? undefined : "_blank"}
-            rel={isApplyMailto ? undefined : "noopener noreferrer"}
-            className="bottom-btn apply-btn"
-            onClick={(e) => {
-              if (applyHref === '#') {
-                e.preventDefault();
-                toast.error('Application link not available');
-              }
-            }}
-          >
-            <i className="bi bi-box-arrow-up-right"></i>
-            <span>Apply Now</span>
-          </a>
+      {/* Mobile Bottom Action Bar (shows at 90% scroll) */}
+      {showMobileBottomBar && (
+        <div className="mobile-bottom-bar">
+          <div className="bottom-bar-content">
+            <a 
+              href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bottom-btn"
+            >
+              <FaWhatsapp size={20} color="#25D366" />
+              <span>WhatsApp</span>
+            </a>
+            <a 
+              href="https://t.me/bcvworld"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bottom-btn"
+            >
+              <FaTelegram size={20} color="#0088cc" />
+              <span>Telegram</span>
+            </a>
+            <a 
+              href={applyHref}
+              target={isApplyMailto ? undefined : "_blank"}
+              rel={isApplyMailto ? undefined : "noopener noreferrer"}
+              className="bottom-btn apply-btn"
+              onClick={(e) => {
+                if (applyHref === '#') {
+                  e.preventDefault();
+                  toast.error('Application link not available');
+                }
+              }}
+            >
+              <i className="bi bi-box-arrow-up-right"></i>
+              <span>Apply Now</span>
+            </a>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
