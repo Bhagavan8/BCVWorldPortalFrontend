@@ -5,13 +5,13 @@ import Footer from '../portal/components/Footer';
 
 const UserLayout = () => {
   return (
-    <>
+    <div className="font-sans">
       <Header />
       <main>
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

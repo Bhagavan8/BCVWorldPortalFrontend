@@ -307,9 +307,7 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Link to="/infosys-prep" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    <BiStar className="mr-2" /> Infosys SP Exam Guide 2025
-                  </Link>
+                 
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
                   <img src="/images/Learning-Resources-Illustration.webp" alt="Learning" className="w-full h-auto" />

@@ -229,7 +229,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-white overflow-hidden">
+    <div className="min-h-screen w-full flex bg-white overflow-hidden font-sans">
       <SEO 
         title="Register" 
         description="Create a BCVWORLD account to unlock job referrals, mentoring, and exclusive career resources." 

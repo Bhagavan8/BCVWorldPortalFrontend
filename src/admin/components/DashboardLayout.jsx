@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }) => {
     };
 
     return (
-        <div className="admin-dashboard">
+        <div className="admin-dashboard font-sans">
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
             <main className="main-content d-flex flex-column min-vh-100">
                 <TopNav toggleSidebar={toggleSidebar} />

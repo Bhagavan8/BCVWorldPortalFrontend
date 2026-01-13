@@ -1,4 +1,4 @@
- import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
@@ -28,6 +28,20 @@ export default function JobDetails() {
   const [showRightAd, setShowRightAd] = useState(true);
   const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
   const hasViewed = useRef(false);
+
+  useEffect(() => {
+    const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
+    const exists = Array.from(document.getElementsByTagName('script')).some(s => s.src === src);
+    if (!exists) {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = src;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    }
+  }, []);
+
+
 
   useEffect(() => {
     hasViewed.current = false;
@@ -118,26 +132,26 @@ export default function JobDetails() {
     (async () => {
       try {
         let url = `${API_BASE}/api/jobs/${id}`;
-        
+
         // Add auth header if token exists
         const userStr = localStorage.getItem('user');
         const headers = {};
         if (userStr) {
-            try {
-                const u = JSON.parse(userStr);
-                let token = u.token || u.data?.token || u.user?.token || u.access_token;
-                if (token) {
-                    if (token.startsWith('Bearer ')) {
-                        token = token.replace('Bearer ', '');
-                    }
-                    headers['Authorization'] = `Bearer ${token}`;
-                }
-                if (u.id) {
-                    url += `?userId=${u.id}`;
-                }
-            } catch(e) {
-                console.error('Error parsing user for auth', e);
+          try {
+            const u = JSON.parse(userStr);
+            let token = u.token || u.data?.token || u.user?.token || u.access_token;
+            if (token) {
+              if (token.startsWith('Bearer ')) {
+                token = token.replace('Bearer ', '');
+              }
+              headers['Authorization'] = `Bearer ${token}`;
             }
+            if (u.id) {
+              url += `?userId=${u.id}`;
+            }
+          } catch (e) {
+            console.error('Error parsing user for auth', e);
+          }
         }
 
         const response = await fetch(url, { headers });
@@ -151,6 +165,19 @@ export default function JobDetails() {
             locations: rawData.location ? rawData.location.split(',').map(s => s.trim()) : (rawData.locations || []),
             jobCategory: rawData.category || rawData.jobCategory,
             experienceRequired: rawData.experience || rawData.experienceRequired,
+            educationLevels: Array.isArray(rawData.educationLevels)
+              ? rawData.educationLevels
+              : typeof rawData.educationLevels === 'string'
+                ? rawData.educationLevels.split(',').map(s => s.trim()).filter(Boolean)
+                : Array.isArray(rawData.education_level)
+                  ? rawData.education_level
+                  : typeof rawData.education_level === 'string'
+                    ? rawData.education_level.split(',').map(s => s.trim()).filter(Boolean)
+                    : Array.isArray(rawData.education)
+                      ? rawData.education
+                      : typeof rawData.education === 'string'
+                        ? rawData.education.split(',').map(s => s.trim()).filter(Boolean)
+                        : [],
             referralCode: rawData.jobCode || rawData.referralCode,
             companyLogoUrl: rawData.logoUrl || rawData.companyLogoUrl,
             postedDate: rawData.postedDate || new Date().toISOString().split('T')[0], // Fallback if missing
@@ -158,7 +185,8 @@ export default function JobDetails() {
             likeCount: rawData.likeCount || 0,
             applicationMethod: rawData.applicationMethod,
             applicationLink: rawData.applicationLink,
-            applicationEmail: rawData.applicationEmail
+            applicationEmail: rawData.applicationEmail,
+            walkin_details: rawData.walkin_details || rawData.walkinDetails
           };
           setJob(data);
           setLikeCount(data.likeCount);
@@ -183,21 +211,21 @@ export default function JobDetails() {
           if (res.ok) {
             let allJobs = await res.json();
             allJobs = Array.isArray(allJobs) ? allJobs : [];
-            
+
             // Filter by SAME COMPANY instead of Category
             const filtered = allJobs.filter(j => {
-                const cName = j.company || j.companyName;
-                const jId = j.id;
-                return cName && cName.toLowerCase() === job.companyName.toLowerCase() && String(jId) !== String(job.id);
+              const cName = j.company || j.companyName;
+              const jId = j.id;
+              return cName && cName.toLowerCase() === job.companyName.toLowerCase() && String(jId) !== String(job.id);
             });
 
             const mapped = filtered.slice(0, 3).map(j => ({
-                id: j.id,
-                jobTitle: j.title || j.jobTitle,
-                companyName: j.company || j.companyName,
-                locations: j.location ? (typeof j.location === 'string' ? j.location.split(',').map(s => s.trim()) : []) : (j.locations || []),
-                companyLogoUrl: j.logoUrl || j.companyLogoUrl,
-                postedDate: j.postedDate
+              id: j.id,
+              jobTitle: j.title || j.jobTitle,
+              companyName: j.company || j.companyName,
+              locations: j.location ? (typeof j.location === 'string' ? j.location.split(',').map(s => s.trim()) : []) : (j.locations || []),
+              companyLogoUrl: j.logoUrl || j.companyLogoUrl,
+              postedDate: j.postedDate
             }));
             setRelatedJobs(mapped);
           }
@@ -227,7 +255,7 @@ export default function JobDetails() {
       // Fetch Previous Job
       const fetchNeighbors = async () => {
         const currentId = Number(id);
-        
+
         // 1. Fetch Previous (id - 1)
         if (currentId > 1) {
           try {
@@ -258,7 +286,7 @@ export default function JobDetails() {
           if (res.ok) {
             nextData = await res.json();
           }
-        } catch (e) {}
+        } catch (e) { }
 
         // 3. Fallback: If Next is missing, try Previous-Previous (id - 2)
         if (!nextData && currentId > 2) {
@@ -268,7 +296,7 @@ export default function JobDetails() {
             if (res.ok) {
               nextData = await res.json();
             }
-          } catch (e) {}
+          } catch (e) { }
         }
 
         if (nextData) {
@@ -291,7 +319,7 @@ export default function JobDetails() {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       return JSON.parse(jsonPayload);
@@ -303,27 +331,27 @@ export default function JobDetails() {
   const formatDateDDMMMYYYY = (dateString) => {
     if (!dateString) return '';
     let date;
-    
+
     // Handle YYYY-MM-DD manually to prevent timezone shifts
     if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-        const [y, m, d] = dateString.split('-');
-        date = new Date(y, parseInt(m) - 1, d);
+      const [y, m, d] = dateString.split('-');
+      date = new Date(y, parseInt(m) - 1, d);
     } else {
-        date = new Date(dateString);
+      date = new Date(dateString);
     }
-    
+
     if (isNaN(date.getTime())) return dateString;
-    
+
     const day = date.getDate().toString().padStart(2, '0');
     const month = date.toLocaleString('en-GB', { month: 'short' });
     const year = date.getFullYear();
-    
+
     return `${day}-${month}-${year}`;
   };
 
   const highlightContent = (htmlContent) => {
     if (!htmlContent) return '';
-    
+
     const keywords = [
       'fresher', 'freshers', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
       'job description', 'key skills', 'qualifications', 'education', 'benefits', 'summary', 'engineer', 'bachelor', 'computer science',
@@ -332,18 +360,18 @@ export default function JobDetails() {
       'front-end', 'front end', 'back-end', 'back end', 'database', 'unix', 'linux', 'sql', 'ai', 'istqb',
       ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
     ];
-    
+
     const techStack = [
       'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker',
       'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel',
       'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API',
       'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
     ];
-    
+
     const allKeywords = [...new Set([...keywords, ...techStack])].filter(k => k && k.length > 1);
     allKeywords.sort((a, b) => b.length - a.length);
     const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    
+
     let processed = htmlContent;
     const safeReplace = (text, pattern, replacement) => {
       try {
@@ -353,13 +381,13 @@ export default function JobDetails() {
         return text;
       }
     };
-    
+
     const keywordPattern = `\\b(${allKeywords.map(escapeRegExp).join('|')})\\b`;
     processed = safeReplace(processed, keywordPattern, '<b>$1</b>');
-    
+
     const numberPattern = `(?<![&#\\w])\\b\\d+(\\.\\d+)?\\+?\\b`;
     processed = safeReplace(processed, numberPattern, '<b>$&</b>');
-    
+
     const linkify = (html) => {
       const parts = html.split(/(<[^>]+>)/g);
       const linked = parts.map(seg => {
@@ -375,7 +403,7 @@ export default function JobDetails() {
       return linked;
     };
     processed = linkify(processed);
-    
+
     return processed;
   };
 
@@ -409,10 +437,10 @@ export default function JobDetails() {
 
     let userObj;
     try {
-        userObj = JSON.parse(userStr);
+      userObj = JSON.parse(userStr);
     } catch (e) {
-        toast.error('Invalid user session');
-        return;
+      toast.error('Invalid user session');
+      return;
     }
 
     if (!commentText.trim()) {
@@ -499,31 +527,31 @@ export default function JobDetails() {
 
       if (response.ok) {
         const data = await response.json();
-        
+
         // Handle boolean response (if backend returns just true/false)
         if (typeof data === 'boolean') {
           setIsLiked(data);
           setLikeCount(prev => data ? prev + 1 : Math.max(0, prev - 1));
           toast.success(data ? 'Job liked!' : 'Job unliked');
-        } 
+        }
         // Handle object response (Job object or custom DTO)
         else if (data && typeof data === 'object') {
           // Determine liked status: look for isLiked, liked, or infer from logic if missing
           // If the backend returns the Job object without isLiked, we might be in trouble unless we track it.
           // But assuming if it's an object, it might have 'liked' or 'isLiked'
           const newStatus = data.isLiked ?? data.liked;
-          
+
           if (newStatus !== undefined) {
             setIsLiked(newStatus);
             toast.success(newStatus ? 'Job liked!' : 'Job unliked');
           }
-          
+
           // Update like count
           if (data.likeCount !== undefined) {
             setLikeCount(data.likeCount);
           } else if (newStatus !== undefined) {
-             // Fallback if count not in response
-             setLikeCount(prev => newStatus ? prev + 1 : Math.max(0, prev - 1));
+            // Fallback if count not in response
+            setLikeCount(prev => newStatus ? prev + 1 : Math.max(0, prev - 1));
           }
         }
       } else {
@@ -550,11 +578,11 @@ export default function JobDetails() {
       elem.setAttribute('title', title);
       elem.setAttribute('rel', 'sidebar');
       elem.click();
-    } else { 
+    } else {
       // Other browsers (Chrome, Safari, Firefox 23+, Mobile) - show instructions
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       if (/Mobi|Android/i.test(navigator.userAgent)) {
-         toast((t) => (
+        toast((t) => (
           <span>
             To bookmark this job, tap the <b>Share</b> icon or <b>Menu</b> button and select <b>Add to Home Screen</b> or <b>Add to Bookmarks</b>.
           </span>
@@ -566,7 +594,7 @@ export default function JobDetails() {
         });
       }
     }
-    
+
     // Also toggle local state just for visual feedback
     setIsSaved(!isSaved);
   };
@@ -596,7 +624,7 @@ export default function JobDetails() {
       const bar = document.getElementById('readingProgress');
       if (bar) bar.style.width = `${scrolled}%`;
       const isMobile = window.innerWidth <= 640;
-      setShowMobileBottomBar(isMobile && scrolled >= 90);
+      setShowMobileBottomBar(isMobile && scrolled >= 85);
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -616,9 +644,9 @@ export default function JobDetails() {
     const title = job?.jobTitle || 'Job Opportunity';
     const companyName = job?.companyName || company?.name || 'BCVWORLD';
     const text = `Check out this job: ${title} at ${companyName}`;
-    
+
     let shareUrl = '';
-    switch(platform) {
+    switch (platform) {
       case 'whatsapp':
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
         break;
@@ -677,12 +705,12 @@ export default function JobDetails() {
       </div>
 
       <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
-      
+
       <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
         <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>
           <i className="bi bi-x-lg"></i>
         </button>
-        
+
         <div className="sidebar-section">
           <h4>Navigation</h4>
           <Link to="/" className="info-item" onClick={() => setSidebarOpen(false)}>
@@ -710,8 +738,8 @@ export default function JobDetails() {
                 <span><i className="bi bi-person-badge"></i> My Profile</span>
                 <i className="bi bi-chevron-right"></i>
               </Link>
-              <button 
-                className="info-item" 
+              <button
+                className="info-item"
                 style={{ width: '100%', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}
                 onClick={() => {
                   localStorage.removeItem('user');
@@ -774,8 +802,8 @@ export default function JobDetails() {
 
   return (
     <>
-      <SEO 
-        title={job ? job.jobTitle : "Job Details"} 
+      <SEO
+        title={job ? job.jobTitle : "Job Details"}
         description={job ? `Apply for ${job.jobTitle} at ${job.companyName || 'BCVWORLD'}. View details, salary, and eligibility.` : "Job Details"}
         keywords={job ? `${job.jobTitle}, ${job.companyName}, ${job.jobCategory}, jobs in ${job.locations ? job.locations.join(' ') : ''}, hiring, vacancy` : "jobs, hiring, vacancy"}
         image={job ? (job.companyLogoUrl || undefined) : undefined}
@@ -787,7 +815,7 @@ export default function JobDetails() {
 
       {/* Main Container - Full Width */}
       <div className="job-details-page page-wrapper font-sans">
-        
+
         {/* Left Ad */}
         {showLeftAd && (
           <div className="ad-column ad-left">
@@ -795,7 +823,17 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <div className="ad-content">Left Ad</div>
+              <ins
+                className="adsbygoogle"
+                style={{ display: 'block' }}
+                data-ad-client="ca-pub-6284022198338659"
+                data-ad-slot="3196528375"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              ></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({ });
+              </script>
             </div>
           </div>
         )}
@@ -807,120 +845,160 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <div className="ad-content">Right Ad</div>
+              <ins
+                className="adsbygoogle"
+                style={{ display: 'block' }}
+                data-ad-client="ca-pub-6284022198338659"
+                data-ad-slot="6272433641"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              ></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({ });
+              </script>
             </div>
           </div>
         )}
-        
+
         {/* Main Content Area */}
         <div className={`main-content-area ${showLeftAd ? 'has-left-ad' : ''} ${showRightAd ? 'has-right-ad' : ''}`}>
-          
+
           {/* Back Navigation */}
           <div className="back-navigation-bar">
             <Link to="/jobs" className="back-btn">
               <i className="bi bi-arrow-left"></i> Back to Jobs
             </Link>
             <div className="breadcrumb-nav">
-              <Link to="/">Home</Link> › 
-              <Link to="/jobs">Jobs</Link> › 
-              <span>{job.jobCategory || 'Jobs'}</span> › 
+              <Link to="/">Home</Link> ›
+              <Link to="/jobs">Jobs</Link> ›
+              <span>{job.jobCategory || 'Jobs'}</span> ›
               <span className="current">{(job.jobTitle || '').substring(0, 25)}...</span>
             </div>
           </div>
 
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-6284022198338659"
+            data-ad-slot="1855526545"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ });
+          </script>
           {/* Job Header */}
-              <div className="job-header-section">
-                <div className="job-header-inner">
-                  <div className="company-brand">
-                    <div className="company-logo">
-                      <img 
-                        src={job.companyLogoUrl || company?.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.companyName || company?.name || 'Company')}&background=random`} 
-                        alt={job.companyName || company?.name || ''}
-                      />
-                    </div>
-                    <div className="company-details">
-                      <h1 className="job-title">{job.jobTitle}</h1>
-                      <h2 className="company-name">{job.companyName || company?.name}</h2>
-                    </div>
-                  </div>
-                  
-                  <div className="job-meta-section">
-                    <div className="meta-grid">
-                      <div className="meta-item">
-                        <i className="bi bi-geo-alt"></i>
-                        <div>
-                          <span className="meta-label">Location</span>
-                          <span className="meta-value">{Array.isArray(job.locations) ? job.locations.join(', ') : ''}</span>
-                        </div>
-                      </div>
-                      <div className="meta-item">
-                        <i className="bi bi-briefcase"></i>
-                        <div>
-                          <span className="meta-label">Experience</span>
-                          <span className="meta-value">{job.experienceRequired || ''}</span>
-                        </div>
-                      </div>
-                      <div className="meta-item">
-                        <i className="bi bi-calendar3"></i>
-                        <div>
-                          <span className="meta-label">Posted</span>
-                          <span className="meta-value">{formatDateDDMMMYYYY(job.postedDate)}</span>
-                        </div>
-                      </div>
-                      <div className="meta-item">
-                        <i className="bi bi-eye"></i>
-                        <div>
-                          <span className="meta-label">Views</span>
-                          <span className="meta-value">{job.viewCount !== undefined && job.viewCount !== null ? job.viewCount : 0}</span>
-                        </div>
-                      </div>
-                      <div className="meta-item" onClick={handleLike} style={{ cursor: 'pointer' }}>
-                        <i className={`bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
-                        <div>
-                          <span className="meta-label">Likes</span>
-                          <span className="meta-value">{likeCount}</span>
-                        </div>
-                      </div>
-                      <div className="meta-item meta-ref-id">
-                        <i className="bi bi-hash"></i>
-                        <div>
-                          <span className="meta-label">Ref ID</span>
-                          <span className="meta-value">{job.referralCode || '—'}</span>
-                        </div>
-                      </div>
-                      {job.salary && (
-                        <div className="meta-item">
-                          <i className="bi bi-cash"></i>
-                          <div>
-                            <span className="meta-label">Salary</span>
-                            <span className="meta-value salary">{job.salary}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="action-buttons-row">
-                      <div className="action-buttons">
-                        <button 
-                          className="btn-primary" 
-                          onClick={handleSaveJob}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', fontWeight: '500', height: '40px', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
-                        >
-                          <i className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i> {isSaved ? 'Saved' : 'Save'}
-                        </button>
-                        
-                        <Link to="/suggestion" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '500', height: '40px' }}>
-                           <i className="bi bi-lightbulb"></i> Suggestion
-                         </Link>
-                      </div>
-                    </div>
-                  </div>
+          <div className="job-header-section">
+            <div className="job-header-inner">
+              <div className="company-brand">
+                <div className="company-logo">
+                  <img
+                    src={job.companyLogoUrl || company?.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.companyName || company?.name || 'Company')}&background=random`}
+                    alt={job.companyName || company?.name || ''}
+                  />
+                </div>
+                <div className="company-details">
+                  <h1 className="job-title">{job.jobTitle}</h1>
+                  <h2 className="company-name">
+                    {job.companyName || company?.name}
+                    {(() => {
+                      const e = job.experienceRequired || '';
+                      const cleaned = String(e).trim();
+                      if (!cleaned) return null;
+                      const lower = cleaned.toLowerCase();
+                      let label = cleaned;
+                      if (lower.includes('fresher')) label = 'Fresher';
+                      else {
+                        label = cleaned.replace(/years/gi, "Year's");
+                      }
+                      return <span className="exp-label"> ({label})</span>;
+                    })()}
+                  </h2>
                 </div>
               </div>
 
+              <div className="job-meta-section">
+                <div className="meta-grid">
+                  <div className="meta-item">
+                    <i className="bi bi-geo-alt"></i>
+                    <div>
+                      <span className="meta-label">Location</span>
+                      <span className="meta-value">{Array.isArray(job.locations) ? job.locations.join(', ') : ''}</span>
+                    </div>
+                  </div>
+                  <div className="meta-item">
+                    <i className="bi bi-mortarboard"></i>
+                    <div>
+                      <span className="meta-label">Education</span>
+                      {(() => {
+                        const levels = Array.isArray(job.educationLevels) ? job.educationLevels : [];
+                        const full = levels.join(', ');
+                        const display = full.length > 25 ? `${full.slice(0, 25)}...` : full;
+                        return <span className="meta-value" title={full}>{display}</span>;
+                      })()}
+                    </div>
+                  </div>
+                  <div className="meta-item">
+                    <i className="bi bi-calendar3"></i>
+                    <div>
+                      <span className="meta-label">Posted</span>
+                      <span className="meta-value">{formatDateDDMMMYYYY(job.postedDate)}</span>
+                    </div>
+                  </div>
+                  <div className="meta-item">
+                    <i className="bi bi-eye"></i>
+                    <div>
+                      <span className="meta-label">Views</span>
+                      <span className="meta-value">{job.viewCount !== undefined && job.viewCount !== null ? job.viewCount : 0}</span>
+                    </div>
+                  </div>
+                  <div className="meta-item" onClick={handleLike} style={{ cursor: 'pointer' }}>
+                    <i className={`bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
+                    <div>
+                      <span className="meta-label">Likes</span>
+                      <span className="meta-value">{likeCount}</span>
+                    </div>
+                  </div>
+                  <div className="meta-item meta-ref-id">
+                    <i className="bi bi-hash"></i>
+                    <div>
+                      <span className="meta-label">Ref ID</span>
+                      <span className="meta-value">{job.referralCode || '—'}</span>
+                    </div>
+                  </div>
+                  {job.salary && (
+                    <div className="meta-item">
+                      <i className="bi bi-cash"></i>
+                      <div>
+                        <span className="meta-label">Salary</span>
+                        <span className="meta-value salary">{job.salary}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="action-buttons-row">
+                  <div className="action-buttons">
+                    <button
+                      className="btn-primary"
+                      onClick={handleSaveJob}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', fontWeight: '500', height: '40px', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
+                    >
+                      <i className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i> {isSaved ? 'Saved' : 'Save'}
+                    </button>
+
+                    <Link to="/suggestion" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '500', height: '40px' }}>
+                      <i className="bi bi-lightbulb"></i> Suggestion
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Content Sections */}
           <div className="content-sections">
-            
+
             {/* Job Description */}
             <section className="content-section">
               <div className="section-title-bar">
@@ -930,7 +1008,7 @@ export default function JobDetails() {
               <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.description) }} />
             </section>
 
-            
+
 
             {/* Required Skills (stacked) */}
             {job.skills && (
@@ -958,6 +1036,17 @@ export default function JobDetails() {
               </section>
             )}
 
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-6284022198338659"
+              data-ad-slot="9542444871"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({ });
+            </script>
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -977,6 +1066,135 @@ export default function JobDetails() {
                   <h3>Additional Details</h3>
                 </div>
                 <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.details) }} />
+              </section>
+            )}
+
+            {job.walkin_details && (
+              <section className="content-section">
+                <div className="section-title-bar">
+                  <i className="bi bi-geo-alt-fill"></i>
+                  <h3>Walk-In Details</h3>
+                </div>
+                {typeof job.walkin_details === 'string' ? (
+                  <div className="section-content">
+                    {(() => {
+                      const text = String(job.walkin_details || '');
+                      const plain = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                      const timeRangeMatch = plain.match(/(\d{1,2}[.:]\d{2}\s*(AM|PM))\s*-\s*(\d{1,2}[.:]\d{2}\s*(AM|PM))/i);
+                      const startTime = timeRangeMatch ? timeRangeMatch[1] : null;
+                      const endTime = timeRangeMatch ? timeRangeMatch[3] : null;
+                      const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : null;
+                      const dateMatch = plain.match(/\b(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+\d{4})?)\b/);
+                      const date = dateMatch ? dateMatch[1] : null;
+                      let venue = null;
+                      const contactIdx = plain.toLowerCase().indexOf('contact');
+                      if (timeRangeMatch) {
+                        const afterTime = plain.slice(plain.indexOf(timeRangeMatch[0]) + timeRangeMatch[0].length).trim();
+                        const contactAfterIdx = afterTime.toLowerCase().indexOf('contact');
+                        venue = afterTime ? (contactAfterIdx > -1 ? afterTime.slice(0, contactAfterIdx).trim() : afterTime) : null;
+                      }
+                      const emailMatch = plain.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/);
+                      const phoneMatch = plain.match(/(\+?\d[\d\s-]{9,}\d)/);
+                      let contactName = null;
+                      if (contactIdx > -1) {
+                        const cText = plain.slice(contactIdx + 'contact'.length).trim();
+                        const nameMatch = cText.match(/[-:–]\s*([A-Za-z ]+)/) || cText.match(/^\s*([A-Za-z ]+)/);
+                        contactName = nameMatch ? nameMatch[1].trim() : null;
+                      }
+                      const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
+                      const contactParts = [contactName, phoneMatch ? phoneMatch[1] : null, emailMatch ? emailMatch[0] : null].filter(Boolean);
+                      return (
+                        <div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>Time and Venue</div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            {(date ? `${formatDateDDMMMYYYY(date)} , ` : '')}{timeRange || 'Missing'}
+                          </div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            {locationsArr.length > 0 ? locationsArr.join(', ') : (venue || 'Missing')}
+                            {(() => {
+                              const mapQuery = (venue && venue.trim().length > 0)
+                                ? venue
+                                : (locationsArr.length > 0 ? locationsArr.join(', ') : '');
+                              return mapQuery ? (
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#0d6efd', marginLeft: 8 }}
+                                >
+                                  (View on map)
+                                </a>
+                              ) : null;
+                            })()}
+                          </div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            Contact - {contactParts.length > 0 ? contactParts.join(', ') : 'Missing'}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                ) : Array.isArray(job.walkin_details) ? (
+                  <div className="section-content">
+                    {job.walkin_details.map((item, idx) => (
+                      <div key={idx}>{String(item ?? 'Missing')}</div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="section-content">
+                    {(() => {
+                      const d = job.walkin_details || {};
+                      const date = d.date || d.walkin_date || d.datetime || null;
+                      const timeRange = (d.start_time && d.end_time) ? `${d.start_time} - ${d.end_time}` : null;
+                      const time = timeRange || d.time || d.walkin_time || null;
+                      const venue = d.venue || d.address || d.location || null;
+                      const rawLocations = d.locations || d.location_list || null;
+                      const locationsArr = Array.isArray(rawLocations)
+                        ? rawLocations
+                        : typeof rawLocations === 'string'
+                          ? rawLocations.split(',').map(s => s.trim()).filter(Boolean)
+                          : Array.isArray(job.locations)
+                            ? job.locations
+                            : typeof job.locations === 'string'
+                              ? job.locations.split(',').map(s => s.trim()).filter(Boolean)
+                              : [];
+                      const contactParts = [
+                        d.contact_person || d.contact || d.hr_name || null,
+                        d.phone || d.contact_number || d.mobile || null,
+                        d.email || d.contact_email || null
+                      ].filter(v => v && String(v).trim().length > 0);
+                      return (
+                        <div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>Time and Venue</div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            {(date ? `${formatDateDDMMMYYYY(date)} , ` : '')}{time || 'Missing'}
+                          </div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            {locationsArr.length > 0 ? locationsArr.join(', ') : (venue || 'Missing')}
+                            {(() => {
+                              const mapQuery = (venue && venue.trim().length > 0)
+                                ? venue
+                                : (locationsArr.length > 0 ? locationsArr.join(', ') : '');
+                              return mapQuery ? (
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#0d6efd', marginLeft: 8 }}
+                                >
+                                  (View on map)
+                                </a>
+                              ) : null;
+                            })()}
+                          </div>
+                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                            Contact - {contactParts.length > 0 ? contactParts.join(', ') : 'Missing'}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
               </section>
             )}
 
@@ -1014,6 +1232,18 @@ export default function JobDetails() {
               </div>
             </section>
 
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-6284022198338659"
+              data-ad-slot="4257478543"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({ });
+            </script>
+
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
               <section className="content-section company-info-section">
@@ -1022,19 +1252,19 @@ export default function JobDetails() {
                   <h3>About the Company</h3>
                 </div>
                 <div className="company-info-header">
-                   <div className="company-info-brand">
-                      <div className="company-info-logo">
-                         <img src={job.companyLogoUrl || company?.logoUrl} alt={job.companyName || company?.name} />
-                      </div>
-                      <div className="company-info-text">
-                        <h4>{job.companyName || company?.name}</h4>
-                        {(job.companyWebsite || company?.website) && (
-                           <a href={job.companyWebsite || company?.website} target="_blank" rel="noopener noreferrer" className="company-website-link">
-                              <i className="bi bi-link-45deg"></i> Visit Website
-                           </a>
-                        )}
-                      </div>
-                   </div>
+                  <div className="company-info-brand">
+                    <div className="company-info-logo">
+                      <img src={job.companyLogoUrl || company?.logoUrl} alt={job.companyName || company?.name} />
+                    </div>
+                    <div className="company-info-text">
+                      <h4>{job.companyName || company?.name}</h4>
+                      {(job.companyWebsite || company?.website) && (
+                        <a href={job.companyWebsite || company?.website} target="_blank" rel="noopener noreferrer" className="company-website-link">
+                          <i className="bi bi-link-45deg"></i> Visit Website
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="company-info-body" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.aboutCompany || company?.about) }}>
                 </div>
@@ -1055,7 +1285,7 @@ export default function JobDetails() {
 
             <section className="comments-section">
               <h3 className="comments-title"><i className="bi bi-chat-dots"></i> Comments ({comments.length})</h3>
-              
+
               <div className="comment-input-area">
                 {user ? (
                   <>
@@ -1069,8 +1299,8 @@ export default function JobDetails() {
                     />
                     <div className="comments-footer">
                       <span className="char-count">{commentText.length}/500</span>
-                      <button 
-                        className="post-comment-btn" 
+                      <button
+                        className="post-comment-btn"
                         onClick={handlePostComment}
                         disabled={postingComment || !commentText.trim()}
                       >
@@ -1123,17 +1353,17 @@ export default function JobDetails() {
                 </div>
                 <div className="company-jobs-list">
                   {relatedJobs.map(rJob => (
-                    <Link 
-                      to={`/job?job_id=${rJob.id}`} 
-                      key={rJob.id} 
-                      className="company-job-item" 
+                    <Link
+                      to={`/job?job_id=${rJob.id}`}
+                      key={rJob.id}
+                      className="company-job-item"
                       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     >
                       <div className="company-job-details">
                         <h4 className="company-job-title">{rJob.jobTitle}</h4>
                         <div className="company-job-meta">
                           {rJob.locations && rJob.locations.length > 0 && (
-                             <span className="company-job-location"><i className="bi bi-geo-alt"></i> {rJob.locations[0]}</span>
+                            <span className="company-job-location"><i className="bi bi-geo-alt"></i> {rJob.locations[0]}</span>
                           )}
                           <span className="company-job-date">Posted {rJob.postedDate ? formatDateDDMMMYYYY(rJob.postedDate) : 'Recently'}</span>
                         </div>
@@ -1146,6 +1376,18 @@ export default function JobDetails() {
                 </div>
               </section>
             )}
+
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-6284022198338659"
+              data-ad-slot="7571899411"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({ });
+            </script>
 
             <section className="job-link-section">
               {isApplyMailto ? (
@@ -1179,8 +1421,8 @@ export default function JobDetails() {
             <div className="job-navigation-section">
               <div className="job-navigation-wrapper">
                 {prevJob && (
-                  <Link 
-                    to={`/job?type=private&job_id=${prevJob.id}&slug=${(prevJob.jobTitle||'').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(prevJob.companyName||'').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`} 
+                  <Link
+                    to={`/job?type=private&job_id=${prevJob.id}&slug=${(prevJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(prevJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                     className="nav-job-item previous-job"
                   >
                     <div className="nav-arrow-circle"><i className="bi bi-chevron-left"></i></div>
@@ -1199,8 +1441,8 @@ export default function JobDetails() {
                   </Link>
                 )}
                 {nextJob && (
-                  <Link 
-                    to={`/job?type=private&job_id=${nextJob.id}&slug=${(nextJob.jobTitle||'').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(nextJob.companyName||'').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`} 
+                  <Link
+                    to={`/job?type=private&job_id=${nextJob.id}&slug=${(nextJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(nextJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                     className="nav-job-item next-job"
                   >
                     <div className="nav-job-details">
@@ -1223,7 +1465,7 @@ export default function JobDetails() {
               </div>
             </div>
 
-            
+
 
           </div>
 
@@ -1235,7 +1477,7 @@ export default function JobDetails() {
       {showMobileBottomBar && (
         <div className="mobile-bottom-bar">
           <div className="bottom-bar-content">
-            <a 
+            <a
               href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o"
               target="_blank"
               rel="noopener noreferrer"
@@ -1244,7 +1486,7 @@ export default function JobDetails() {
               <FaWhatsapp size={20} color="#25D366" />
               <span>WhatsApp</span>
             </a>
-            <a 
+            <a
               href="https://t.me/bcvworld"
               target="_blank"
               rel="noopener noreferrer"
@@ -1253,7 +1495,7 @@ export default function JobDetails() {
               <FaTelegram size={20} color="#0088cc" />
               <span>Telegram</span>
             </a>
-            <a 
+            <a
               href={applyHref}
               target={isApplyMailto ? undefined : "_blank"}
               rel={isApplyMailto ? undefined : "noopener noreferrer"}

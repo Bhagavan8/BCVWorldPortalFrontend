@@ -166,7 +166,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-white overflow-hidden">
+    <div className="min-h-screen w-full flex bg-white overflow-hidden font-sans">
       <SEO 
         title="Login" 
         description="Login to your BCVWORLD account to access job referrals, mentoring, and financial tools." 

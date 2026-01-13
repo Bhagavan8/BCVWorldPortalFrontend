@@ -123,7 +123,7 @@ const BCVWorldAuth = () => {
   };
 
   return (
-    <div className="auth-page-wrapper">
+    <div className="auth-page-wrapper font-sans">
       <div className="auth-container">
       {/* Left Panel with BCVWorld Branding */}
       <div className="brand-panel">

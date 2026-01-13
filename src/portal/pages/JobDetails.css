@@ -400,6 +400,12 @@
   margin: 0;
 }
 
+.exp-label {
+  color: #10b981;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
 .job-meta-section {
   display: flex;
   flex-direction: column;
