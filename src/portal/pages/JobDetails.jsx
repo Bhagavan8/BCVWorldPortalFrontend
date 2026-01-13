@@ -693,13 +693,13 @@ export default function JobDetails() {
   const mobileNav = (
     <>
       <div className="mobile-header font-sans">
-        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Open mobile menu" aria-expanded={sidebarOpen}>
           <i className="bi bi-list"></i>
         </button>
         <div className="mobile-logo">
           <Link to="/">BCV World</Link>
         </div>
-        <button className="mobile-share-btn" onClick={() => handleShare('copy')}>
+        <button className="mobile-share-btn" onClick={() => handleShare('copy')} aria-label="Copy job link">
           <i className="bi bi-share"></i>
         </button>
       </div>
@@ -707,7 +707,7 @@ export default function JobDetails() {
       <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
 
       <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
-        <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)}>
+        <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
           <i className="bi bi-x-lg"></i>
         </button>
 
@@ -891,12 +891,16 @@ export default function JobDetails() {
           <div className="job-header-section">
             <div className="job-header-inner">
               <div className="company-brand">
-                <div className="company-logo">
-                  <img
-                    src={job.companyLogoUrl || company?.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.companyName || company?.name || 'Company')}&background=random`}
-                    alt={job.companyName || company?.name || ''}
-                  />
-                </div>
+                    <div className="company-logo">
+                      <img 
+                        src={job.companyLogoUrl || company?.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.companyName || company?.name || 'Company')}&background=random&size=80`} 
+                        alt={job.companyName || company?.name || ''}
+                        width="80"
+                        height="80"
+                        sizes="(max-width: 640px) 60px, 80px"
+                        decoding="async"
+                      />
+                    </div>
                 <div className="company-details">
                   <h1 className="job-title">{job.jobTitle}</h1>
                   <h2 className="company-name">
@@ -1253,9 +1257,17 @@ export default function JobDetails() {
                 </div>
                 <div className="company-info-header">
                   <div className="company-info-brand">
-                    <div className="company-info-logo">
-                      <img src={job.companyLogoUrl || company?.logoUrl} alt={job.companyName || company?.name} />
-                    </div>
+                      <div className="company-info-logo">
+                         <img 
+                           src={job.companyLogoUrl || company?.logoUrl} 
+                           alt={job.companyName || company?.name} 
+                           width="60"
+                           height="60"
+                           loading="lazy"
+                           decoding="async"
+                           sizes="(max-width: 640px) 60px, 60px"
+                         />
+                      </div>
                     <div className="company-info-text">
                       <h4>{job.companyName || company?.name}</h4>
                       {(job.companyWebsite || company?.website) && (
@@ -1428,7 +1440,7 @@ export default function JobDetails() {
                     <div className="nav-arrow-circle"><i className="bi bi-chevron-left"></i></div>
                     <div className="nav-logo-wrapper">
                       {(prevJob.companyLogoUrl) ? (
-                        <img src={prevJob.companyLogoUrl} alt={prevJob.companyName || ''} className="nav-logo-img" />
+                        <img src={prevJob.companyLogoUrl} alt={prevJob.companyName || ''} className="nav-logo-img" width="48" height="48" loading="lazy" decoding="async" />
                       ) : (
                         <div className="nav-logo-img"></div>
                       )}
@@ -1454,7 +1466,7 @@ export default function JobDetails() {
                     </div>
                     <div className="nav-logo-wrapper">
                       {(nextJob.companyLogoUrl) ? (
-                        <img src={nextJob.companyLogoUrl} alt={nextJob.companyName || ''} className="nav-logo-img" />
+                        <img src={nextJob.companyLogoUrl} alt={nextJob.companyName || ''} className="nav-logo-img" width="48" height="48" loading="lazy" decoding="async" />
                       ) : (
                         <div className="nav-logo-img"></div>
                       )}

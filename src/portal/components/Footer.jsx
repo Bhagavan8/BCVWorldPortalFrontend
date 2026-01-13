@@ -11,7 +11,7 @@ const Footer = () => {
       <div className="container">
         <div className="footer-top d-flex flex-column align-items-center justify-content-center mb-4">
            <div className="d-flex align-items-center mb-3">
-             <img src={logo} alt="BCVWORLD" className="rounded-circle me-3" style={{ height: '60px', width: '60px', objectFit: 'cover' }} />
+             <img src={logo} alt="" aria-hidden="true" role="presentation" className="rounded-circle me-3" style={{ height: '60px', width: '60px', objectFit: 'cover' }} width="60" height="60" />
              <span className="fw-bold fs-3 text-white">BCV<span style={{ color: '#4fc3f7' }}>WORLD</span></span>
            </div>
         </div>

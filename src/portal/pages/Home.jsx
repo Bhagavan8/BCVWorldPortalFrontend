@@ -127,6 +127,9 @@ export default function Home() {
                 src="/images/illustration-1.webp" 
                 alt="Career Growth Illustration" 
                 className="w-full h-auto drop-shadow-2xl animate-float"
+                width="637"
+                height="490"
+                decoding="async"
               />
               <div className="absolute -bottom-6 -left-6 md:bottom-6 md:left-6 bg-white p-4 rounded-xl shadow-xl border border-gray-100 max-w-xs hidden sm:block">
                 <p className="text-sm font-medium text-gray-800 mb-0">
@@ -151,7 +154,7 @@ export default function Home() {
                         <stat.icon />
                       </div>
                       <div>
-                        <h4 className="text-xl font-bold text-gray-900 leading-none mb-2">{stat.count}</h4>
+                        <span className="text-xl font-bold text-gray-900 leading-none mb-2">{stat.count}</span>
                         <p className="text-gray-500 font-medium text-sm">{stat.label}</p>
                       </div>
                     </div>
@@ -203,10 +206,10 @@ export default function Home() {
 
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-4">
-                    <img src="/images/Career_Expert.webp" alt="Expert" className="w-12 h-12 rounded-full object-cover" />
+                <div className="flex items-center gap-4">
+                    <img src="/images/Career_Expert.webp" alt="Expert" className="w-12 h-12 rounded-full object-cover" width="48" height="48" loading="lazy" decoding="async" />
                     <div>
-                      <h4 className="font-bold text-gray-900">Career Support</h4>
+                      <h3 className="font-bold text-gray-900">Career Support</h3>
                       <p className="text-sm text-gray-500">Expert Team</p>
                     </div>
                   </div>
@@ -226,7 +229,7 @@ export default function Home() {
 
             <div className="w-full lg:w-6/12" data-aos="zoom-out" data-aos-delay="300">
               <div className="relative">
-                <img src="/images/Career-Guidance-Session.webp" alt="Session" className="rounded-2xl shadow-2xl w-full" />
+                <img src="/images/Career-Guidance-Session.webp" alt="Session" className="rounded-2xl shadow-2xl w-full" width="800" height="600" loading="lazy" decoding="async" />
                 <div className="absolute bottom-8 right-8 bg-white p-6 rounded-xl shadow-xl animate-bounce-slow hidden md:block">
                   <h3 className="text-3xl font-bold text-blue-600 mb-1">50+ <span className="text-gray-900 text-lg font-normal">Success</span></h3>
                   <p className="text-gray-500 text-sm">Stories in career enhancement</p>
@@ -284,7 +287,7 @@ export default function Home() {
                   </ul>
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Career-Growth-Illustration.webp" alt="Career Growth" className="w-full h-auto" />
+                  <img src="/images/Career-Growth-Illustration.webp" alt="Career Growth" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
                 </div>
               </div>
             )}
@@ -310,7 +313,7 @@ export default function Home() {
                  
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Learning-Resources-Illustration.webp" alt="Learning" className="w-full h-auto" />
+                  <img src="/images/Learning-Resources-Illustration.webp" alt="Learning" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
                 </div>
               </div>
             )}
@@ -334,7 +337,7 @@ export default function Home() {
                   <p className="text-gray-600 italic">Build your financial future with expert guidance on investment planning and wealth management.</p>
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Investment Planning Illustration.webp" alt="Investment" className="w-full h-auto" />
+                  <img src="/images/Investment Planning Illustration.webp" alt="Investment" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
                 </div>
               </div>
             )}
@@ -388,7 +391,7 @@ export default function Home() {
             </div>
 
             <div className="w-full lg:w-1/3 text-center" data-aos="zoom-in" data-aos-delay="200">
-              <img src="/images/Features.webp" alt="App Preview" className="rounded-2xl shadow-2xl mx-auto" />
+              <img src="/images/Features.webp" alt="App Preview" className="rounded-2xl shadow-2xl mx-auto" width="637" height="956" loading="lazy" decoding="async" />
             </div>
 
             <div className="w-full lg:w-1/3 space-y-12">

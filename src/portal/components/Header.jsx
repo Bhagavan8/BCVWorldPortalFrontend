@@ -70,7 +70,7 @@ export default function Header() {
             
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover rounded-full" />
+              <img src={logo} alt="" aria-hidden="true" role="presentation" className="h-12 w-12 object-cover rounded-full" width="48" height="48" />
               <span className="text-xl font-bold text-gray-900 tracking-tight">BCV<span className="text-blue-600">WORLD</span></span>
             </Link>
 
@@ -94,13 +94,16 @@ export default function Header() {
                 <button 
                   onClick={() => setIsAuthOpen(!isAuthOpen)}
                     className="flex items-center px-3 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                    aria-haspopup="menu"
+                    aria-expanded={isAuthOpen ? 'true' : 'false'}
+                    aria-controls="auth-menu"
                   >
                     <span className="mr-2 hidden md:inline">Account</span>
                     <BiChevronDown />
                   </button>
                   
                   {isAuthOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100">
+                    <div id="auth-menu" className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100">
                       <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <BiLogIn className="mr-2" /> Sign In
                       </Link>
@@ -161,6 +164,9 @@ export default function Header() {
               <button 
                 className="xl:hidden text-gray-700 text-2xl"
                 onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+                aria-label={isMobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-controls="mobile-nav"
+                aria-expanded={isMobileNavOpen ? 'true' : 'false'}
               >
                 <BiMenu />
               </button>
@@ -170,7 +176,7 @@ export default function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileNavOpen && (
-          <div className="xl:hidden border-t border-gray-100 px-8 pb-6 rounded-b-3xl">
+          <div id="mobile-nav" className="xl:hidden border-t border-gray-100 px-8 pb-6 rounded-b-3xl">
             <div className="pt-2 space-y-1">
               <Link to="/#hero" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Home</Link>
               <Link to="/about" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">About</Link>
