@@ -7,7 +7,7 @@ const UserLayout = () => {
   return (
     <div className="font-sans">
       <Header />
-      <main className="pt-28 sm:pt-28 md:pt-32">
+      <main>
         <Outlet />
       </main>
       <Footer />

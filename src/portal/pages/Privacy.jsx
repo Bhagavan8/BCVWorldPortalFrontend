@@ -3,7 +3,7 @@ import SEO from '../components/SEO'
 
 const Privacy = () => {
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 pt-32 md:pt-36 pb-24">
       <SEO title="Privacy Policy" description="BCVWorld privacy practices and data protection" />
       <div className="bg-white rounded-lg shadow-sm border p-6 md:p-8">
         <h1 className="text-2xl font-bold mb-4"><i className="bi bi-shield-lock me-2"></i>Privacy Policy</h1>
