@@ -86,27 +86,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                                 <span>Private Jobs</span>
                                             </Link>
                                         </li>
-                                        <li className="nav-item">
-                                            <Link className={`nav-link ${isActive('/admin/govt-jobs-upload') ? 'active' : ''}`} to="/admin/govt-jobs-upload">
-                                                <i className="bi bi-bank2"></i>
-                                                <span>Government Jobs</span>
-                                            </Link>
-                                        </li>
-                                        <li className="nav-item">
-                                            <Link className={`nav-link ${isActive('/admin/bank-jobs-upload') ? 'active' : ''}`} to="/admin/bank-jobs-upload">
-                                                <i className="bi bi-cash-coin"></i>
-                                                <span>Banking Jobs</span>
-                                            </Link>
-                                        </li>
                                     </ul>
                                 </div>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className={`nav-link ${isActive('/admin/profile-upload') ? 'active' : ''}`} to="/admin/profile-upload">
-                                    <i className="bi bi-person-circle"></i>
-                                    <span>Profile Upload</span>
-                                </Link>
                             </li>
 
                             <li className="nav-item mt-auto pt-4 px-3">

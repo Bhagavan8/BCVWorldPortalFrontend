@@ -116,9 +116,6 @@ function App() {
           <Route path="jobs-edit/:id" element={<JobUploadForm />} />
           
           <Route path="upload-news" element={<NewsUpload />} />
-          <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />
-          <Route path="bank-jobs-upload" element={<div className="p-4"><h2>Banking Jobs (Placeholder)</h2></div>} />
-          <Route path="profile-upload" element={<div className="p-4"><h2>Profile Upload (Placeholder)</h2></div>} />
         </Route>
 
         {/* Redirects for direct access */}
