@@ -27,10 +27,10 @@ const Dashboard = () => {
         activeUsers: 0,
         newsViews: 0,
         newsArticles: 0,
-        jobViews: 0,
-        todayJobs: 0,
-        yesterdayJobs: 0,
-        weeklyJobs: 0,
+        totalJobsViews: 0,
+        todayJobsViews: 0,
+        yesterdayJobsViews: 0,
+        weeklyJobsViews: 0,
         totalApplies: 0,
         totalComments: 0,
         totalSuggestions: 0,
@@ -40,6 +40,7 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [selectedRange, setSelectedRange] = useState('This Month');
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -59,11 +60,27 @@ const Dashboard = () => {
 
                 try {
                     const response = await adminApi.get('/stats');
-                    console.log('API Stats Response:', response.data); // Debug API response
-                    setStats(prevStats => ({
-                        ...prevStats,
-                        ...response.data
-                    }));
+                    console.log('API Stats Response:', response.data);
+                    const d = response.data || {};
+                    const normalized = {
+                        totalJobs: d.totalJobs ?? d.totalJobCount ?? 0,
+                        activeUsers: d.activeUsers ?? 0,
+                        newsViews: d.newsViews ?? 0,
+                        newsArticles: d.newsArticles ?? 0,
+                        totalJobsViews: d.totalJobsViews ?? d.jobViews ?? d.totalJobViews ?? 0,
+                        todayJobsViews: d.todayJobsViews ?? d.todayJobs ?? d.todayJobViews ?? 0,
+                        yesterdayJobsViews: d.yesterdayJobsViews ?? d.yesterdayJobs ?? d.yesterdayJobViews ?? 0,
+                        weeklyJobsViews: d.weeklyJobsViews ?? d.weeklyJobs ?? d.weeklyJobViews ?? 0,
+                        totalApplies: d.totalApplies ?? 0,
+                        totalComments: d.totalComments ?? 0,
+                        totalSuggestions: d.totalSuggestions ?? 0,
+                        monthlyJobViews: d.monthlyJobViews ?? 0,
+                        months: d.months,
+                        privateJobsData: d.privateJobsData ?? [],
+                        govtJobsData: d.govtJobsData ?? [],
+                        bankJobsData: d.bankJobsData ?? []
+                    };
+                    setStats(prevStats => ({ ...prevStats, ...normalized }));
                     setError(null);
                 } catch (error) {
                     console.error('Error fetching stats:', error);
@@ -256,7 +273,7 @@ const Dashboard = () => {
                             <i className="bi bi-eye"></i>
                         </div>
                         <div className="card-info">
-                            <h3>{stats.jobViews}</h3>
+                            <h3>{stats.totalJobsViews}</h3>
                             <p>Total Job Views</p>
                         </div>
                         <div className="card-growth positive">
@@ -271,8 +288,8 @@ const Dashboard = () => {
                             <i className="bi bi-calendar-day"></i>
                         </div>
                         <div className="card-info">
-                            <h3>{stats.todayJobs}</h3>
-                            <p>Today's Jobs</p>
+                            <h3>{stats.todayJobsViews}</h3>
+                            <p>Today's Jobs Views</p>
                         </div>
                         <div className="card-growth positive">
                             <i className="bi bi-arrow-up"></i> 0%
@@ -286,8 +303,8 @@ const Dashboard = () => {
                             <i className="bi bi-calendar-minus"></i>
                         </div>
                         <div className="card-info">
-                            <h3>{stats.yesterdayJobs}</h3>
-                            <p>Yesterday's Jobs</p>
+                            <h3>{stats.yesterdayJobsViews}</h3>
+                            <p>Yesterday's Jobs Views</p>
                         </div>
                         <div className="card-growth negative">
                             <i className="bi bi-arrow-down"></i> 0%
@@ -301,8 +318,8 @@ const Dashboard = () => {
                             <i className="bi bi-calendar-week"></i>
                         </div>
                         <div className="card-info">
-                            <h3>{stats.weeklyJobs}</h3>
-                            <p>Weekly Jobs</p>
+                            <h3>{stats.weeklyJobsViews}</h3>
+                            <p>Weekly Jobs Views</p>
                         </div>
                         <div className="card-growth positive">
                             <i className="bi bi-arrow-up"></i> 0%
@@ -419,13 +436,13 @@ const Dashboard = () => {
                                     onClick={toggleDropdown}
                                     aria-expanded={dropdownOpen}
                                 >
-                                    This Month
+                                    {selectedRange}
                                 </button>
                                 <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? 'show' : ''}`} style={{ right: 0 }}>
-                                    <li><a className="dropdown-item" href="#">Today</a></li>
-                                    <li><a className="dropdown-item" href="#">This Week</a></li>
-                                    <li><a className="dropdown-item" href="#">This Month</a></li>
-                                    <li><a className="dropdown-item" href="#">This Year</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('Today'); setDropdownOpen(false); }}>Today</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Week'); setDropdownOpen(false); }}>This Week</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Month'); setDropdownOpen(false); }}>This Month</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Year'); setDropdownOpen(false); }}>This Year</a></li>
                                 </ul>
                             </div>
                         </div>

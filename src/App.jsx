@@ -27,6 +27,8 @@ import JobManagement from './admin/pages/JobManagement';
 import Disclaimer from './portal/pages/Disclaimer';
 import AdsDisclosure from './portal/pages/AdsDisclosure';
 import Profile from './portal/pages/Profile';
+import Privacy from './portal/pages/Privacy';
+import Terms from './portal/pages/Terms';
 
 // Admin Pages
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
@@ -135,6 +137,8 @@ function App() {
             <Route path="/contact" element={<Home />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/ads-disclosure" element={<AdsDisclosure />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/profile" element={<Profile />} />
         </Route>
         

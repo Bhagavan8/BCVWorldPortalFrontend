@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import '../assets/css/Profile.css';
 
@@ -370,7 +371,6 @@ const Profile = () => {
                 <i className="bi bi-clock-history"></i>
                 Recent Activity
               </h3>
-              <a href="/activity" className="btn-link">View All</a>
             </div>
             <div className="activity-grid-horizontal">
               <div className="activity-item">
@@ -503,30 +503,30 @@ const Profile = () => {
               Security & Links
             </h3>
             <div className="links-grid">
-              <a className="link-card" href="/about">
+              <Link className="link-card" to="/about">
                 <i className="bi bi-building"></i>
                 <span>About Us</span>
-              </a>
-              <a className="link-card" href="/disclaimer">
+              </Link>
+              <Link className="link-card" to="/disclaimer">
                 <i className="bi bi-file-text"></i>
                 <span>Disclaimer</span>
-              </a>
-              <a className="link-card" href="/ads-disclosure">
+              </Link>
+              <Link className="link-card" to="/ads-disclosure">
                 <i className="bi bi-window-sidebar"></i>
                 <span>Ads Disclosure</span>
-              </a>
+              </Link>
               <a className="link-card" href="/#contact">
                 <i className="bi bi-headset"></i>
                 <span>Contact Support</span>
               </a>
-              <a className="link-card" href="/privacy">
+              <Link className="link-card" to="/privacy">
                 <i className="bi bi-lock"></i>
                 <span>Privacy Policy</span>
-              </a>
-              <a className="link-card" href="/terms">
+              </Link>
+              <Link className="link-card" to="/terms">
                 <i className="bi bi-file-earmark-check"></i>
                 <span>Terms of Service</span>
-              </a>
+              </Link>
             </div>
             
             <div className="security-note">

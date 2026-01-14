@@ -353,9 +353,18 @@ export default function JobDetails() {
     if (!htmlContent) return '';
 
     const keywords = [
-      'fresher', 'freshers', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
-      'job description', 'key skills', 'qualifications', 'education', 'benefits', 'summary', 'engineer', 'bachelor', 'computer science',
-      'communication skills', 'analytical', 'healthcare', 'compliance', 'security', 'regulatory',
+      'fresher', 'freshers', 'graduates', 'postgraduates', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
+      'job description', 'key skills', 'qualifications', 'education', 'education branches', 'benefits', 'summary', 'engineer', 'engineering', 'bachelor', 'computer science', 'computer science and engineering', 'computer science engineering',
+      'communication skills', 'english communication', 'analytical', 'healthcare', 'compliance', 'security', 'regulatory',
+      'voice process', 'voice-based', 'voice', 'customer support', 'customer support process', 'international voice process', 'night shift', 'night shifts',
+      'cse', 'ece', 'ec', 'eee', 'cs', 'it', 'information technology', 'information technology engineering',
+      'electronics and communication engineering', 'electrical and electronics engineering', 'electronics engineering', 'electrical engineering', 'telecommunication engineering',
+      'mechanical engineering', 'civil engineering', 'chemical engineering', 'biomedical engineering', 'aeronautical engineering', 'automobile engineering', 'industrial engineering', 'instrumentation engineering',
+      'commerce', 'science', 'arts', 'business administration', 'computer applications',
+      'bcom', 'b.com', 'bsc', 'b.sc', 'ba', 'b.a', 'bba', 'bca', 'be', 'b.e', 'btech', 'b.tech', 'b.ed',
+      'mcom', 'm.com', 'msc', 'm.sc', 'ma', 'm.a', 'mba', 'mca', 'me', 'm.e', 'mtech', 'm.tech', 'm.ed',
+      'phd', 'doctorate',
+      'diploma', 'polytechnic', 'ug', 'pg',
       'software testing', 'automation testing', 'manual testing', 'test cases', 'test scenarios', 'qa', 'api',
       'front-end', 'front end', 'back-end', 'back end', 'database', 'unix', 'linux', 'sql', 'ai', 'istqb',
       ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
@@ -872,7 +881,14 @@ export default function JobDetails() {
               <Link to="/">Home</Link> ›
               <Link to="/jobs">Jobs</Link> ›
               <span>{job.jobCategory || 'Jobs'}</span> ›
-              <span className="current">{(job.jobTitle || '').substring(0, 25)}...</span>
+              <span
+                className="current"
+                title={job.jobTitle || ''}
+              >
+                {(job.jobTitle || '').length > 30
+                  ? (job.jobTitle || '').slice(0, 30) + '...'
+                  : (job.jobTitle || '')}
+              </span>
             </div>
           </div>
 
@@ -902,7 +918,14 @@ export default function JobDetails() {
                       />
                     </div>
                 <div className="company-details">
-                  <h1 className="job-title">{job.jobTitle}</h1>
+                  <h1
+                    className="job-title"
+                    title={job.jobTitle || ''}
+                  >
+                    {(job.jobTitle || '').length > 30
+                      ? (job.jobTitle || '').slice(0, 30) + '...'
+                      : (job.jobTitle || '')}
+                  </h1>
                   <h2 className="company-name">
                     {job.companyName || company?.name}
                     {(() => {

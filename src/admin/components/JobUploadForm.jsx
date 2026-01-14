@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import JobService from '../services/JobService';
 
@@ -29,7 +29,7 @@ const JobUploadForm = () => {
                 employmentType: job.employmentType || 'fulltime',
                 locations: Array.isArray(job.locations) ? job.locations : (job.location ? [job.location] : []),
                 educationLevels: Array.isArray(job.educationLevels) ? job.educationLevels : [],
-                experienceRequired: job.experience || job.experienceRequired || '',
+                experienceRequired: job.experience || job.experienceRequired || 'Fresher',
                 noticePeriod: job.noticePeriod || '',
                 salaryRange: job.salaryRange || '',
                 lastDateToApply: job.lastDate ? new Date(job.lastDate).toISOString().split('T')[0] : (job.lastDateToApply || ''),
@@ -37,22 +37,22 @@ const JobUploadForm = () => {
                 description: job.description || '',
                 qualifications: job.qualifications || '',
                 walkinDetails: job.walkinDetails || '',
-                
+
                 // Company details
                 companyName: job.companyName || '',
                 companyWebsite: job.companyWebsite || '',
                 aboutCompany: job.aboutCompany || '',
                 companyLogoUrl: job.logoUrl || job.companyLogoUrl || '',
-                
+
                 // Application details
                 applicationMethod: job.applicationLink ? 'link' : (job.applicationEmail ? 'email' : ''),
                 applicationLinkOrEmail: job.applicationLink || job.applicationEmail || '',
-                
+
                 listingStatus: job.listingStatus || 'public',
                 isActive: job.active !== undefined ? job.active : (job.isActive !== undefined ? job.isActive : true),
                 referralCode: job.referralCode || ''
             }));
-            
+
             showToast('success', 'Job details loaded');
         } catch (error) {
             console.error('Error fetching job details:', error);
@@ -75,6 +75,7 @@ const JobUploadForm = () => {
         employmentType: 'fulltime',
         locations: [],
         educationLevels: [],
+        experienceRequired: 'Fresher',
         noticePeriod: '',
         salaryRange: '',
         lastDateToApply: '',
@@ -96,7 +97,7 @@ const JobUploadForm = () => {
     });
 
     const locationsList = [
-        "Remote", "Bengaluru", "Bangalore", "Mumbai", "Delhi NCR", "Hyderabad",
+        "Remote", "Bengaluru", "Bangalore", "Mumbai", "Delhi NCR", "New Delhi", "Noida", "Greater Noida", "Gurugram", "Gurgaon", "Hyderabad",
         "Chennai", "Pune", "Kolkata", "Ahmedabad", "Jaipur", "Lucknow",
         "Indore", "Kochi", "Chandigarh", "Pan India"
     ];
@@ -116,17 +117,51 @@ const JobUploadForm = () => {
         }));
     };
 
+    const locationBtnRef = useRef(null);
+    const eduBtnRef = useRef(null);
+
+    const closeDropdown = (btnRefId) => {
+        const btn = btnRefId === 'location' ? locationBtnRef.current : eduBtnRef.current;
+        if (!btn) return;
+        const menu = btn.nextElementSibling;
+        btn.setAttribute('aria-expanded', 'false');
+        btn.classList.remove('show');
+        if (menu) menu.classList.remove('show');
+    };
+
     const handleMultiSelectChange = (e, field) => {
         const { value, checked } = e.target;
         setFormData(prev => {
             const list = prev[field];
             if (checked) {
-                return { ...prev, [field]: [...list, value] };
+                const updated = { ...prev, [field]: [...list, value] };
+                if (field === 'locations') closeDropdown('location');
+                if (field === 'educationLevels') closeDropdown('edu');
+                return updated;
             } else {
-                return { ...prev, [field]: list.filter(item => item !== value) };
+                const updated = { ...prev, [field]: list.filter(item => item !== value) };
+                if (field === 'locations') closeDropdown('location');
+                if (field === 'educationLevels') closeDropdown('edu');
+                return updated;
             }
         });
     };
+
+    useEffect(() => {
+        const handleDocumentClick = (evt) => {
+            const locBtn = locationBtnRef.current;
+            const eduBtn = eduBtnRef.current;
+            const clickedInsideDropdown =
+                (locBtn && (locBtn.contains(evt.target) || (locBtn.nextElementSibling && locBtn.nextElementSibling.contains(evt.target)))) ||
+                (eduBtn && (eduBtn.contains(evt.target) || (eduBtn.nextElementSibling && eduBtn.nextElementSibling.contains(evt.target))));
+            if (!clickedInsideDropdown) {
+                closeDropdown('location');
+                closeDropdown('edu');
+            }
+        };
+        document.addEventListener('click', handleDocumentClick);
+        return () => document.removeEventListener('click', handleDocumentClick);
+    }, []);
 
     const handleLogoChange = async (e) => {
         const file = e.target.files?.[0];
@@ -354,17 +389,29 @@ const JobUploadForm = () => {
                                             <label className="form-label">Experience Required</label>
                                             <select className="form-select" name="experienceRequired" value={formData.experienceRequired} onChange={handleChange} required>
                                                 <option value="">Select Experience</option>
-                                                <option value="Fresher">Fresher</option>
+                                                <option value="Fresher" selected="">Fresher</option>
                                                 <option value="0-1 Years">0-1 Years</option>
+                                                <option value="0-2 Years">0-2 Years</option>
+                                                <option value="0-3 Years">0-3 Years</option>
+                                                <option value="0-4 Years">0-4 Years</option>
+                                                <option value="0-5 Years">0-5 Years</option>
+                                                <option value="1-2 Years">1-2 Years</option>
                                                 <option value="1-3 Years">1-3 Years</option>
+                                                <option value="1-4 Years">1-4 Years</option>
+                                                <option value="1-5 Years">1-5 Years</option>
+                                                <option value="2-3 Years">2-3 Years</option>
+                                                <option value="2-4 Years">2-4 Years</option>
+                                                <option value="2-5 Years">2-5 Years</option>
                                                 <option value="3-5 Years">3-5 Years</option>
-                                                <option value="5+ Years">5+ Years</option>
+                                                <option value="5-7 Years">5-7 Years</option>
+                                                <option value="7-10 Years">7-10 Years</option>
+                                                <option value="10+ Years">10+ Years</option>
                                             </select>
                                         </div>
                                         <div className="col-md-6">
                                             <label className="form-label">Location</label>
                                             <div className="dropdown">
-                                                <button className="form-select text-start" type="button" id="locationBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button ref={locationBtnRef} className="form-select text-start" type="button" id="locationBtn" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {formData.locations.length > 0 ? formData.locations.join(", ") : "Select Location"}
                                                 </button>
                                                 <ul className="dropdown-menu w-100 p-2" aria-labelledby="locationBtn" style={{ maxHeight: '250px', overflowY: 'auto' }}>
@@ -390,7 +437,7 @@ const JobUploadForm = () => {
                                         <div className="col-md-6">
                                             <label className="form-label">Education Level</label>
                                             <div className="dropdown">
-                                                <button className="form-select text-start" type="button" id="eduBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button ref={eduBtnRef} className="form-select text-start" type="button" id="eduBtn" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {formData.educationLevels.length > 0 ? formData.educationLevels.join(", ") : "Select Education"}
                                                 </button>
                                                 <ul className="dropdown-menu w-100 p-2" aria-labelledby="eduBtn" style={{ maxHeight: '250px', overflowY: 'auto' }}>
