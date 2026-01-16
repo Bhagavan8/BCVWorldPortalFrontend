@@ -38,9 +38,9 @@ const Dashboard = () => {
     });
     const [isAdmin, setIsAdmin] = useState(false);
     const [error, setError] = useState(null);
+    const [statsError, setStatsError] = useState(null);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [selectedRange, setSelectedRange] = useState('This Month');
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -82,16 +82,19 @@ const Dashboard = () => {
                     };
                     setStats(prevStats => ({ ...prevStats, ...normalized }));
                     setError(null);
+                    setStatsError(null);
                 } catch (error) {
                     console.error('Error fetching stats:', error);
                     let errorMsg = 'Failed to load dashboard statistics.';
                     
                     if (error.response) {
                         console.error('Error response:', error.response.status, error.response.data);
-                        if (error.response.status === 403) {
-                            errorMsg = 'Access Denied (403): Your session may have expired or you do not have permission. Please log in again.';
-                        } else if (error.response.status === 401) {
-                            errorMsg = 'Unauthorized (401): Please log in again.';
+                        if (error.response.status === 403 || error.response.status === 401) {
+                            const short = error.response.status === 403
+                                ? 'Dashboard numbers could not be loaded (403).'
+                                : 'Dashboard numbers could not be loaded (401).';
+                            setStatsError(short + ' Other admin features will continue to work.');
+                            return;
                         }
                     }
                     setError(errorMsg);
@@ -205,6 +208,11 @@ const Dashboard = () => {
 
     return (
         <div className="content-wrapper">
+            {statsError && (
+                <div className="alert alert-warning mb-4" role="alert">
+                    {statsError}
+                </div>
+            )}
             {/* Row 1 Stats */}
             <div className="row g-4 mb-4">
                 <div className="col-md-6 col-lg-3">
@@ -436,13 +444,13 @@ const Dashboard = () => {
                                     onClick={toggleDropdown}
                                     aria-expanded={dropdownOpen}
                                 >
-                                    {selectedRange}
+                                    This Month
                                 </button>
                                 <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? 'show' : ''}`} style={{ right: 0 }}>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('Today'); setDropdownOpen(false); }}>Today</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Week'); setDropdownOpen(false); }}>This Week</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Month'); setDropdownOpen(false); }}>This Month</a></li>
-                                    <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setSelectedRange('This Year'); setDropdownOpen(false); }}>This Year</a></li>
+                                    <li><a className="dropdown-item" href="#">Today</a></li>
+                                    <li><a className="dropdown-item" href="#">This Week</a></li>
+                                    <li><a className="dropdown-item" href="#">This Month</a></li>
+                                    <li><a className="dropdown-item" href="#">This Year</a></li>
                                 </ul>
                             </div>
                         </div>

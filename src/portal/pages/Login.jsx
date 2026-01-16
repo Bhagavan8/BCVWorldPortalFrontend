@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import api from '../../api/axios';
 import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
-import logo from '../assets/logo/logo.svg';
+import logo from '../assets/logo/logo.png';
 import { 
   Eye, 
   EyeOff, 

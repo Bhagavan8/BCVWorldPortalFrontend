@@ -1326,6 +1326,14 @@
     width: 40px;
     height: 40px;
   }
+
+  .job-link-section {
+    margin: 16px 0 8px;
+  }
+  
+  .job-navigation-section {
+    margin-top: 16px;
+  }
 }
 
 /* Mobile Bottom Bar Styling */

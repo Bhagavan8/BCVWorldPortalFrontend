@@ -57,7 +57,6 @@ export default function Jobs() {
       const response = await fetch(jobsUrl); // Fetch all jobs
       if (response.ok) {
         let rawData = await response.json();
-        console.log('Fetched jobs:', rawData);
         rawData = Array.isArray(rawData) ? rawData : [];
         
         // Normalize data to match component expectations
@@ -273,7 +272,7 @@ export default function Jobs() {
   const handleCategoryClick = (cat) => {
     setSelectedCategory(cat);
     setSearchParams({ category: cat });
-    setDateFilter(''); // Clear date filter when changing category
+    setDateFilter('');
   };
 
   const handleLocationChange = (val) => {
@@ -295,7 +294,7 @@ export default function Jobs() {
   const locations = ['Andhra Pradesh', 'Bangalore', 'Chennai', 'Delhi', 'Gurgaon', 'Hyderabad', 'Mumbai', 'NCR', 'Noida', 'Pune'];
 
   // Derived lists for Sidebars
-  const mostViewedJobs = [...jobs].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+  const mostViewedJobs = [...jobs].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 3);
 
   return (
     <div className="pt-32 pb-12 bg-white min-h-screen font-sans">
@@ -311,6 +310,9 @@ export default function Jobs() {
           <button 
             onClick={() => setShowMobileFilter(!showMobileFilter)}
             className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg font-semibold shadow-md"
+            type="button"
+            aria-expanded={showMobileFilter ? 'true' : 'false'}
+            aria-controls="jobs-filter-panel"
           >
             <BiFilter className="text-xl" />
             {showMobileFilter ? 'Hide Filters' : 'Show Filters'}
@@ -329,6 +331,9 @@ export default function Jobs() {
                 <h2 className="text-base font-bold text-gray-800 m-0">Filter Jobs</h2>
                 <button 
                   className="lg:hidden text-gray-500 hover:text-blue-600"
+                  type="button"
+                  aria-expanded={isFilterOpen ? 'true' : 'false'}
+                  aria-controls="jobs-filter-panel"
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                 >
                   <BiFilter size={20} />
@@ -336,43 +341,58 @@ export default function Jobs() {
               </div>
 
               {isFilterOpen && (
-                <div className="p-4">
+                <div className="p-4" id="jobs-filter-panel">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     
                     {/* Search */}
                     <div className="lg:col-span-1">
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Search Jobs</label>
+                      <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="jobs-search-input">
+                        Search Jobs
+                      </label>
                       <div className="relative">
                         <input 
                           type="text" 
                           className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder-gray-400"
                           placeholder="Skills, Company, etc."
+                          id="jobs-search-input"
+                          aria-label="Search jobs by skill, company, or keyword"
                           value={searchTerm}
                           onChange={handleSearchChange}
                           onFocus={() => { if (searchTerm.length >= 3) setShowSuggestions(true); }}
                           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                         />
                         {showSuggestions && suggestions.length > 0 && (
-                          <div className="absolute z-10 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto mt-1">
+                          <ul
+                            className="absolute z-10 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto mt-1"
+                            role="listbox"
+                            aria-label="Search suggestions"
+                          >
                             {suggestions.map((s, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
-                                    onClick={() => selectSuggestion(s)}
-                                >
-                                    {s}
-                                </div>
+                              <li 
+                                key={idx} 
+                                className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                                role="option"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  selectSuggestion(s);
+                                }}
+                              >
+                                {s}
+                              </li>
                             ))}
-                          </div>
+                          </ul>
                         )}
                       </div>
                     </div>
 
                     {/* Company Filter (Replaces Category) */}
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Company</label>
+                      <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="jobs-company-filter">
+                        Company
+                      </label>
                       <select 
                         className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-700"
+                        id="jobs-company-filter"
                         value={companyFilter}
                         onChange={(e) => handleCompanyChange(e.target.value)}
                       >
@@ -383,9 +403,12 @@ export default function Jobs() {
 
                     {/* Location */}
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Location</label>
+                      <label className="block text-sm font-bold text-gray-700 mb-2" htmlFor="jobs-location-filter">
+                        Location
+                      </label>
                       <select 
                         className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-700"
+                        id="jobs-location-filter"
                         value={location}
                         onChange={(e) => handleLocationChange(e.target.value)}
                       >
@@ -396,7 +419,9 @@ export default function Jobs() {
 
                     {/* Experience Level */}
                     <div>
-                       <label className="block text-sm font-bold text-gray-700 mb-2">Experience Level</label>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">
+                        Experience Level
+                      </label>
                        <div className="flex gap-2">
                          <label className={`flex-1 cursor-pointer py-1.5 px-2 text-sm border rounded text-center transition select-none ${experience.fresher ? 'bg-gray-600 text-white border-gray-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'}`}>
                            <input 
@@ -436,6 +461,7 @@ export default function Jobs() {
                            <button 
                              onClick={() => setDateFilter('')}
                              className="px-2 bg-white border-l border-gray-300 text-gray-500 hover:text-red-500 flex items-center shrink-0"
+                             type="button"
                            >
                              <BiX />
                            </button>
@@ -446,6 +472,7 @@ export default function Jobs() {
                        {/* Apply Filters Button Removed (Auto-apply enabled) */}
                        <button 
                          onClick={clearFilters}
+                         type="button"
                          className="col-span-2 md:col-span-1 px-4 py-1.5 bg-white border border-gray-300 text-gray-600 text-sm font-medium rounded hover:bg-gray-50 transition flex items-center justify-center"
                        >
                          <BiXCircle className="mr-1" /> Clear All
@@ -491,6 +518,7 @@ export default function Jobs() {
                <Link 
                  to="/" 
                  className="btn btn-sm bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-blue-700 transition text-sm font-medium"
+                 aria-label="Back to home page"
                >
                  <BiArrowBack /> Back to Home
                </Link>
@@ -513,11 +541,7 @@ export default function Jobs() {
                    
                    const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
                    const slug = `${clean(job.jobTitle)}-${clean(compName)}-${clean(primaryLoc)}`;
-                   // Generate random strings for URL obfuscation
-                   const r1 = Math.random().toString(36).substring(2, 10);
-                   const r2 = Math.random().toString(36).substring(2, 10);
-                   const r3 = Math.random().toString(36).substring(2, 10);
-                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}~${job.id}&ref=${r1}&token=${r2}&s=${r3}&src=bcvworld.com`;
+                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
 
                    return (
                   <div key={job.id} className="w-full bg-white border-b border-[#e0e0e0] py-6 hover:bg-[#fcfcfc] transition-colors duration-200 last:border-b-0">
@@ -531,6 +555,9 @@ export default function Jobs() {
                                src={logo} 
                                alt={compName} 
                                className="max-w-full h-auto object-contain max-h-[60px] md:max-h-[80px]" 
+                               width="80"
+                               height="60"
+                               decoding="async"
                                onError={(e) => {
                                  e.target.style.display = 'none';
                                  e.target.nextSibling.style.display = 'block';
@@ -609,31 +636,28 @@ export default function Jobs() {
               </div>
               <div className="divide-y divide-gray-100">
                 {mostViewedJobs.map((job, idx) => {
-                   const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                   const slug = `${clean(job.jobTitle)}-${clean(job.companyName)}-${clean(job.locations?.[0])}`;
-                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
-                   
-                   return (
-                   <div key={job.id} className="p-3 hover:bg-gray-50 transition relative">
-                     <Link to={jobUrl} className="block pl-2">
-                       <div className="flex justify-between items-start mb-1">
-                          <h4 className="text-sm font-medium text-gray-900 line-clamp-1 pr-6" title={job.jobTitle}>
-                            {job.jobTitle}
-                          </h4>
-                          <span className="absolute top-3 right-3 flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-[10px] font-bold rounded-full">
-                            #{idx + 1}
-                          </span>
-                       </div>
-                       <div className="text-xs text-gray-500 mb-1 line-clamp-1">{job.companyName}</div>
-                       <div className="flex justify-between items-center mt-2">
-                         <span className="text-xs text-gray-600 line-clamp-1 max-w-[60%]">{job.locations?.[0] || 'Remote'}</span>
-                         <span className="text-xs text-gray-500 flex items-center gap-1 font-semibold">
-                           <BiShow /> {job.views || 0}
-                         </span>
-                       </div>
-                     </Link>
-                   </div>
-                   );
+                  const clean = (str) =>
+                    (str || '')
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, '-')
+                      .replace(/(^-|-$)/g, '');
+                  const slug = `${clean(job.jobTitle)}-${clean(job.companyName)}`;
+                  const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
+
+                  return (
+                    <div key={job.id} className="p-3 hover:bg-gray-50 transition">
+                      <Link to={jobUrl} className="flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-medium text-gray-900 truncate">
+                            {job.jobTitle} – {job.companyName}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 shrink-0">
+                          <BiShow /> {job.views || 0}
+                        </div>
+                      </Link>
+                    </div>
+                  );
                 })}
                 {mostViewedJobs.length === 0 && <div className="p-4 text-xs text-gray-400 text-center">No viewed jobs</div>}
               </div>

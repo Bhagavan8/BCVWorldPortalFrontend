@@ -26,4 +26,21 @@ adminApi.interceptors.request.use(
   }
 );
 
+adminApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401 || status === 403) {
+      console.warn('Admin API auth error detected, logging out and redirecting', status);
+      AuthService.logout();
+      if (window.location.pathname.startsWith('/admin')) {
+        window.location.href = '/admin/auth';
+      } else {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default adminApi;

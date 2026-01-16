@@ -115,8 +115,8 @@ const AboutUs = () => {
                </div>
             </div>
             <div className="founder-content-area">
-              <h2 className="section-label">THE VISIONARY</h2>
-              <h3 className="founder-name">{founderInfo.name}</h3>
+              <h4 className="section-label">THE VISIONARY</h4>
+              <h2 className="founder-name">{founderInfo.name}</h2>
               <p className="founder-role">{founderInfo.role}</p>
               
               <p className="founder-bio">
@@ -204,7 +204,7 @@ const AboutUs = () => {
              <h2>Join 4000+ Empowered Users</h2>
              <p>Start your journey towards a smarter career and financial future today.</p>
              <div className="cta-actions">
-               <button className="btn-primary" aria-label="Get Started for Free">Get Started for Free</button>
+               <button className="btn-primary">Get Started for Free</button>
              </div>
            </div>
         </div>

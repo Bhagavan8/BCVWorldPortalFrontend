@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BiChevronDown, BiMenu, BiUser, BiLogIn, BiLogOut, BiGridAlt, BiBriefcase, BiEnvelope } from 'react-icons/bi';
-import logo from '../assets/logo/logo.svg';
+import logo from '../assets/logo/logo.png';
 
 export default function Header() {
   const location = useLocation();

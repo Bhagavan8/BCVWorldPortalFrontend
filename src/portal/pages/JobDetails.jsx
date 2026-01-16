@@ -28,6 +28,7 @@ export default function JobDetails() {
   const [showRightAd, setShowRightAd] = useState(true);
   const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
   const hasViewed = useRef(false);
+  const bottomBarShownRef = useRef(false);
 
   useEffect(() => {
     const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
@@ -630,11 +631,26 @@ export default function JobDetails() {
     const update = () => {
       const doc = document.documentElement;
       const total = doc.scrollHeight - doc.clientHeight;
-      const scrolled = total > 0 ? (doc.scrollTop / total) * 100 : 0;
+      const scrolledPercent = total > 0 ? (doc.scrollTop / total) * 100 : 0;
       const bar = document.getElementById('readingProgress');
-      if (bar) bar.style.width = `${scrolled}%`;
+      if (bar) bar.style.width = `${scrolledPercent}%`;
       const isMobile = window.innerWidth <= 640;
-      setShowMobileBottomBar(isMobile && scrolled >= 85);
+
+      if (!isMobile) {
+        setShowMobileBottomBar(false);
+        ticking = false;
+        return;
+      }
+
+      if (bottomBarShownRef.current) {
+        setShowMobileBottomBar(true);
+      } else if (scrolledPercent >= 80) {
+        bottomBarShownRef.current = true;
+        setShowMobileBottomBar(true);
+      } else {
+        setShowMobileBottomBar(false);
+      }
+
       ticking = false;
     };
     const onScroll = () => {
@@ -644,6 +660,7 @@ export default function JobDetails() {
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
+    update();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -900,18 +917,7 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-6284022198338659"
-            data-ad-slot="1855526545"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({ });
-          </script>
-          {/* Job Header */}
+          {/* Job Header (kept above the fold for best LCP) */}
           <div className="job-header-section">
             <div className="job-header-inner">
               <div className="company-brand">
@@ -1030,6 +1036,18 @@ export default function JobDetails() {
               </div>
             </div>
           </div>
+
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-6284022198338659"
+            data-ad-slot="1855526545"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({ });
+          </script>
 
           {/* Content Sections */}
           <div className="content-sections">

@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import api from '../../api/axios';
 import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
-import logo from '../assets/logo/logo.svg';
+import logo from '../assets/logo/logo.png';
 import { 
   Eye, 
   EyeOff, 
@@ -397,7 +397,7 @@ export default function Register() {
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
             <Link to="/" className="flex items-center space-x-2">
-              <img src={logo} alt="BCVWorld logo" className="h-12 w-12 rounded-full" width="48" height="48" decoding="async" loading="lazy" />
+              <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover rounded-full" />
             </Link>
           </div>
 
