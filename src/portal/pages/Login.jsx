@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
 import logo from '../assets/logo/logo.png';
 import { 
@@ -61,7 +62,9 @@ export default function Login() {
       toast.success(`${provider} login successful!`);
 
       setTimeout(() => {
-        navigate(returnTo);
+        const isAdmin = AuthService.isAdmin();
+        const safeReturn = (!isAdmin && typeof returnTo === 'string' && returnTo.includes('/admin')) ? '/profile' : returnTo;
+        navigate(isAdmin ? '/admin' : safeReturn);
       }, 1200);
 
     } catch (err) {
@@ -152,7 +155,9 @@ export default function Login() {
       toast.success('Login successful! Redirecting...');
 
       setTimeout(() => {
-        const dest = data.role === 'ADMIN' ? '/admin' : returnTo;
+        const isAdmin = AuthService.isAdmin();
+        const safeReturn = (!isAdmin && typeof returnTo === 'string' && returnTo.includes('/admin')) ? '/profile' : returnTo;
+        const dest = isAdmin ? '/admin' : (safeReturn || '/profile');
         navigate(dest);
       }, 1200);
 

@@ -86,7 +86,7 @@ const BCVWorldAuth = () => {
       AuthService.setUser(userData);
       
       toast.success('Login successful!');
-      navigate('/admin/dashboard');
+      navigate(AuthService.isAdmin() ? '/admin/dashboard' : '/');
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || 'An error occurred. Please try again.');
