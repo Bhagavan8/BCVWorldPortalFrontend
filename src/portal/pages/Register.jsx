@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import api from '../../api/axios';
+import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
 import logo from '../assets/logo/logo.png';
 import { 
@@ -53,6 +55,10 @@ const INDIAN_STATES_CITIES = {
 };
 
 export default function Register() {
+  const toTitleCase = (s) => {
+    if (!s) return s;
+    return s.trim().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  };
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -73,6 +79,9 @@ export default function Register() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [googleReady, setGoogleReady] = useState(false);
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get('returnTo') || '/';
 
   const passwordCriteria = {
     length: formData.password.length >= 8,
@@ -95,18 +104,87 @@ export default function Register() {
     }
   }, [formData.state]);
 
+  useEffect(() => {
+    const existing = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+    if (existing) {
+      setGoogleReady(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleReady(true);
+    script.onerror = () => setGoogleReady(false);
+    document.head.appendChild(script);
+  }, []);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const key = e.target.name;
+    const val = e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      [key]: key === 'name' ? toTitleCase(val) : val
+    }));
   };
 
-  const handleSocialLogin = (provider) => {
-    toast.error(`${provider} login is currently disabled for development.`, {
-      icon: '🔒',
-      duration: 3000
-    });
+  const handleSocialLogin = async (provider) => {
+    setIsLoading(true);
+    try {
+      if (provider === 'Google') {
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        if (!clientId) {
+          toast.error('Google client ID not configured');
+          return;
+        }
+        if (!googleReady || !window.google?.accounts?.id) {
+          toast.error('Google services not loaded. Please try again.');
+          return;
+        }
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async ({ credential }) => {
+            try {
+              const decoded = (() => {
+                try {
+                  const base64Url = credential.split('.')[1];
+                  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                  }).join(''));
+                  return JSON.parse(jsonPayload);
+                } catch { return null; }
+              })();
+              const payload = {
+                provider: 'GOOGLE',
+                idToken: credential,
+                id_token: credential,
+                email: decoded?.email,
+                name: toTitleCase(decoded?.name),
+                googleId: decoded?.sub
+              };
+              const { data } = await api.post('/social', payload);
+              localStorage.setItem('user', JSON.stringify(data));
+              toast.success('Google login successful!');
+              setTimeout(() => {
+                const isAdmin = AuthService.isAdmin();
+                const safeReturn = (!isAdmin && typeof returnTo === 'string' && returnTo.includes('/admin')) ? '/' : returnTo;
+                navigate(isAdmin ? '/admin' : safeReturn);
+              }, 1000);
+            } catch (err) {
+              toast.error(err.response?.data?.message || 'Google login failed');
+            } finally {
+              setIsLoading(false);
+            }
+          }
+        });
+        window.google.accounts.id.prompt();
+        return;
+      }
+      toast.error(`${provider} login is currently disabled.`, { duration: 3000 });
+    } finally {
+      if (provider !== 'Google') setIsLoading(false);
+    }
   };
 
   const parseJwt = (token) => {
@@ -536,7 +614,7 @@ export default function Register() {
                 />
               </div>
               <label htmlFor="terms" className="ml-2 text-xs text-gray-600">
-                I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+                I agree to the <Link to="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>
               </label>
             </div>
 

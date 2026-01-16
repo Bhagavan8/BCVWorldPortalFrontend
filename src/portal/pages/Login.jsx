@@ -18,10 +18,15 @@ import {
 } from 'lucide-react';
 
 export default function Login() {
+  const toTitleCase = (s) => {
+    if (!s) return s;
+    return s.trim().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  };
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [googleReady, setGoogleReady] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -38,6 +43,21 @@ export default function Login() {
     }
   }, []);
 
+  useEffect(() => {
+    const existing = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+    if (existing) {
+      setGoogleReady(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleReady(true);
+    script.onerror = () => setGoogleReady(false);
+    document.head.appendChild(script);
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -49,18 +69,65 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const payload = {
+      if (provider === 'Google') {
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        if (!clientId) {
+          toast.error('Google client ID not configured');
+          return;
+        }
+        if (!googleReady || !window.google?.accounts?.id) {
+          toast.error('Google services not loaded. Please try again.');
+          return;
+        }
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async ({ credential }) => {
+            try {
+              const decoded = (() => {
+                try {
+                  const base64Url = credential.split('.')[1];
+                  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                  }).join(''));
+                  return JSON.parse(jsonPayload);
+                } catch { return null; }
+              })();
+              const payload = {
+                provider: 'GOOGLE',
+                idToken: credential,
+                id_token: credential,
+                email: decoded?.email,
+                name: toTitleCase(decoded?.name),
+                googleId: decoded?.sub
+              };
+              const { data } = await api.post('/social', payload);
+              localStorage.setItem('user', JSON.stringify(data));
+              toast.success('Google login successful!');
+              setTimeout(() => {
+                const isAdmin = AuthService.isAdmin();
+                const safeReturn = (!isAdmin && typeof returnTo === 'string' && returnTo.includes('/admin')) ? '/profile' : returnTo;
+                navigate(isAdmin ? '/admin' : safeReturn);
+              }, 1000);
+            } catch (err) {
+              toast.error(err.response?.data?.message || 'Google login failed');
+            } finally {
+              setIsLoading(false);
+            }
+          }
+        });
+        window.google.accounts.id.prompt();
+        return;
+      }
+
+      const mock = {
         email: `user.${provider.toLowerCase()}@example.com`,
         name: `Demo ${provider} User`,
         provider: provider.toUpperCase(),
       };
-
-      const { data } = await api.post('/social', payload);
-
+      const { data } = await api.post('/social', mock);
       localStorage.setItem('user', JSON.stringify(data));
-
       toast.success(`${provider} login successful!`);
-
       setTimeout(() => {
         const isAdmin = AuthService.isAdmin();
         const safeReturn = (!isAdmin && typeof returnTo === 'string' && returnTo.includes('/admin')) ? '/profile' : returnTo;
@@ -72,7 +139,7 @@ export default function Login() {
         err.response?.data?.message || `${provider} login failed`
       );
     } finally {
-      setIsLoading(false);
+      if (provider !== 'Google') setIsLoading(false);
     }
   };
 
