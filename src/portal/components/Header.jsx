@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BiChevronDown, BiMenu, BiUser, BiLogIn, BiLogOut, BiGridAlt, BiBriefcase, BiEnvelope } from 'react-icons/bi';
-import logo from '../assets/logo/logo.png';
+import logo from '../assets/logo/logo.svg';
 
 export default function Header() {
   const location = useLocation();
@@ -70,7 +70,7 @@ export default function Header() {
             
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <img src={logo} alt="" aria-hidden="true" role="presentation" className="h-12 w-12 object-cover rounded-full" width="48" height="48" />
+              <img src={logo} alt="BCVWorld logo" className="h-12 w-12 rounded-full" width="48" height="48" decoding="async" loading="lazy" />
               <span className="text-xl font-bold text-gray-900 tracking-tight">BCV<span className="text-blue-600">WORLD</span></span>
             </Link>
 
@@ -97,6 +97,7 @@ export default function Header() {
                     aria-haspopup="menu"
                     aria-expanded={isAuthOpen ? 'true' : 'false'}
                     aria-controls="auth-menu"
+                    aria-label="Account menu"
                   >
                     <span className="mr-2 hidden md:inline">Account</span>
                     <BiChevronDown />

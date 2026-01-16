@@ -186,6 +186,7 @@
   min-height: 100vh;
   overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
+  padding-top: 104px; /* Offset for fixed desktop header */
 }
 
 .main-content-area {
@@ -198,6 +199,120 @@
 }
 
 /* Ad Banners */
+/* (ad styles are defined inline or via vendor elements) */
+/* Navigation between jobs */
+.job-navigation-section {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.job-navigation-wrapper {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  width: 100%;
+}
+
+.nav-job-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  min-width: 0;
+  position: relative;
+}
+
+.nav-job-item.previous-job {
+  border-right: 1px solid #e5e7eb;
+}
+
+.nav-job-item:hover {
+  background-color: #f8fafc;
+}
+
+.nav-arrow-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-job-item:hover .nav-arrow-circle {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.nav-logo-wrapper {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.nav-logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.nav-job-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-direction-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nav-job-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-company-name {
+  font-size: 13px;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .job-navigation-wrapper {
+    flex-direction: column;
+  }
+  .nav-job-item.previous-job {
+    border-right: 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
 .ad-banner {
   background: #f8f9fa;
   border: 2px dashed #ddd;

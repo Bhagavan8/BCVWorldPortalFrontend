@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AuthService from '../services/AuthService';
-import logo from '../../portal/assets/logo/logo.png';
+import logo from '../../portal/assets/logo/logo.svg';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     const location = useLocation();

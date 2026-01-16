@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import AuthService from '../services/AuthService';
-import logo from '../../portal/assets/logo/logo.png';
+import logo from '../../portal/assets/logo/logo.svg';
 import './AuthPages.css';
 
 const BCVWorldAuth = () => {
