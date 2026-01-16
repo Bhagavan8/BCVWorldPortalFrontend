@@ -626,7 +626,8 @@ export default function JobDetails() {
   }, [job, API_BASE]);
 
   useEffect(() => {
-    const onScroll = () => {
+    let ticking = false;
+    const update = () => {
       const doc = document.documentElement;
       const total = doc.scrollHeight - doc.clientHeight;
       const scrolled = total > 0 ? (doc.scrollTop / total) * 100 : 0;
@@ -634,8 +635,15 @@ export default function JobDetails() {
       if (bar) bar.style.width = `${scrolled}%`;
       const isMobile = window.innerWidth <= 640;
       setShowMobileBottomBar(isMobile && scrolled >= 85);
+      ticking = false;
     };
-    window.addEventListener('scroll', onScroll);
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
