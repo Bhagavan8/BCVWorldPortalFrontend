@@ -332,6 +332,7 @@ export default function Jobs() {
                 <button 
                   className="lg:hidden text-gray-500 hover:text-blue-600"
                   type="button"
+                  aria-label="Toggle job filters"
                   aria-expanded={isFilterOpen ? 'true' : 'false'}
                   aria-controls="jobs-filter-panel"
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -454,6 +455,7 @@ export default function Jobs() {
                          <input 
                            type="date" 
                            className="px-3 text-sm outline-none bg-white text-gray-600 w-full min-w-0"
+                           aria-label="Filter jobs by posting date"
                            value={dateFilter}
                            onChange={(e) => setDateFilter(e.target.value)}
                          />
@@ -462,6 +464,7 @@ export default function Jobs() {
                              onClick={() => setDateFilter('')}
                              className="px-2 bg-white border-l border-gray-300 text-gray-500 hover:text-red-500 flex items-center shrink-0"
                              type="button"
+                              aria-label="Clear date filter"
                            >
                              <BiX />
                            </button>

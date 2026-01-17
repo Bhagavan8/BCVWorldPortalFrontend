@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import api from '../../api/axios';
 import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
-import logo from '../assets/logo/logo.png';
 import { 
   Eye, 
   EyeOff, 
@@ -254,7 +253,14 @@ export default function Login() {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center space-x-2 text-white mb-12">
-            <img src={logo} alt="BCVWORLD" className="h-12 w-12 object-cover bg-white rounded-full p-1" />
+            <img
+              src="/assets/images/logo.webp"
+              alt="BCVWORLD"
+              className="h-12 w-12 object-cover bg-white rounded-full p-1"
+              width="48"
+              height="48"
+              decoding="async"
+            />
           </Link>
           
           <motion.div 
@@ -319,7 +325,15 @@ export default function Login() {
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
             <Link to="/" className="flex items-center space-x-2">
-              <img src={logo} alt="BCVWorld logo" className="h-12 w-12 rounded-full" width="48" height="48" decoding="async" loading="lazy" />
+              <img
+                src="/assets/images/logo.webp"
+                alt="BCVWorld logo"
+                className="h-12 w-12 rounded-full"
+                width="48"
+                height="48"
+                decoding="async"
+                loading="lazy"
+              />
             </Link>
           </div>
 
