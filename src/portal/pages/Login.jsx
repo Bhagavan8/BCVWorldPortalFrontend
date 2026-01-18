@@ -32,6 +32,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnTo = searchParams.get('returnTo') || '/';
+  const forgotPasswordPath = `/forgot-password?returnTo=${encodeURIComponent(returnTo)}`;
 
   useEffect(() => {
     // Check for remembered email
@@ -405,9 +406,9 @@ export default function Login() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to={forgotPasswordPath} className="font-medium text-blue-600 hover:text-blue-500">
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
 

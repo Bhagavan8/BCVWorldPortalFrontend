@@ -24,6 +24,7 @@ import Login from './portal/pages/Login';
 import Register from './portal/pages/Register';
 import Profile from './portal/pages/Profile';
 import Terms from './portal/pages/Terms';
+import ForgotPassword from './portal/pages/ForgotPassword';
 import JobManagement from './admin/pages/JobManagement';
 
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
@@ -365,6 +366,7 @@ function App() {
         {/* Pages without Header (Login/Register) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* 404 */}
         <Route path="*" element={<div className="pt-24 text-center">404 - Page Not Found</div>} />
