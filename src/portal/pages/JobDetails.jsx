@@ -66,52 +66,6 @@ export default function JobDetails() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!job || !id) return;
-    try {
-      const currentUrl = new URL(window.location.href);
-      const currentParams = currentUrl.searchParams;
-      const params = new URLSearchParams();
-      const jobIdForUrl = job.id || id;
-
-      const normalizeSegment = (value) =>
-        String(value || '')
-          .toLowerCase()
-          .trim()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-
-      const slugParts = [
-        normalizeSegment(job.jobTitle),
-        normalizeSegment(job.companyName)
-      ].filter(Boolean);
-
-      const slug = slugParts.length ? slugParts.join('-') : 'job-details';
-
-      const typeParam = currentParams.get('type') || 'private';
-      const refParam = currentParams.get('ref') || Math.random().toString(36).substring(2);
-      const tokenParam = currentParams.get('token') || Math.random().toString(36).substring(2);
-      const srcParam = currentParams.get('src') || 'bcvworld.com';
-
-      params.set('type', typeParam);
-      params.set('job_id', jobIdForUrl);
-      params.set('slug', slug);
-      params.set('ref', refParam);
-      params.set('token', tokenParam);
-      params.set('src', srcParam);
-
-      const canonicalPath = '/job';
-      const canonicalSearch = `?${params.toString()}`;
-
-      const currentPath = currentUrl.pathname;
-      const currentSearch = currentUrl.search;
-
-      if (currentPath !== canonicalPath || currentSearch !== canonicalSearch) {
-        window.history.replaceState({}, '', `${canonicalPath}${canonicalSearch}`);
-      }
-    } catch (e) {}
-  }, [job, id]);
-
 
 
   useEffect(() => {
@@ -826,7 +780,7 @@ export default function JobDetails() {
             <i className="bi bi-chevron-right"></i>
           </Link>
           <Link to="/suggestion" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><i className="bi bi-chat-dots"></i> Suggestion</span>
+            <span><i className="bi bi-lightbulb"></i> Suggestions</span>
             <i className="bi bi-chevron-right"></i>
           </Link>
         </div>
@@ -1129,7 +1083,17 @@ export default function JobDetails() {
               </section>
             )}
 
-            <GoogleAd slot="9542444871" />
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-6284022198338659"
+              data-ad-slot="9542444871"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            ></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({ });
+            </script>
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -1435,7 +1399,7 @@ export default function JobDetails() {
                 <div className="company-jobs-list">
                   {relatedJobs.map(rJob => (
                     <Link
-                      to={`/job?type=private&job_id=${rJob.id}&slug=${(rJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(rJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
+                      to={`/job?job_id=${rJob.id}`}
                       key={rJob.id}
                       className="company-job-item"
                       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
