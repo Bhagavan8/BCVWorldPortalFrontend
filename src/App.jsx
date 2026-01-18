@@ -26,6 +26,9 @@ import Profile from './portal/pages/Profile';
 import Terms from './portal/pages/Terms';
 import ForgotPassword from './portal/pages/ForgotPassword';
 import JobManagement from './admin/pages/JobManagement';
+import MarketingAdsFinance from './admin/pages/MarketingAdsFinance';
+import TotalFinanceOverview from './admin/pages/TotalFinanceOverview';
+import FinanceTracking from './admin/pages/FinanceTracking';
 
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
 import Dashboard from './admin/pages/Dashboard';
@@ -340,6 +343,9 @@ function App() {
           <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />
           <Route path="bank-jobs-upload" element={<div className="p-4"><h2>Banking Jobs (Placeholder)</h2></div>} />
           <Route path="profile-upload" element={<div className="p-4"><h2>Profile Upload (Placeholder)</h2></div>} />
+          <Route path="finance/overview" element={<TotalFinanceOverview />} />
+          <Route path="finance/marketing-ads" element={<MarketingAdsFinance />} />
+          <Route path="finance/tracking" element={<FinanceTracking />} />
         </Route>
 
         {/* Redirects for direct access */}

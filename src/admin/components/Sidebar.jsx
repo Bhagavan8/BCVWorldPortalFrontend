@@ -90,6 +90,50 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 </div>
                             </li>
 
+                            <li className="nav-item dropdown">
+                                <a
+                                    className={`nav-link dropdown-toggle ${financeOpen ? '' : 'collapsed'}`}
+                                    href="#"
+                                    onClick={(e) => { e.preventDefault(); setFinanceOpen(!financeOpen); }}
+                                    aria-expanded={financeOpen}
+                                >
+                                    <i className="bi bi-bank"></i>
+                                    <span>Finance</span>
+                                    <i className="bi bi-chevron-down dropdown-arrow"></i>
+                                </a>
+                                <div className={`collapse ${financeOpen ? 'show' : ''}`} id="finance-collapse">
+                                    <ul className="nav flex-column sub-menu">
+                                        <li className="nav-item">
+                                            <Link
+                                                className={`nav-link ${isActive('/admin/finance/overview') ? 'active' : ''}`}
+                                                to="/admin/finance/overview"
+                                            >
+                                                <i className="bi bi-grid"></i>
+                                                <span>Total Overview</span>
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                className={`nav-link ${isActive('/admin/finance/marketing-ads') ? 'active' : ''}`}
+                                                to="/admin/finance/marketing-ads"
+                                            >
+                                                <i className="bi bi-megaphone"></i>
+                                                <span>Marketing Ads Finance</span>
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                className={`nav-link ${isActive('/admin/finance/tracking') ? 'active' : ''}`}
+                                                to="/admin/finance/tracking"
+                                            >
+                                                <i className="bi bi-line-chart"></i>
+                                                <span>Financial Tracking</span>
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
                             <li className="nav-item mt-auto pt-4 px-3">
                                 <Link className="nav-link back-to-portal-btn" to="/">
                                     <i className="bi bi-box-arrow-left"></i>

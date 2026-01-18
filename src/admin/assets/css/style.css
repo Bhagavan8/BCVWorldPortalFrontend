@@ -142,11 +142,11 @@ textarea {
     align-items: center !important;
     justify-content: flex-start !important; /* Force left alignment */
     text-align: left !important;
-    padding: 0.75rem 1rem 0.75rem 3rem !important; /* Indent sub-menu items */
+    padding: 0.5rem 1rem 0.5rem 2.4rem !important;
     opacity: 1 !important;
     visibility: visible !important;
     text-decoration: none !important;
-    white-space: nowrap !important; /* Prevent text wrapping */
+    white-space: nowrap !important;
     width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
@@ -169,7 +169,7 @@ textarea {
 
 .sidebar .sub-menu .nav-link span {
     color: #ffffff !important;
-    font-size: 0.95rem !important; /* Slightly larger font */
+    font-size: 0.9rem !important;
     font-weight: 400 !important;
 }
 
@@ -245,4 +245,208 @@ textarea {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.finance-card {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.finance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon-bg {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 5rem;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: #ffffff;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: #ffffff;
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #ef476f 0%, #ff1053 100%);
+    color: #ffffff;
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #2ec4b6 0%, #20a4f3 100%);
+    color: #ffffff;
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(135deg, #7209b7 0%, #b5179e 100%);
+    color: #ffffff;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #ff9f1c 0%, #ffbf69 100%);
+    color: #212529;
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%);
+    color: #ffffff;
+}
+
+.total-card {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: #ffffff;
+}
+
+.spend-card {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: #ffffff;
+}
+
+.diff-card {
+    background: linear-gradient(135deg, #2ec4b6 0%, #20a4f3 100%);
+    color: #ffffff;
+}
+
+.week-card {
+    background: linear-gradient(135deg, #ef476f 0%, #ff1053 100%);
+    color: #ffffff;
+}
+
+.today-card {
+    background: linear-gradient(135deg, #ffd166 0%, #f97316 100%);
+    color: #ffffff;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+}
+
+.income-card {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #ffffff;
+}
+
+.expense-card {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    color: #ffffff;
+}
+
+.pending-card {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #ffffff;
+}
+
+.top-toggle-bar {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.toggle-track {
+    position: relative;
+    height: 44px;
+    border-radius: 999px;
+    background: #0d6efd;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    gap: 4px;
+    overflow: hidden;
+    min-width: 280px;
+    max-width: 420px;
+    width: 100%;
+}
+
+.toggle-track .toggle-option {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 999px;
+    z-index: 1;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.toggle-track .toggle-option.active {
+    color: #0d6efd;
+}
+
+.toggle-track .toggle-knob {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: 50%;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+    transition: transform 0.25s ease, width 0.25s ease;
+}
+
+.toggle-track.right-active .toggle-knob {
+    transform: translateX(50%);
+}
+
+.toggle-track.far-right-active .toggle-knob {
+    transform: translateX(100%);
+}
+
+.transaction-item {
+    border-left: 4px solid transparent;
+    transition: background-color 0.2s ease;
+}
+
+.transaction-item:hover {
+    background-color: #f8f9fa;
+}
+
+.transaction-item.type-income {
+    border-left-color: #2ec4b6;
+}
+
+.transaction-item.type-expense {
+    border-left-color: #ef476f;
+}
+
+.transaction-item.type-loan {
+    border-left-color: #7209b7;
+}
+
+.transaction-item.type-investment {
+    border-left-color: #4361ee;
+}
+
+.segment-toggle .btn {
+    border-radius: 999px !important;
+    margin-right: 0.5rem !important;
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+}
+
+.btn-check + .btn-outline-primary {
+    background-color: #ffffff;
 }

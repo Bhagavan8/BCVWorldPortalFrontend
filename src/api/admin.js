@@ -30,8 +30,21 @@ adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
+    const requestUrl = error?.config?.url || '';
+
     if (status === 401 || status === 403) {
-      console.warn('Admin API auth error detected, logging out and redirecting', status);
+      const isFinanceRequest = requestUrl.includes('/finance/');
+
+      if (isFinanceRequest) {
+        console.warn(
+          'Admin API auth error on finance endpoint. Keeping session, showing page-level error instead.',
+          status,
+          requestUrl
+        );
+        return Promise.reject(error);
+      }
+
+      console.warn('Admin API auth error detected, logging out and redirecting', status, requestUrl);
       AuthService.logout();
       if (window.location.pathname.startsWith('/admin')) {
         window.location.href = '/admin/auth';
@@ -39,6 +52,7 @@ adminApi.interceptors.response.use(
         window.location.href = '/login';
       }
     }
+
     return Promise.reject(error);
   }
 );
