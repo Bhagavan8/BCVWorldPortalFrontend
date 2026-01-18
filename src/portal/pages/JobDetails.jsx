@@ -5,6 +5,30 @@ import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
 import SEO from '../components/SEO';
 import './JobDetails.css';
 
+function GoogleAd({ slot, className }) {
+  const adRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !adRef.current) return;
+    const adElement = adRef.current;
+    if (!adElement.getAttribute('data-adsbygoogle-status')) {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  }, []);
+
+  return (
+    <ins
+      ref={adRef}
+      className={`adsbygoogle${className ? ` ${className}` : ''}`}
+      style={{ display: 'block' }}
+      data-ad-client="ca-pub-6284022198338659"
+      data-ad-slot={slot}
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    ></ins>
+  );
+}
+
 export default function JobDetails() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -41,6 +65,52 @@ export default function JobDetails() {
       document.head.appendChild(script);
     }
   }, []);
+
+  useEffect(() => {
+    if (!job || !id) return;
+    try {
+      const currentUrl = new URL(window.location.href);
+      const currentParams = currentUrl.searchParams;
+      const params = new URLSearchParams();
+      const jobIdForUrl = job.id || id;
+
+      const normalizeSegment = (value) =>
+        String(value || '')
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+
+      const slugParts = [
+        normalizeSegment(job.jobTitle),
+        normalizeSegment(job.companyName)
+      ].filter(Boolean);
+
+      const slug = slugParts.length ? slugParts.join('-') : 'job-details';
+
+      const typeParam = currentParams.get('type') || 'private';
+      const refParam = currentParams.get('ref') || Math.random().toString(36).substring(2);
+      const tokenParam = currentParams.get('token') || Math.random().toString(36).substring(2);
+      const srcParam = currentParams.get('src') || 'bcvworld.com';
+
+      params.set('type', typeParam);
+      params.set('job_id', jobIdForUrl);
+      params.set('slug', slug);
+      params.set('ref', refParam);
+      params.set('token', tokenParam);
+      params.set('src', srcParam);
+
+      const canonicalPath = '/job';
+      const canonicalSearch = `?${params.toString()}`;
+
+      const currentPath = currentUrl.pathname;
+      const currentSearch = currentUrl.search;
+
+      if (currentPath !== canonicalPath || currentSearch !== canonicalSearch) {
+        window.history.replaceState({}, '', `${canonicalPath}${canonicalSearch}`);
+      }
+    } catch (e) {}
+  }, [job, id]);
 
 
 
@@ -755,8 +825,8 @@ export default function JobDetails() {
             <span><i className="bi bi-briefcase"></i> Browse Jobs</span>
             <i className="bi bi-chevron-right"></i>
           </Link>
-          <Link to="/calculators" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><i className="bi bi-calculator"></i> Calculators</span>
+          <Link to="/suggestion" className="info-item" onClick={() => setSidebarOpen(false)}>
+            <span><i className="bi bi-chat-dots"></i> Suggestion</span>
             <i className="bi bi-chevron-right"></i>
           </Link>
         </div>
@@ -857,17 +927,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <ins
-                className="adsbygoogle"
-                style={{ display: 'block' }}
-                data-ad-client="ca-pub-6284022198338659"
-                data-ad-slot="3196528375"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              ></ins>
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({ });
-              </script>
+              <GoogleAd slot="3196528375" />
             </div>
           </div>
         )}
@@ -879,17 +939,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <ins
-                className="adsbygoogle"
-                style={{ display: 'block' }}
-                data-ad-client="ca-pub-6284022198338659"
-                data-ad-slot="6272433641"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-              ></ins>
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({ });
-              </script>
+              <GoogleAd slot="6272433641" />
             </div>
           </div>
         )}
@@ -1037,17 +1087,7 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-6284022198338659"
-            data-ad-slot="1855526545"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({ });
-          </script>
+          <GoogleAd slot="1855526545" />
 
           {/* Content Sections */}
           <div className="content-sections">
@@ -1089,17 +1129,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <ins
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client="ca-pub-6284022198338659"
-              data-ad-slot="9542444871"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({ });
-            </script>
+            <GoogleAd slot="9542444871" />
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -1285,17 +1315,7 @@ export default function JobDetails() {
               </div>
             </section>
 
-            <ins
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client="ca-pub-6284022198338659"
-              data-ad-slot="4257478543"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({ });
-            </script>
+            <GoogleAd slot="4257478543" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1415,7 +1435,7 @@ export default function JobDetails() {
                 <div className="company-jobs-list">
                   {relatedJobs.map(rJob => (
                     <Link
-                      to={`/job?job_id=${rJob.id}`}
+                      to={`/job?type=private&job_id=${rJob.id}&slug=${(rJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(rJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                       key={rJob.id}
                       className="company-job-item"
                       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -1438,17 +1458,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <ins
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client="ca-pub-6284022198338659"
-              data-ad-slot="7571899411"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({ });
-            </script>
+            <GoogleAd slot="7571899411" />
 
             <section className="job-link-section">
               {isApplyMailto ? (
