@@ -51,10 +51,45 @@ export default function JobDetails() {
   const [showLeftAd, setShowLeftAd] = useState(true);
   const [showRightAd, setShowRightAd] = useState(true);
   const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
+  const [hideStickyAds, setHideStickyAds] = useState(false);
   const hasViewed = useRef(false);
   const bottomBarShownRef = useRef(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (typeof window === 'undefined') return;
+      
+      // Logic for Mobile Bottom Bar
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollPosition >= docHeight * 0.9) {
+        if (!bottomBarShownRef.current) {
+          setShowMobileBottomBar(true);
+          bottomBarShownRef.current = true;
+        }
+      } else {
+        if (bottomBarShownRef.current) {
+          setShowMobileBottomBar(false);
+          bottomBarShownRef.current = false;
+        }
+      }
+
+      // Logic for Sticky Ads (Hide when near footer/bottom)
+      const distanceToBottom = docHeight - scrollPosition;
+      if (distanceToBottom < 400) {
+        setHideStickyAds(true);
+      } else {
+        setHideStickyAds(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
     const exists = Array.from(document.getElementsByTagName('script')).some(s => s.src === src);
     if (!exists) {
@@ -875,8 +910,8 @@ export default function JobDetails() {
       <div className="job-details-page page-wrapper font-sans">
 
         {/* Left Ad */}
-        {showLeftAd && (
-          <div className="ad-column ad-left">
+        {!isMobile && showLeftAd && (
+          <div className="ad-column ad-left" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
             <div className="ad-sidebar">
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
@@ -887,8 +922,8 @@ export default function JobDetails() {
         )}
 
         {/* Right Ad */}
-        {showRightAd && (
-          <div className="ad-column ad-right">
+        {!isMobile && showRightAd && (
+          <div className="ad-column ad-right" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
             <div className="ad-sidebar">
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
@@ -1306,6 +1341,8 @@ export default function JobDetails() {
               </section>
             )}
 
+             <GoogleAd slot="7571899411" />
+
             <section className="community-section">
               <h3 className="community-title"><i className="bi bi-people"></i> Join Our Community</h3>
               <div className="community-actions">
@@ -1412,8 +1449,6 @@ export default function JobDetails() {
               </section>
             )}
 
-            <GoogleAd slot="7571899411" />
-
             <section className="job-link-section">
               {isApplyMailto ? (
                 <div className="job-link-row">
@@ -1490,7 +1525,7 @@ export default function JobDetails() {
               </div>
             </div>
 
-
+           
 
           </div>
 
