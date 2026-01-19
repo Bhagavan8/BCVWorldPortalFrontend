@@ -264,6 +264,7 @@ const JobUploadForm = () => {
                     const actualUser = userObj.data || userObj.user || userObj;
                     currentUserPostedBy = actualUser.id || actualUser.userId || actualUser._id || actualUser.uid;
                     currentUserPostedByName = actualUser.name || actualUser.username || actualUser.email;
+                    console.log('JobUploadForm: Resolved current user:', { currentUserPostedBy, currentUserPostedByName });
                 }
             } catch (err) {
                 console.error('Error retrieving user info:', err);
@@ -285,12 +286,20 @@ const JobUploadForm = () => {
                 // Remove ownership fields during update to prevent permission issues
                 delete payload.postedBy;
                 delete payload.postedByName;
+                delete payload.posted_by;
+                delete payload.posted_by_name;
                 // Also ensure we don't send internal fields that might confuse backend
                 delete payload.userId; 
             } else {
                 // Only set these for new jobs
-                payload.postedBy = (formData.postedBy) ? formData.postedBy : currentUserPostedBy;
-                payload.postedByName = (formData.postedByName) ? formData.postedByName : currentUserPostedByName;
+                const finalPostedBy = (formData.postedBy) ? formData.postedBy : currentUserPostedBy;
+                const finalPostedByName = (formData.postedByName) ? formData.postedByName : currentUserPostedByName;
+
+                // Send both camelCase and snake_case to ensure backend compatibility
+                payload.postedBy = finalPostedBy;
+                payload.postedByName = finalPostedByName;
+                payload.posted_by = finalPostedBy;
+                payload.posted_by_name = finalPostedByName;
             }
 
             console.log('Submitting Job Payload:', payload);

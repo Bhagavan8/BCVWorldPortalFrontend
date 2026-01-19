@@ -22,9 +22,9 @@ class JobService {
             'Content-Type': 'application/json',
             ...this.getAuthHeader()
         };
-        // Using standard API_URL for consistency if ADMIN_API_URL is restricted
-        console.log('JobService: Creating job at', API_URL, 'with headers:', headers);
-        return axios.post(API_URL, job, { headers });
+        // Use the dedicated admin endpoint for creating jobs
+        console.log('JobService: Creating job at', ADMIN_API_URL, 'with headers:', headers);
+        return axios.post(ADMIN_API_URL, job, { headers });
     }
 
     updateJob(id, job) {
