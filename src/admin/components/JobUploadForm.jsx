@@ -250,12 +250,29 @@ const JobUploadForm = () => {
 
         setLoading(true);
         try {
+            // Get user info from localStorage
+            let postedBy = null;
+            let postedByName = null;
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const userObj = JSON.parse(userStr);
+                    const actualUser = userObj.data || userObj.user || userObj;
+                    postedBy = actualUser.id || actualUser.userId || actualUser._id || actualUser.uid;
+                    postedByName = actualUser.name || actualUser.username || actualUser.email;
+                }
+            } catch (err) {
+                console.error('Error retrieving user info:', err);
+            }
+
             const payload = {
                 ...formData,
                 experience: formData.experienceRequired,
                 logoUrl: formData.companyLogoUrl,
                 applicationLink: formData.applicationMethod === 'link' ? formData.applicationLinkOrEmail : null,
                 applicationEmail: formData.applicationMethod === 'email' ? formData.applicationLinkOrEmail : null,
+                postedBy,
+                postedByName
             };
 
             if (id) {

@@ -238,14 +238,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-white overflow-hidden font-sans">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
       <SEO 
         title="Login" 
         description="Login to your BCVWORLD account to access job referrals, mentoring, and financial tools." 
         keywords="login, sign in, bcvworld login, career portal, job portal login"
       />
-      {/* Left Panel - Brand & Content */}
-      <div className="hidden lg:flex w-1/2 bg-indigo-900 text-white p-12 flex-col justify-between relative overflow-hidden">
+      <div className="w-full lg:w-1/2 bg-indigo-900 text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[100px]"></div>
@@ -312,10 +311,10 @@ export default function Login() {
         </div>
 
         <div className="relative z-10 flex items-center justify-between text-sm text-gray-400 border-t border-white/10 pt-8">
-          <p>© 2025 BCVWorld. All rights reserved.</p>
+          <p>© 2026 BCVWorld. All rights reserved.</p>
           <div className="flex space-x-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
@@ -442,7 +441,7 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <button
                 type="button"
                 onClick={() => handleSocialLogin('Google')}
@@ -468,16 +467,6 @@ export default function Login() {
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Google</span>
               </button>
-              <button
-                type="button"
-                onClick={() => handleSocialLogin('LinkedIn')}
-                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#0077b5">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-                <span className="text-sm font-medium text-gray-700">LinkedIn</span>
-              </button>
             </div>
 
             <div className="relative my-6">
@@ -497,7 +486,7 @@ export default function Login() {
           </form>
           
           <div className="lg:hidden text-center mt-8 text-xs text-gray-500">
-            © 2025 BCVWorld. All rights reserved.
+            © 2026 BCVWorld. All rights reserved.
           </div>
         </div>
       </div>
