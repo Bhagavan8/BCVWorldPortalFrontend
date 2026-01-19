@@ -206,6 +206,30 @@ const Dashboard = () => {
         }
     };
 
+    const calculateGrowth = (current, previous) => {
+        if (!previous || previous === 0) return { value: 0, isPositive: true, isZero: true };
+        const growth = ((current - previous) / previous) * 100;
+        return {
+            value: Math.abs(growth).toFixed(1),
+            isPositive: growth >= 0,
+            isZero: growth === 0
+        };
+    };
+
+    const renderGrowth = (current, previous, label = null) => {
+        if (label === 'todayJobsViews') {
+            const { value, isPositive, isZero } = calculateGrowth(current, stats.yesterdayJobsViews);
+             if (isZero && value === 0 && current === 0 && stats.yesterdayJobsViews === 0) return null; 
+            
+            return (
+                <div className={`card-growth ${isPositive ? 'positive' : 'negative'}`}>
+                    <i className={`bi bi-arrow-${isPositive ? 'up' : 'down'}`}></i> {value}%
+                </div>
+            );
+        }
+        return null; 
+    };
+
     return (
         <div className="content-wrapper">
             {statsError && (
@@ -224,9 +248,7 @@ const Dashboard = () => {
                             <h3>{stats.totalJobs}</h3>
                             <p>Total Jobs</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.totalJobs, null)}
                     </div>
                 </div>
 
@@ -239,9 +261,7 @@ const Dashboard = () => {
                             <h3>{stats.activeUsers}</h3>
                             <p>Active Users</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.activeUsers, null)}
                     </div>
                 </div>
 
@@ -254,9 +274,7 @@ const Dashboard = () => {
                             <h3>{stats.newsViews}</h3>
                             <p>Total News Views</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.newsViews, null)}
                     </div>
                 </div>
 
@@ -269,9 +287,7 @@ const Dashboard = () => {
                             <h3>{stats.newsArticles}</h3>
                             <p>News Articles</p>
                         </div>
-                        <div className="card-growth negative">
-                            <i className="bi bi-arrow-down"></i> 0%
-                        </div>
+                        {renderGrowth(stats.newsArticles, null)}
                     </div>
                 </div>
 
@@ -284,9 +300,7 @@ const Dashboard = () => {
                             <h3>{stats.totalJobsViews}</h3>
                             <p>Total Job Views</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.totalJobsViews, null)}
                     </div>
                 </div>
 
@@ -299,9 +313,7 @@ const Dashboard = () => {
                             <h3>{stats.todayJobsViews}</h3>
                             <p>Today's Jobs Views</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.todayJobsViews, stats.yesterdayJobsViews, 'todayJobsViews')}
                     </div>
                 </div>
 
@@ -314,14 +326,12 @@ const Dashboard = () => {
                             <h3>{stats.yesterdayJobsViews}</h3>
                             <p>Yesterday's Jobs Views</p>
                         </div>
-                        <div className="card-growth negative">
-                            <i className="bi bi-arrow-down"></i> 0%
-                        </div>
+                        {renderGrowth(stats.yesterdayJobsViews, null)}
                     </div>
                 </div>
 
                 <div className="col-md-6 col-lg-3">
-                    <div className="stats-card bg-purple" style={{ backgroundColor: '#6f42c1' }}>
+                    <div className="stats-card bg-purple" style={{ backgroundColor: '#6f42c1', color: 'white' }}>
                         <div className="card-icon">
                             <i className="bi bi-calendar-week"></i>
                         </div>
@@ -329,9 +339,7 @@ const Dashboard = () => {
                             <h3>{stats.weeklyJobsViews}</h3>
                             <p>Weekly Jobs Views</p>
                         </div>
-                        <div className="card-growth positive">
-                            <i className="bi bi-arrow-up"></i> 0%
-                        </div>
+                        {renderGrowth(stats.weeklyJobsViews, null)}
                     </div>
                 </div>
             </div>
