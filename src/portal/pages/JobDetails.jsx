@@ -1083,17 +1083,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <ins
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client="ca-pub-6284022198338659"
-              data-ad-slot="9542444871"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({ });
-            </script>
+            <GoogleAd slot="9542444871" />
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
