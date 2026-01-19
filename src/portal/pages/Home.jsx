@@ -130,7 +130,7 @@ export default function Home() {
                 width="637"
                 height="490"
                 decoding="async"
-                fetchpriority="high"
+                fetchPriority="high"
               />
               <div className="absolute -bottom-6 -left-6 md:bottom-6 md:left-6 bg-white p-4 rounded-xl shadow-xl border border-gray-100 max-w-xs hidden sm:block">
                 <p className="text-sm font-medium text-gray-800 mb-0">
@@ -232,7 +232,7 @@ export default function Home() {
 
             <div className="w-full lg:w-6/12" data-aos="zoom-out" data-aos-delay="300">
               <div className="relative">
-                <img src="/images/Career-Guidance-Session.webp" alt="Session" className="rounded-2xl shadow-2xl w-full" width="800" height="600" loading="lazy" decoding="async" fetchpriority="low" />
+                <img src="/images/Career-Guidance-Session.webp" alt="Session" className="rounded-2xl shadow-2xl w-full" width="800" height="600" loading="lazy" decoding="async" fetchPriority="low" />
                 <div className="absolute bottom-8 right-8 bg-white p-6 rounded-xl shadow-xl animate-bounce-slow hidden md:block">
                   <h3 className="text-3xl font-bold text-blue-600 mb-1">50+ <span className="text-gray-900 text-lg font-normal">Success</span></h3>
                   <p className="text-gray-500 text-sm">Stories in career enhancement</p>

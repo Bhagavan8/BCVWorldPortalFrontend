@@ -50,7 +50,9 @@ const JobUploadForm = () => {
 
                 listingStatus: job.listingStatus || 'public',
                 isActive: job.active !== undefined ? job.active : (job.isActive !== undefined ? job.isActive : true),
-                referralCode: job.referralCode || ''
+                referralCode: job.referralCode || '',
+                postedBy: job.postedBy || job.userId || null,
+                postedByName: job.postedByName || job.posted_by_name || ''
             }));
 
             showToast('success', 'Job details loaded');
@@ -93,7 +95,9 @@ const JobUploadForm = () => {
         isActive: true,
         referralCode: '',
         companyLogoUrl: '',
-        companyId: null
+        companyId: null,
+        postedBy: null,
+        postedByName: ''
     });
 
     const locationsList = [
@@ -251,34 +255,50 @@ const JobUploadForm = () => {
         setLoading(true);
         try {
             // Get user info from localStorage
-            let postedBy = null;
-            let postedByName = null;
+            let currentUserPostedBy = null;
+            let currentUserPostedByName = null;
             try {
                 const userStr = localStorage.getItem('user');
                 if (userStr) {
                     const userObj = JSON.parse(userStr);
                     const actualUser = userObj.data || userObj.user || userObj;
-                    postedBy = actualUser.id || actualUser.userId || actualUser._id || actualUser.uid;
-                    postedByName = actualUser.name || actualUser.username || actualUser.email;
+                    currentUserPostedBy = actualUser.id || actualUser.userId || actualUser._id || actualUser.uid;
+                    currentUserPostedByName = actualUser.name || actualUser.username || actualUser.email;
                 }
             } catch (err) {
                 console.error('Error retrieving user info:', err);
             }
 
+            // If updating (id exists), we exclude postedBy/postedByName to avoid 403 Forbidden
+            // caused by trying to update ownership fields (which might be restricted).
+            // For creation, we must include them.
+            
             const payload = {
                 ...formData,
                 experience: formData.experienceRequired,
                 logoUrl: formData.companyLogoUrl,
                 applicationLink: formData.applicationMethod === 'link' ? formData.applicationLinkOrEmail : null,
                 applicationEmail: formData.applicationMethod === 'email' ? formData.applicationLinkOrEmail : null,
-                postedBy,
-                postedByName
             };
+
+            if (id) {
+                // Remove ownership fields during update to prevent permission issues
+                delete payload.postedBy;
+                delete payload.postedByName;
+                // Also ensure we don't send internal fields that might confuse backend
+                delete payload.userId; 
+            } else {
+                // Only set these for new jobs
+                payload.postedBy = (formData.postedBy) ? formData.postedBy : currentUserPostedBy;
+                payload.postedByName = (formData.postedByName) ? formData.postedByName : currentUserPostedByName;
+            }
+
+            console.log('Submitting Job Payload:', payload);
 
             if (id) {
                 await JobService.updateJob(id, payload);
                 showToast('success', 'Job updated successfully');
-                setTimeout(() => navigate('/admin/jobs'), 1500);
+                setTimeout(() => navigate('/admin/job-management'), 1500);
             } else {
                 await JobService.createJob(payload);
                 showToast('success', 'Job posted successfully');
@@ -307,7 +327,9 @@ const JobUploadForm = () => {
                     isActive: true,
                     referralCode: '',
                     companyLogoUrl: '',
-                    companyId: null
+                    companyId: null,
+                    postedBy: null,
+                    postedByName: ''
                 });
                 setStep(1);
                 setCompanySearch('');
@@ -320,7 +342,13 @@ const JobUploadForm = () => {
             if (error.code === 'ERR_NETWORK') {
                 msg = 'Network Error: Backend not reachable';
             } else if (error.response) {
-                msg = `Error ${error.response.status}: ${error.response.data?.message || 'Server rejected request'}`;
+                console.error('Job Save Error Response:', error.response.status, error.response.data);
+                if (error.response.status === 403 || error.response.status === 401) {
+                    const serverMsg = error.response.data?.message || error.response.data?.error;
+                    msg = serverMsg ? `Permission Error: ${serverMsg}` : 'Session expired or permission denied. Please logout and login again.';
+                } else {
+                    msg = `Error ${error.response.status}: ${error.response.data?.message || 'Server rejected request'}`;
+                }
             }
 
             showToast('danger', msg);

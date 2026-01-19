@@ -22,9 +22,9 @@ class JobService {
             'Content-Type': 'application/json',
             ...this.getAuthHeader()
         };
-        // Use the dedicated admin endpoint for creating jobs
-        console.log('JobService: Creating job at', ADMIN_API_URL, 'with headers:', headers);
-        return axios.post(ADMIN_API_URL, job, { headers });
+        // Using standard API_URL for consistency if ADMIN_API_URL is restricted
+        console.log('JobService: Creating job at', API_URL, 'with headers:', headers);
+        return axios.post(API_URL, job, { headers });
     }
 
     updateJob(id, job) {
@@ -32,8 +32,11 @@ class JobService {
             'Content-Type': 'application/json',
             ...this.getAuthHeader()
         };
-        console.log(`JobService: Updating job ${id} at`, `${ADMIN_API_URL}/${id}`, 'with headers:', headers);
-        return axios.put(`${ADMIN_API_URL}/${id}`, job, { headers });
+        // User confirmed they added @PutMapping("/{id}") to the backend.
+        // Assuming this was added to the standard JobController which handles /api/jobs.
+        const url = `${API_URL}/${id}`;
+        console.log(`JobService: Updating job ${id} at`, url, 'with headers:', headers);
+        return axios.put(url, job, { headers });
     }
 
     getAllJobs() {

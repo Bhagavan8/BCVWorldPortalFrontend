@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BiSearch, BiFilter, BiBriefcase, BiMap, BiBuilding, BiCalendar, BiX, BiXCircle, BiArrowBack, BiUser, BiTime, BiFolder, BiShow } from 'react-icons/bi';
+import { BsPatchCheckFill } from 'react-icons/bs';
 
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
@@ -580,9 +581,19 @@ export default function Jobs() {
                           </h3>
                           
                           <div className="flex flex-wrap gap-4 text-xs text-gray-500 mb-4 items-center">
-                              <span className="flex items-center gap-1.5">
-                                <BiUser className="text-gray-400 text-sm" /> <span>bcvworld</span>
-                              </span>
+                              {job.postedByName ? (
+                                <span className="flex items-center gap-1.5">
+                                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-500">
+                                      <BiUser className="text-xs" />
+                                   </div>
+                                   <span className="font-semibold text-gray-700">{job.postedByName}</span>
+                                   <BsPatchCheckFill className="text-blue-500 text-base" />
+                                 </span>
+                               ) : (
+                                <span className="flex items-center gap-1.5">
+                                  <BiUser className="text-gray-400 text-sm" /> <span>bcvworld</span>
+                                </span>
+                              )}
                               {job.postedDate && (
                                 <span className="flex items-center gap-1.5">
                                   <BiCalendar className="text-gray-400 text-sm" /> 
