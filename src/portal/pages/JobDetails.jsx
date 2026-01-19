@@ -241,6 +241,7 @@ export default function JobDetails() {
             referralCode: rawData.jobCode || rawData.referralCode,
             companyLogoUrl: rawData.logoUrl || rawData.companyLogoUrl,
             postedDate: rawData.postedDate || new Date().toISOString().split('T')[0], // Fallback if missing
+            postedByName: rawData.posted_by_name || rawData.postedByName,
             viewCount: rawData.viewCount || 0,
             likeCount: rawData.likeCount || 0,
             applicationMethod: rawData.applicationMethod,
@@ -994,6 +995,33 @@ export default function JobDetails() {
                       return <span className="exp-label"> ({label})</span>;
                     })()}
                   </h2>
+                  {job.postedByName && (
+                    <div className="posted-by-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '16px' }}>
+                      <div className="posted-by-avatar" style={{ 
+                        width: '32px', 
+                        height: '32px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#e2e8f0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#64748b'
+                      }}>
+                        <i className="bi bi-person-fill" style={{ fontSize: '18px' }}></i>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
+                            By {job.postedByName}
+                          </span>
+                          <i className="bi bi-patch-check-fill" style={{ color: '#0066cc', fontSize: '14px' }}></i>
+                        </div>
+                        <span style={{ fontSize: '12px', color: '#64748b' }}>
+                          Published on: {new Date(job.postedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
