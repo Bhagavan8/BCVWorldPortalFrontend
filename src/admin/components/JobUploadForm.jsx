@@ -202,10 +202,10 @@ const JobUploadForm = () => {
             ...prev,
             useExistingCompany: true,
             companyId: c.id,
-            companyName: c.name || '',
-            companyWebsite: c.website || '',
-            aboutCompany: c.about || '',
-            companyLogoUrl: c.logoUrl || ''
+            companyName: c.companyName || c.company_name || c.name || '',
+            companyWebsite: c.companyWebsite || c.company_website || c.website || c.url || '',
+            aboutCompany: c.aboutCompany || c.about_company || c.about || c.description || '',
+            companyLogoUrl: c.logoUrl || c.logo_url || c.companyLogoUrl || c.company_logo_url || c.logo || ''
         }));
         setCompanyResults([]);
         showToast('success', 'Company details filled');
@@ -588,7 +588,7 @@ const JobUploadForm = () => {
                                             {companyResults.map(c => (
                                                 <button type="button" key={c.id} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onClick={() => selectCompany(c)}>
                                                     <span>
-                                                        <strong>{c.name}</strong> <span className="text-muted">{c.website}</span>
+                                                        <strong>{c.companyName || c.company_name || c.name}</strong> <span className="text-muted ms-2">{c.companyWebsite || c.company_website || c.website || c.url}</span>
                                                     </span>
                                                     <i className="bi bi-arrow-right"></i>
                                                 </button>
