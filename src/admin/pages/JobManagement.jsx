@@ -20,6 +20,7 @@ const JobManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState(null);
 
+  // Display 10 items per page
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -125,7 +126,7 @@ const JobManagement = () => {
 
   return (
     <div className="container-fluid p-4">
-      <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+      <div className="card shadow-sm border-0 rounded-4 h-auto" style={{ height: 'auto' }}>
         <div className="card-header bg-white py-4 px-4 border-bottom border-light d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
           <div className="d-flex align-items-center gap-2">
             <h5 className="mb-0 fw-bold text-dark text-nowrap">Job Listings</h5>
@@ -155,9 +156,9 @@ const JobManagement = () => {
           </div>
         </div>
         <div className="card-body p-0">
-          <div className="table-responsive">
-            <table className="table table-hover mb-0 align-middle custom-table">
-              <thead className="bg-light bg-opacity-50">
+           <div className="table-responsive" style={{ overflowY: 'visible', overflowX: 'auto', minHeight: 'auto', maxHeight: 'none', height: 'auto' }}>
+             <table className="table table-hover mb-0 align-middle custom-table">
+               <thead className="bg-light bg-opacity-50">
                 <tr>
                   <th className="ps-4 py-3 text-primary">Job Title</th>
                   <th className="py-3 text-primary">Company</th>

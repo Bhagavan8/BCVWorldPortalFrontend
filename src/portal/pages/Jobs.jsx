@@ -44,6 +44,69 @@ export default function Jobs() {
 
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
 
+  const MOCK_JOBS = [
+    {
+      id: 1,
+      jobTitle: 'Senior React Developer',
+      companyName: 'TechSolutions Inc.',
+      locations: ['Remote', 'Bangalore'],
+      jobCategory: 'IT',
+      experienceRequired: '3-5 years',
+      referralCode: 'REF123',
+      companyLogoUrl: '',
+      lastDateToApply: '2026-02-15',
+      postedDate: getTodayString(),
+      views: 150,
+      skills: 'React, Redux, Node.js',
+      description: 'Looking for an experienced React developer to join our team.'
+    },
+    {
+      id: 2,
+      jobTitle: 'Java Backend Engineer',
+      companyName: 'Bank of Future',
+      locations: ['Mumbai', 'Pune'],
+      jobCategory: 'Bank',
+      experienceRequired: '2-4 years',
+      referralCode: 'BOF456',
+      companyLogoUrl: '',
+      lastDateToApply: '2026-03-01',
+      postedDate: getTodayString(),
+      views: 120,
+      skills: 'Java, Spring Boot, Microservices',
+      description: 'Join our fintech revolution as a backend engineer.'
+    },
+    {
+      id: 3,
+      jobTitle: 'Data Analyst',
+      companyName: 'Global Corp',
+      locations: ['Delhi', 'Gurgaon'],
+      jobCategory: 'Core',
+      experienceRequired: '0-2 years',
+      referralCode: 'GC789',
+      companyLogoUrl: '',
+      lastDateToApply: '2026-01-30',
+      postedDate: '2026-01-18',
+      views: 200,
+      skills: 'SQL, Python, Excel',
+      description: 'Analyze data trends and generate reports.'
+    },
+    {
+      id: 4,
+      jobTitle: 'Customer Support Executive',
+      companyName: 'ServiceFirst BPO',
+      locations: ['Hyderabad', 'Chennai'],
+      jobCategory: 'BPO',
+      experienceRequired: '0-1 year',
+      referralCode: 'SF101',
+      companyLogoUrl: '',
+      lastDateToApply: '2026-02-10',
+      postedDate: getTodayString(),
+      views: 90,
+      skills: 'Communication, English, Hindi',
+      description: 'Provide excellent customer support to our clients.'
+    }
+  ];
+
   useEffect(() => {
     const cat = searchParams.get('category');
     if (cat) setSelectedCategory(cat);
@@ -83,7 +146,7 @@ export default function Jobs() {
             lastDateToApply: j.lastDateToApply || null, 
             postedDate: j.postedDate || getTodayString(),
             views: j.views || j.viewCount || 0
-        }});
+          }});
 
         setJobs(data);
         const baseJobs = data;
@@ -135,11 +198,31 @@ export default function Jobs() {
         }
       } else {
         console.error('Failed to fetch jobs:', response.status, response.statusText);
-        toast.error(`Failed to load jobs (Status: ${response.status}). Please try again later.`, { id: 'fetch-jobs-error' });
+        // toast.error(`Failed to load jobs (Status: ${response.status}). Please try again later.`, { id: 'fetch-jobs-error' });
+        throw new Error('Backend unreachable');
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);
-      toast.error('Unable to connect to the server. Please check your internet connection.', { id: 'fetch-jobs-network-error' });
+      // toast.error('Unable to connect to the server. Please check your internet connection.', { id: 'fetch-jobs-network-error' });
+      
+      // Fallback to Mock Data
+      toast.error('Backend unreachable. Showing mock data.', { id: 'fetch-jobs-mock' });
+      setJobs(MOCK_JOBS);
+      
+      // Initialize filters for mock data
+      const companies = new Set();
+      const locs = new Set();
+      MOCK_JOBS.forEach(j => {
+          if (j.companyName) companies.add(j.companyName);
+          if (Array.isArray(j.locations)) {
+              j.locations.forEach(l => {
+                  if (l) locs.add(l);
+              });
+          }
+      });
+      setUniqueCompanies(Array.from(companies).sort());
+      setUniqueLocations(Array.from(locs).sort());
+      
     } finally {
       setLoading(false);
     }

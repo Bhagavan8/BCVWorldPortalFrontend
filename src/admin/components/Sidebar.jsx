@@ -90,6 +90,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 </div>
                             </li>
 
+                            <li className="nav-item">
+                                <Link className={`nav-link ${isActive('/admin/users') ? 'active' : ''}`} to="/admin/users">
+                                    <i className="bi bi-people-fill"></i>
+                                    <span>Users Management</span>
+                                </Link>
+                            </li>
+
                             <li className="nav-item dropdown">
                                 <a
                                     className={`nav-link dropdown-toggle ${financeOpen ? '' : 'collapsed'}`}

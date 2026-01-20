@@ -3,31 +3,9 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
 import SEO from '../components/SEO';
+import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
 
-function GoogleAd({ slot, className }) {
-  const adRef = useRef(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !adRef.current) return;
-    const adElement = adRef.current;
-    if (!adElement.getAttribute('data-adsbygoogle-status')) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    }
-  }, []);
-
-  return (
-    <ins
-      ref={adRef}
-      className={`adsbygoogle${className ? ` ${className}` : ''}`}
-      style={{ display: 'block' }}
-      data-ad-client="ca-pub-6284022198338659"
-      data-ad-slot={slot}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    ></ins>
-  );
-}
 
 export default function JobDetails() {
   const [searchParams] = useSearchParams();
@@ -87,21 +65,6 @@ export default function JobDetails() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
-    const exists = Array.from(document.getElementsByTagName('script')).some(s => s.src === src);
-    if (!exists) {
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = src;
-      script.crossOrigin = 'anonymous';
-      document.head.appendChild(script);
-    }
-  }, []);
-
-
 
   useEffect(() => {
     hasViewed.current = false;
@@ -1040,7 +1003,16 @@ export default function JobDetails() {
                       <span className="meta-label">Education</span>
                       {(() => {
                         const levels = Array.isArray(job.educationLevels) ? job.educationLevels : [];
-                        const full = levels.join(', ');
+                        const formattedLevels = levels.map((level, index) => {
+                           const s = String(level).trim();
+                           // Remove "Degree" from all items except the last one to avoid repetition
+                           // e.g. "Bachelor Degree, Master Degree" -> "Bachelor, Master Degree"
+                           if (index < levels.length - 1) {
+                               return s.replace(/\s+Degree$/i, '');
+                           }
+                           return s;
+                        });
+                        const full = formattedLevels.join(', ');
                         const display = full.length > 25 ? `${full.slice(0, 25)}...` : full;
                         return <span className="meta-value" title={full}>{display}</span>;
                       })()}

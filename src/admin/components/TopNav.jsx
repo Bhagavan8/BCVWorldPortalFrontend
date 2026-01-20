@@ -46,6 +46,8 @@ const TopNav = ({ toggleSidebar }) => {
                 return 'Profile Upload';
             case '/admin/jobs':
                 return 'Manage Jobs';
+            case '/admin/users':
+                return 'Users Management';
             case '/admin/profile':
                 return 'Profile';
             default:
