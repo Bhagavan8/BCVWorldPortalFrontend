@@ -97,6 +97,20 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 </Link>
                             </li>
 
+                            <li className="nav-item">
+                                <Link className={`nav-link ${isActive('/admin/messages') ? 'active' : ''}`} to="/admin/messages">
+                                    <i className="bi bi-envelope-paper"></i>
+                                    <span>Messages</span>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link className={`nav-link ${isActive('/admin/comments') ? 'active' : ''}`} to="/admin/comments">
+                                    <i className="bi bi-chat-left-text"></i>
+                                    <span>Comments</span>
+                                </Link>
+                            </li>
+
                             <li className="nav-item dropdown">
                                 <a
                                     className={`nav-link dropdown-toggle ${financeOpen ? '' : 'collapsed'}`}

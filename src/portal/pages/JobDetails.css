@@ -51,6 +51,58 @@
   display: none;
 }
 
+/* Location Tooltip */
+.location-more {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: #0066cc;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.location-tooltip {
+  visibility: hidden;
+  background-color: #1e293b;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 100;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  white-space: normal;
+  min-width: 150px;
+  max-width: 250px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  pointer-events: none;
+  margin-bottom: 8px;
+}
+
+.location-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1e293b transparent transparent transparent;
+}
+
+.location-more:hover .location-tooltip,
+.location-more:focus .location-tooltip,
+.location-more:active .location-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 .mobile-menu-btn, .mobile-share-btn {
   background: none;
   border: none;

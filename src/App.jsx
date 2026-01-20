@@ -30,6 +30,8 @@ import MarketingAdsFinance from './admin/pages/MarketingAdsFinance';
 import TotalFinanceOverview from './admin/pages/TotalFinanceOverview';
 import FinanceTracking from './admin/pages/FinanceTracking';
 import UsersManagement from './admin/pages/UsersManagement';
+import MessagesSuggestions from './admin/pages/MessagesSuggestions';
+import CommentsManagement from './admin/pages/CommentsManagement';
 
 import BCVWorldAuth from './admin/pages/BCVWorldAuth';
 import Dashboard from './admin/pages/Dashboard';
@@ -340,6 +342,8 @@ function App() {
           <Route path="jobs-upload" element={<JobUploadForm />} />
           <Route path="jobs-edit/:id" element={<JobUploadForm />} />
           <Route path="users" element={<UsersManagement />} />
+          <Route path="messages" element={<MessagesSuggestions />} />
+          <Route path="comments" element={<CommentsManagement />} />
           
           <Route path="upload-news" element={<NewsUpload />} />
           <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />

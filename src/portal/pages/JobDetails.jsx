@@ -994,7 +994,25 @@ export default function JobDetails() {
                     <i className="bi bi-geo-alt"></i>
                     <div>
                       <span className="meta-label">Location</span>
-                      <span className="meta-value">{Array.isArray(job.locations) ? job.locations.join(', ') : ''}</span>
+                      <span className="meta-value">
+                        {Array.isArray(job.locations) ? (
+                          job.locations.length > 2 ? (
+                            <>
+                              {job.locations.slice(0, 2).join(', ')}
+                              <span className="location-more">
+                                <i className="bi bi-plus-circle-fill" style={{ fontSize: '0.9em', marginLeft: '4px' }}></i>
+                                <span className="location-tooltip">
+                                  {job.locations.slice(2).join(', ')}
+                                </span>
+                              </span>
+                            </>
+                          ) : (
+                            job.locations.join(', ')
+                          )
+                        ) : (
+                          ''
+                        )}
+                      </span>
                     </div>
                   </div>
                   <div className="meta-item">
