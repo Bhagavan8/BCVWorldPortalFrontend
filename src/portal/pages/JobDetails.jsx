@@ -285,62 +285,55 @@ export default function JobDetails() {
         }
       })();
 
-      // Fetch Previous Job
+      // Fetch Previous and Next Jobs (Active Only)
       const fetchNeighbors = async () => {
-        const currentId = Number(id);
+        try {
+          const res = await fetch(`${API_BASE}/api/jobs`);
+          if (res.ok) {
+            let allJobs = await res.json();
+            allJobs = Array.isArray(allJobs) ? allJobs : [];
+            
+            // Filter active jobs and sort by ID
+            const activeJobs = allJobs
+              .filter(j => j.isActive === true || j.isActive === 'true' || String(j.isActive) === 'true')
+              .sort((a, b) => a.id - b.id);
 
-        // 1. Fetch Previous (id - 1)
-        if (currentId > 1) {
-          try {
-            const res = await fetch(`${API_BASE}/api/jobs/${currentId - 1}`);
-            if (res.ok) {
-              const data = await res.json();
-              setPrevJob({
-                id: currentId - 1,
-                jobTitle: data.title || data.jobTitle,
-                companyName: data.company || data.companyName,
-                companyLogoUrl: data.logoUrl || data.companyLogoUrl
-              });
+            const currentId = Number(id);
+            const currentIndex = activeJobs.findIndex(j => j.id === currentId);
+
+            if (currentIndex !== -1) {
+              // Previous
+              if (currentIndex > 0) {
+                const prev = activeJobs[currentIndex - 1];
+                setPrevJob({
+                  id: prev.id,
+                  jobTitle: prev.title || prev.jobTitle,
+                  companyName: prev.company || prev.companyName,
+                  companyLogoUrl: prev.logoUrl || prev.companyLogoUrl
+                });
+              } else {
+                setPrevJob(null);
+              }
+
+              // Next
+              if (currentIndex < activeJobs.length - 1) {
+                const next = activeJobs[currentIndex + 1];
+                setNextJob({
+                  id: next.id,
+                  jobTitle: next.title || next.jobTitle,
+                  companyName: next.company || next.companyName,
+                  companyLogoUrl: next.logoUrl || next.companyLogoUrl
+                });
+              } else {
+                setNextJob(null);
+              }
             } else {
               setPrevJob(null);
+              setNextJob(null);
             }
-          } catch (e) {
-            setPrevJob(null);
           }
-        } else {
-          setPrevJob(null);
-        }
-
-        // 2. Fetch Next (id + 1)
-        let nextData = null;
-        let nextId = currentId + 1;
-        try {
-          const res = await fetch(`${API_BASE}/api/jobs/${nextId}`);
-          if (res.ok) {
-            nextData = await res.json();
-          }
-        } catch (e) { }
-
-        // 3. Fallback: If Next is missing, try Previous-Previous (id - 2)
-        if (!nextData && currentId > 2) {
-          try {
-            nextId = currentId - 2; // Use this slot for the previous-previous job
-            const res = await fetch(`${API_BASE}/api/jobs/${nextId}`);
-            if (res.ok) {
-              nextData = await res.json();
-            }
-          } catch (e) { }
-        }
-
-        if (nextData) {
-          setNextJob({
-            id: nextId,
-            jobTitle: nextData.title || nextData.jobTitle,
-            companyName: nextData.company || nextData.companyName,
-            companyLogoUrl: nextData.logoUrl || nextData.companyLogoUrl
-          });
-        } else {
-          setNextJob(null);
+        } catch (e) {
+          console.error('Error fetching neighbors:', e);
         }
       };
 

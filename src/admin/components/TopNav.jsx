@@ -1,28 +1,79 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import AuthService from '../services/AuthService';
+import NotificationService from '../services/NotificationService';
 
 const TopNav = ({ toggleSidebar }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(undefined);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (user) {
             setCurrentUser(user);
+            fetchNotifications();
         }
 
         const handleAuthChange = (newUser) => {
             setCurrentUser(newUser);
+            if (newUser) fetchNotifications();
         };
 
         AuthService.subscribe(handleAuthChange);
+        
+        // Poll every 2 hours (7200000 ms)
+        const intervalId = setInterval(() => {
+            if (AuthService.getCurrentUser()) {
+                fetchNotifications();
+            }
+        }, 7200000);
 
         return () => {
             AuthService.unsubscribe(handleAuthChange);
+            clearInterval(intervalId);
         };
     }, []);
+
+    const fetchNotifications = async () => {
+        try {
+            const rawNotifications = await NotificationService.getRecentNotifications();
+            
+            const lastReadTime = localStorage.getItem('lastNotificationReadTime') || new Date(0).toISOString();
+            
+            // Calculate unread count and process list
+            const processed = rawNotifications.map(n => {
+                const isUnread = new Date(n.createdAt) > new Date(lastReadTime);
+                return { ...n, isUnread };
+            });
+
+            setNotifications(processed);
+            setUnreadCount(processed.filter(n => n.isUnread).length);
+        } catch (error) {
+            console.error('TopNav: Error loading notifications', error);
+        }
+    };
+
+    const handleMarkAllRead = () => {
+        const now = new Date().toISOString();
+        localStorage.setItem('lastNotificationReadTime', now);
+        
+        // Optimistically update UI
+        setNotifications(prev => prev.map(n => ({ ...n, isUnread: false })));
+        setUnreadCount(0);
+    };
+
+    const formatTimeAgo = (dateStr) => {
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const minutes = Math.floor(diff / 60000);
+        if (minutes < 60) return `${minutes}m ago`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours}h ago`;
+        const days = Math.floor(hours / 24);
+        return `${days}d ago`;
+    };
 
     const handleLogout = () => {
         AuthService.logout();
@@ -69,21 +120,72 @@ const TopNav = ({ toggleSidebar }) => {
                     <div className="dropdown me-3" id="notificationsDropdownContainer">
                         <button className="btn position-relative p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{overflow: 'visible'}}>
                             <i className="bi bi-bell fs-4"></i>
-                            <span className="position-absolute badge rounded-pill bg-danger" id="notificationBadge" style={{top: '-5px', right: '-5px', display: 'none', zIndex: 1050, border: '2px solid white'}}>
-                                0
-                            </span>
+                            {unreadCount > 0 && (
+                                <span className="position-absolute badge rounded-pill bg-danger" style={{top: '-5px', right: '-5px', zIndex: 1050, border: '2px solid white'}}>
+                                    {unreadCount}
+                                </span>
+                            )}
                         </button>
-                        <div className="dropdown-menu dropdown-menu-end p-0 shadow-lg border-0" style={{width: '320px', maxHeight: '400px', overflowY: 'auto'}}>
-                            <div className="card border-0">
-                                <div className="card-header bg-white py-2 border-bottom d-flex justify-content-between align-items-center sticky-top bg-white">
-                                    <h6 className="mb-0 fw-bold">Notifications</h6>
-                                    <button className="btn btn-link btn-sm text-decoration-none p-0" id="markAllReadBtn">Mark all read</button>
-                                </div>
-                                <div className="list-group list-group-flush" id="notificationsList">
-                                    <div className="text-center p-4 text-muted">
-                                        <small>No new notifications</small>
+                        <div className="dropdown-menu dropdown-menu-end p-0 shadow-lg border-0 mt-2" style={{width: '360px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto', borderRadius: '12px'}}>
+                            <div className="d-flex justify-content-between align-items-center py-3 px-3 border-bottom sticky-top bg-white">
+                                <h6 className="mb-0 fw-bold text-dark">Notifications</h6>
+                                {unreadCount > 0 && (
+                                    <button className="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style={{fontSize: '0.85rem'}} onClick={handleMarkAllRead}>
+                                        Mark all read
+                                    </button>
+                                )}
+                            </div>
+                            <div className="list-group list-group-flush">
+                                {notifications.length === 0 ? (
+                                    <div className="text-center p-5 text-muted">
+                                        <div className="mb-3">
+                                            <i className="bi bi-bell-slash fs-1 text-secondary opacity-50"></i>
+                                        </div>
+                                        <p className="mb-0 fw-medium">No new notifications</p>
                                     </div>
-                                </div>
+                                ) : (
+                                    notifications.map(notif => (
+                                        <Link 
+                                            key={`${notif.type}-${notif.id}`} 
+                                            to={notif.link} 
+                                            className="list-group-item list-group-item-action py-3 px-3 border-bottom-0 d-flex align-items-start position-relative"
+                                            style={{ 
+                                                backgroundColor: notif.isUnread ? '#f0f7ff' : '#fff',
+                                                transition: 'background-color 0.2s ease'
+                                            }}
+                                        >
+                                            <div className={`rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0 ${
+                                                notif.type === 'USER' ? 'bg-success bg-opacity-10 text-success' :
+                                                notif.type === 'COMMENT' ? 'bg-primary bg-opacity-10 text-primary' :
+                                                'bg-warning bg-opacity-10 text-warning'
+                                            }`} style={{ width: '42px', height: '42px' }}>
+                                                <i className={`bi ${
+                                                    notif.type === 'USER' ? 'bi-person-plus-fill' :
+                                                    notif.type === 'COMMENT' ? 'bi-chat-right-text-fill' :
+                                                    'bi-lightbulb-fill'
+                                                } fs-5`}></i>
+                                            </div>
+                                            <div className="flex-grow-1 min-w-0">
+                                                <div className="d-flex justify-content-between align-items-baseline mb-1">
+                                                    <span className={`text-uppercase small ${notif.isUnread ? 'fw-bold text-primary' : 'fw-semibold text-secondary'}`} style={{fontSize: '0.75rem', letterSpacing: '0.5px'}}>
+                                                        {notif.title}
+                                                    </span>
+                                                    <small className="text-muted ms-2 flex-shrink-0" style={{fontSize: '0.7rem'}}>
+                                                        {formatTimeAgo(notif.createdAt)}
+                                                    </small>
+                                                </div>
+                                                <p className={`mb-0 small text-break ${notif.isUnread ? 'text-dark fw-medium' : 'text-muted'}`} style={{lineHeight: '1.4'}}>
+                                                    {notif.description}
+                                                </p>
+                                            </div>
+                                            {notif.isUnread && (
+                                                <span className="position-absolute bg-primary rounded-circle" 
+                                                      style={{width: '8px', height: '8px', top: '15px', right: '10px'}}>
+                                                </span>
+                                            )}
+                                        </Link>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
