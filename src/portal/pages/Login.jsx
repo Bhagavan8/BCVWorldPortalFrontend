@@ -35,10 +35,15 @@ export default function Login() {
   const forgotPasswordPath = `/forgot-password?returnTo=${encodeURIComponent(returnTo)}`;
 
   useEffect(() => {
-    // Check for remembered email
+    // Check for remembered email and password
     const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
     if (rememberedEmail) {
-      setFormData(prev => ({ ...prev, email: rememberedEmail }));
+      setFormData(prev => ({ 
+        ...prev, 
+        email: rememberedEmail,
+        password: rememberedPassword || ''
+      }));
       setRememberMe(true);
     }
   }, []);
@@ -159,6 +164,16 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.email) {
+      toast.error('Please enter your email');
+      return;
+    }
+
+    if (!formData.password) {
+      toast.error('Please enter your password');
+      return;
+    }
+
     if (!formData.email.includes('@')) {
       toast.error('Please enter a valid email address');
       return;
@@ -215,8 +230,10 @@ export default function Login() {
 
       if (rememberMe) {
         localStorage.setItem('rememberedEmail', formData.email);
+        localStorage.setItem('rememberedPassword', formData.password);
       } else {
         localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedPassword');
       }
 
       toast.success('Login successful! Redirecting...');
@@ -238,25 +255,25 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
+    <div className="h-screen w-full flex flex-col lg:flex-row bg-[#0f172a] overflow-hidden font-sans text-slate-200">
       <SEO 
-        title="Login" 
+        title="Login"  
         description="Login to your BCVWORLD account to access job referrals, mentoring, and financial tools." 
         keywords="login, sign in, bcvworld login, career portal, job portal login"
       />
-      <div className="w-full lg:w-1/2 bg-indigo-900 text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
+      <div className="w-full lg:w-1/2 bg-[#0f172a] text-white p-8 lg:p-12 lg:pb-20 flex flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[100px]"></div>
-          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600 rounded-full opacity-20 blur-[100px]"></div>
+          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-10 blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600 rounded-full opacity-10 blur-[100px]"></div>
         </div>
 
         <div className="relative z-10">
-          <Link to="/" className="flex items-center space-x-2 text-white mb-12">
+          <Link to="/" className="flex items-center space-x-2 text-white mb-8">
             <img
               src="/assets/images/logo.webp"
               alt="BCVWORLD"
-              className="h-12 w-12 object-cover bg-white rounded-full p-1"
+              className="h-12 w-12 object-cover bg-white rounded-full p-1 shadow-lg shadow-blue-900/20"
               width="48"
               height="48"
               decoding="async"
@@ -268,51 +285,51 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">
               Your Complete <br/>
-              <span className="text-blue-400">Career Growth</span> Partner
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Career Growth</span> Partner
             </h1>
-            <p className="text-xl text-gray-300 mb-12 max-w-lg">
+            <p className="text-lg lg:text-xl text-slate-400 mb-8 max-w-lg">
               Join thousands of professionals who are accelerating their careers with BCVWorld's comprehensive platform.
             </p>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="p-3 bg-blue-500/20 rounded-xl">
+                <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm">
                   <Target className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1">Personalized Job Referrals</h3>
-                  <p className="text-gray-400">Direct access to opportunities at top companies tailored to your skills.</p>
+                  <h3 className="text-lg font-semibold mb-1 text-white">Personalized Job Referrals</h3>
+                  <p className="text-slate-400 text-sm">Direct access to opportunities at top companies tailored to your skills.</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="p-3 bg-purple-500/20 rounded-xl">
+                <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm">
                   <Users className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1">1:1 Career Mentoring</h3>
-                  <p className="text-gray-400">Get personalized guidance from industry experts and senior professionals.</p>
+                  <h3 className="text-lg font-semibold mb-1 text-white">1:1 Career Mentoring</h3>
+                  <p className="text-slate-400 text-sm">Get personalized guidance from industry experts and senior professionals.</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="p-3 bg-pink-500/20 rounded-xl">
+                <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm">
                   <BookOpen className="w-6 h-6 text-pink-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1">Comprehensive Resources</h3>
-                  <p className="text-gray-400">Access 200+ study materials, structured learning paths, and interview prep.</p>
+                  <h3 className="text-lg font-semibold mb-1 text-white">Comprehensive Resources</h3>
+                  <p className="text-slate-400 text-sm">Access 200+ study materials, structured learning paths, and interview prep.</p>
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        <div className="relative z-10 flex items-center justify-between text-sm text-gray-400 border-t border-white/10 pt-8">
-          <p>© 2026 BCVWorld. All rights reserved.</p>
-          <div className="flex space-x-6">
+        <div className="relative z-10 flex items-center justify-between text-sm text-slate-500 border-t border-slate-800 pt-6">
+          <p className="mb-0">© 2026 BCVWorld. All rights reserved.</p>
+          <div className="flex items-center space-x-6">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
@@ -320,7 +337,7 @@ export default function Login() {
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative bg-[#1e293b] border-l border-slate-700/50">
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
@@ -328,7 +345,7 @@ export default function Login() {
               <img
                 src="/assets/images/logo.webp"
                 alt="BCVWorld logo"
-                className="h-12 w-12 rounded-full"
+                className="h-12 w-12 rounded-full shadow-lg shadow-blue-900/20 bg-white p-1"
                 width="48"
                 height="48"
                 decoding="async"
@@ -338,18 +355,18 @@ export default function Login() {
           </div>
 
           <div className="text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-gray-900">Welcome Back!</h2>
-            <p className="mt-2 text-gray-600">Please enter your details to sign in.</p>
+            <h2 className="text-3xl font-bold text-white">Welcome Back!</h2>
+            <p className="mt-2 text-slate-400">Please enter your details to sign in.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                <div className="relative">
+                <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
                   </div>
                   <input
                     name="email"
@@ -357,17 +374,16 @@ export default function Login() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Enter your email"
+                    className="block w-full pl-10 pr-3 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <div className="relative">
+                <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
                   </div>
                   <input
                     name="password"
@@ -375,13 +391,12 @@ export default function Login() {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Enter your password"
+                    className="block w-full pl-10 pr-10 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -397,15 +412,15 @@ export default function Login() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 bg-slate-900 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300">
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <Link to={forgotPasswordPath} className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to={forgotPasswordPath} className="font-medium text-blue-400 hover:text-blue-300">
                   Forgot password?
                 </Link>
               </div>
@@ -414,7 +429,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg shadow-blue-900/20 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isLoading ? (
                 <span className="flex items-center">
@@ -434,10 +449,10 @@ export default function Login() {
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-slate-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-[#1e293b] text-slate-500">Or continue with</span>
               </div>
             </div>
 
@@ -445,7 +460,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => handleSocialLogin('Google')}
-                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-center w-full px-4 py-2 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors bg-slate-900"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -465,22 +480,23 @@ export default function Login() {
                     fill="#EA4335"
                   />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">Google</span>
+                <span className="text-sm font-medium text-slate-300">Google</span>
               </button>
             </div>
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-slate-700"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
+                <span className="px-2 bg-[#1e293b] text-slate-500">Don't have an account?</span>
               </div>
             </div>
 
             <div className="text-center">
-              <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
                 Create an account for free
+
               </Link>
             </div>
           </form>

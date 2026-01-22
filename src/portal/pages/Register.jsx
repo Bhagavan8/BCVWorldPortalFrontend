@@ -65,11 +65,21 @@ export default function Register() {
     password: '',
     confirmPassword: '',
     mobile: '',
+    countryCode: '+91',
     dob: '',
     country: 'India',
     state: '',
     city: ''
   });
+
+  const COUNTRY_CODES = [
+    { code: "+91", label: "IN (+91)" },
+    { code: "+1", label: "US/CA (+1)" },
+    { code: "+44", label: "UK (+44)" },
+    { code: "+61", label: "AU (+61)" },
+    { code: "+971", label: "AE (+971)" },
+    { code: "+65", label: "SG (+65)" },
+  ];
   
   const [cities, setCities] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
@@ -120,7 +130,20 @@ export default function Register() {
 
   const handleChange = (e) => {
     const key = e.target.name;
-    const val = e.target.value;
+    let val = e.target.value;
+
+    if (key === 'mobile') {
+      // Remove non-numeric characters
+      val = val.replace(/\D/g, '');
+      
+      // Enforce max length based on country code
+      if (formData.countryCode === '+91' && val.length > 10) {
+        val = val.slice(0, 10);
+      } else if (val.length > 15) {
+        val = val.slice(0, 15);
+      }
+    }
+
     setFormData(prev => ({
       ...prev,
       [key]: key === 'name' ? toTitleCase(val) : val
@@ -203,6 +226,39 @@ export default function Register() {
     e.preventDefault();
 
     // Validation
+    if (!formData.name) {
+      toast.error('Please enter your full name');
+      return;
+    }
+    if (!formData.mobile) {
+      toast.error('Please enter your mobile number');
+      return;
+    }
+    if (!formData.email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    if (!formData.dob) {
+      toast.error('Please select your date of birth');
+      return;
+    }
+    if (!formData.state) {
+      toast.error('Please select your state');
+      return;
+    }
+    if (!formData.city) {
+      toast.error('Please select your city');
+      return;
+    }
+    if (!formData.password) {
+      toast.error('Please enter a password');
+      return;
+    }
+    if (!formData.confirmPassword) {
+      toast.error('Please confirm your password');
+      return;
+    }
+
     if (emailError || !validateEmail(formData.email)) {
       toast.error('Please enter a valid email address');
       return;
@@ -228,8 +284,12 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      // Exclude confirmPassword from payload
-      const { confirmPassword, ...payload } = formData;
+      // Exclude confirmPassword and format mobile number
+      const { confirmPassword, countryCode, mobile, ...rest } = formData;
+      const payload = {
+        ...rest,
+        mobile: `${countryCode}${mobile}`
+      };
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 
       const response = await fetch(`${API_BASE_URL}/api/admin/auth/register`, {
@@ -306,25 +366,26 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
+    <div className="h-screen w-full flex flex-col lg:flex-row bg-[#0f172a] overflow-hidden font-sans text-slate-200">
       <SEO 
         title="Register" 
         description="Create a BCVWORLD account to unlock job referrals, mentoring, and exclusive career resources." 
         keywords="register, sign up, create account, bcvworld registration, career growth, job alerts"
       />
-      <div className="w-full lg:w-1/2 bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
+      {/* Left Side - Hidden on Mobile */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0f172a] text-white p-8 lg:p-12 flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-20 blur-[100px]"></div>
-          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600 rounded-full opacity-20 blur-[100px]"></div>
+          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-10 blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600 rounded-full opacity-10 blur-[100px]"></div>
         </div>
 
         <div className="relative z-10">
-          <Link to="/" className="flex items-center space-x-2 text-white mb-12">
+          <Link to="/" className="flex items-center space-x-2 text-white mb-8">
             <img
               src="/assets/images/logo.webp"
               alt="BCVWORLD"
-              className="h-12 w-12 object-cover bg-white rounded-full p-1"
+              className="h-12 w-12 object-cover bg-white rounded-full p-1 shadow-lg shadow-blue-900/20"
               width="48"
               height="48"
               decoding="async"
@@ -336,52 +397,52 @@ export default function Register() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
               Start Your <br/>
               <span className="text-blue-400">Career Journey</span> Today
             </h1>
-            <p className="text-xl text-gray-300 mb-12 max-w-lg">
+            <p className="text-lg text-slate-400 mb-8 max-w-lg">
               Join a community of professionals and get access to exclusive job opportunities, mentorship, and resources.
             </p>
 
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col space-y-2">
+                <div className="w-12 h-12 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center justify-center backdrop-blur-sm mb-2">
                   <CheckCircle className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Personalized Job Matches</h3>
-                  <p className="text-gray-400 text-sm">Get recommendations based on your skills</p>
+                  <h3 className="font-semibold text-lg leading-tight">Personalized Job Matches</h3>
+                  <p className="text-gray-400 text-xs mt-1">Get recommendations based on your skills</p>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <div className="flex flex-col space-y-2">
+                <div className="w-12 h-12 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center justify-center backdrop-blur-sm mb-2">
                   <Users className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Community Access</h3>
-                  <p className="text-gray-400 text-sm">Connect with peers and mentors</p>
+                  <h3 className="font-semibold text-lg leading-tight">Community Access</h3>
+                  <p className="text-slate-400 text-xs mt-1">Connect with peers and mentors</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <div className="flex flex-col space-y-2">
+                <div className="w-12 h-12 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center justify-center backdrop-blur-sm mb-2">
                   <BookOpen className="w-6 h-6 text-pink-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Learning Resources</h3>
-                  <p className="text-gray-400 text-sm">Access to premium study materials</p>
+                  <h3 className="font-semibold text-lg leading-tight">Learning Resources</h3>
+                  <p className="text-slate-400 text-xs mt-1">Access to premium study materials</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <div className="flex flex-col space-y-2">
+                <div className="w-12 h-12 bg-slate-800/50 border border-slate-700/50 rounded-xl flex items-center justify-center backdrop-blur-sm mb-2">
                   <Shield className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Secure & Private</h3>
-                  <p className="text-gray-400 text-sm">Your data is encrypted and protected with enterprise-grade security</p>
+                  <h3 className="font-semibold text-lg leading-tight">Secure & Private</h3>
+                  <p className="text-slate-400 text-xs mt-1">Your data is encrypted and protected</p>
                 </div>
               </div>
             </div>
@@ -389,23 +450,23 @@ export default function Register() {
         </div>
 
         <div className="relative z-10">
-          <div className="flex items-center space-x-2 text-sm text-gray-400">
+          <div className="flex items-center space-x-2 text-sm text-slate-400">
             <span>Already have an account?</span>
-            <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-white hover:text-blue-400 font-medium transition-colors">Sign in here</Link>
+            <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">Sign in here</Link>
           </div>
         </div>
       </div>
 
       {/* Right Panel - Registration Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-y-auto">
-        <div className="w-full max-w-xl">
+      <div className="w-full lg:w-1/2 h-full overflow-y-auto bg-[#1e293b] relative border-l border-slate-700/50">
+        <div className="w-full max-w-xl mx-auto p-6 sm:p-8 flex flex-col justify-center min-h-full">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-8">
+          <div className="lg:hidden flex justify-center mb-6">
             <Link to="/" className="flex items-center space-x-2">
               <img
                 src="/assets/images/logo.webp"
                 alt="BCVWORLD"
-                className="h-12 w-12 object-cover rounded-full"
+                className="h-12 w-12 object-cover rounded-full shadow-lg shadow-blue-900/20 bg-white p-1"
                 width="48"
                 height="48"
                 decoding="async"
@@ -415,43 +476,59 @@ export default function Register() {
           </div>
 
           <div className="mb-6 text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-            <p className="text-gray-600 text-base mt-2">Fill in your details to get started</p>
+            <h2 className="text-3xl font-bold text-white">Create Account</h2>
+            <p className="text-slate-400 text-base mt-2">Fill in your details to get started</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* Row 1: Name & Mobile */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                     <input
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
-                      placeholder="John Doe"
+                      className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
                       required
                     />
                   </div>
                 </div>
                 {/* Mobile */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="tel"
-                      name="mobile"
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
-                      placeholder="+91 9876543210"
-                      required
-                    />
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Mobile Number</label>
+                  <div className="flex gap-2">
+                    <div className="w-24 flex-shrink-0">
+                      <select
+                        name="countryCode"
+                        value={formData.countryCode}
+                        onChange={handleChange}
+                        className="w-full px-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
+                      >
+                        {COUNTRY_CODES.map(c => (
+                          <option key={c.code} value={c.code} className="bg-slate-900 text-white">
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="relative flex-1">
+                      <Phone className="absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
+                      <input
+                        type="tel"
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        className="w-full pl-8 pr-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
+                        required
+                        maxLength={formData.countryCode === '+91' ? 10 : 15}
+                        placeholder="1234567890"
+                      />
+                    </div>
                   </div>
                 </div>
             </div>
@@ -460,18 +537,17 @@ export default function Register() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-3 py-2.5 border rounded-lg focus:ring-2 outline-none transition-all text-base ${
-                        emailError ? 'border-red-300 focus:ring-red-200 focus:border-red-400' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 ${
+                        emailError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-slate-700 focus:ring-blue-500 focus:border-blue-500'
                       }`}
-                      placeholder="name@example.com"
                       required
                     />
                   </div>
@@ -479,15 +555,15 @@ export default function Register() {
                 </div>
                 {/* DOB */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">Date of Birth</label>
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                       <input
                         type="date"
                         name="dob"
                         value={formData.dob}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
+                        className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base [color-scheme:dark]"
                         required
                       />
                     </div>
@@ -497,38 +573,38 @@ export default function Register() {
             {/* Row 3: State & City */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">State</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <select
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none bg-white text-base"
+                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base"
                     required
                   >
-                    <option value="">Select State</option>
+                    <option value="" className="bg-slate-900 text-slate-400">Select State</option>
                     {Object.keys(INDIAN_STATES_CITIES).map(state => (
-                      <option key={state} value={state}>{state}</option>
+                      <option key={state} value={state} className="bg-slate-900 text-white">{state}</option>
                     ))}
                   </select>
                 </div>
                </div>
                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">City</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <select
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none bg-white text-base"
+                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base"
                     required
                     disabled={!formData.state}
                   >
-                    <option value="">Select City</option>
+                    <option value="" className="bg-slate-900 text-slate-400">Select City</option>
                     {cities.map(city => (
-                      <option key={city} value={city}>{city}</option>
+                      <option key={city} value={city} className="bg-slate-900 text-white">{city}</option>
                     ))}
                   </select>
                 </div>
@@ -538,49 +614,47 @@ export default function Register() {
             {/* Password */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     onFocus={() => setShowPasswordCriteria(true)}
-                    className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
-                    placeholder="••••••••"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Confirm Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2.5 border rounded-lg focus:ring-2 outline-none transition-all text-base ${
+                    className={`w-full pl-10 pr-10 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 ${
                       formData.confirmPassword && formData.password !== formData.confirmPassword
-                        ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-slate-700 focus:ring-blue-500 focus:border-blue-500'
                     }`}
-                    placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -593,22 +667,22 @@ export default function Register() {
 
             {/* Password Criteria Checklist */}
             {(showPasswordCriteria || formData.password) && (
-              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs font-medium text-gray-500 mb-2">Password Requirements:</p>
+              <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                <p className="text-xs font-medium text-slate-400 mb-2">Password Requirements:</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className={`flex items-center text-xs ${passwordCriteria.length ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`flex items-center text-xs ${passwordCriteria.length ? 'text-green-400' : 'text-slate-500'}`}>
                     <CheckCircle className="w-3 h-3 mr-1" /> 8+ Characters
                   </div>
-                  <div className={`flex items-center text-xs ${passwordCriteria.upper ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`flex items-center text-xs ${passwordCriteria.upper ? 'text-green-400' : 'text-slate-500'}`}>
                     <CheckCircle className="w-3 h-3 mr-1" /> Uppercase Letter
                   </div>
-                  <div className={`flex items-center text-xs ${passwordCriteria.lower ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`flex items-center text-xs ${passwordCriteria.lower ? 'text-green-400' : 'text-slate-500'}`}>
                     <CheckCircle className="w-3 h-3 mr-1" /> Lowercase Letter
                   </div>
-                  <div className={`flex items-center text-xs ${passwordCriteria.number ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`flex items-center text-xs ${passwordCriteria.number ? 'text-green-400' : 'text-slate-500'}`}>
                     <CheckCircle className="w-3 h-3 mr-1" /> Number
                   </div>
-                  <div className={`flex items-center text-xs ${passwordCriteria.special ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`flex items-center text-xs ${passwordCriteria.special ? 'text-green-400' : 'text-slate-500'}`}>
                     <CheckCircle className="w-3 h-3 mr-1" /> Special Char
                   </div>
                 </div>
@@ -623,18 +697,18 @@ export default function Register() {
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="w-4 h-4 border border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                  className="w-4 h-4 border border-slate-600 rounded bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
                 />
               </div>
-              <label htmlFor="terms" className="ml-2 text-xs text-gray-600">
-                I agree to the <Link to="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>
+              <label htmlFor="terms" className="ml-2 text-xs text-slate-400">
+                I agree to the <Link to="/terms" className="text-blue-400 hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-blue-400 hover:underline">Privacy Policy</Link>
               </label>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed text-sm"
+              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed text-sm shadow-lg shadow-blue-900/20"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -647,10 +721,10 @@ export default function Register() {
 
             <div className="relative my-3">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-slate-700"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-[#1e293b] text-slate-500">Or continue with</span>
               </div>
             </div>
 
@@ -658,7 +732,7 @@ export default function Register() {
               <button
                 type="button"
                 onClick={() => handleSocialLogin('Google')}
-                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-center w-full px-4 py-2 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors bg-slate-900"
               >
                 <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                   <path
@@ -678,15 +752,15 @@ export default function Register() {
                     fill="#EA4335"
                   />
                 </svg>
-                <span className="text-xs font-medium text-gray-700">Google</span>
+                <span className="text-xs font-medium text-slate-300">Google</span>
               </button>
             </div>
           </form>
 
           <div className="mt-4 text-center lg:hidden">
-             <p className="text-xs text-gray-600">
+             <p className="text-xs text-slate-400">
                Already have an account?{' '}
-               <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-blue-600 font-medium hover:underline">Sign in</Link>
+               <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="text-blue-400 font-medium hover:underline">Sign in</Link>
              </p>
           </div>
         </div>
