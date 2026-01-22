@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { BiCopy } from 'react-icons/bi';
 import SEO from '../components/SEO';
 import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
@@ -13,6 +14,7 @@ export default function JobDetails() {
   const id = searchParams.get('job_id') || searchParams.get('id');
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
   const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
@@ -217,10 +219,17 @@ export default function JobDetails() {
           setIsLiked(data.isLiked || false);
           setIsSaved(data.isSaved || false);
         } else {
-          console.error('Job not found');
+          if (response.status === 404) {
+             console.error('Job not found');
+             // Job will remain null, triggering "Job Not Found" UI
+          } else {
+             throw new Error(`Server returned ${response.status}`);
+          }
         }
       } catch (error) {
         console.error('Error fetching job details:', error);
+        setError('Unable to load job details. Please check your internet connection.');
+        toast.error('Network Error: Unable to load job details');
       } finally {
         setLoading(false);
       }
@@ -546,11 +555,36 @@ export default function JobDetails() {
 
     try {
       const u = JSON.parse(userStr);
-      const actualUser = u.data || u.user || u;
-      const userId = actualUser.id || actualUser.userId || actualUser.uid;
+      
+      // Robust User ID Extraction
+      let userId = 
+        u?.id ??
+        u?.userId ??
+        u?.uid ??
+        u?._id ??
+        u?.user?.id ??
+        u?.user?.userId ??
+        u?.user?.uid ??
+        u?.user?._id ??
+        u?.data?.id ??
+        u?.data?.userId ??
+        u?.data?.uid ??
+        u?.data?._id;
+
+      // Fallback: Extract ID from token if missing (similar to handlePostComment)
+      if (!userId) {
+        const token = u.token || u.access_token || u.data?.token || u.user?.token;
+        if (token) {
+          const decoded = parseJwt(token);
+          if (decoded) {
+            userId = decoded.id || decoded.userId || decoded.uid || decoded.sub;
+          }
+        }
+      }
 
       if (!userId) {
-        toast.error('Invalid user session');
+        console.error('User ID missing in object:', u);
+        toast.error('Invalid user session. Please logout and login again.');
         return;
       }
 
@@ -696,6 +730,14 @@ export default function JobDetails() {
     }
   }, [loading, job, navigate]);
 
+  const handleCopyTitle = () => {
+    if (job && job.jobTitle) {
+      navigator.clipboard.writeText(job.jobTitle)
+        .then(() => toast.success('Job title copied!'))
+        .catch(() => toast.error('Failed to copy title'));
+    }
+  };
+
   const handleShare = (platform) => {
     const url = window.location.href;
     const title = job?.jobTitle || 'Job Opportunity';
@@ -839,6 +881,31 @@ export default function JobDetails() {
     );
   }
 
+  if (error) {
+    return (
+      <>
+        {mobileNav}
+        <div className="not-found-container">
+          <div className="not-found-content">
+            <h2 className="text-red-600">Connection Error</h2>
+            <p>{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-primary mt-4"
+            >
+              Retry
+            </button>
+            <div className="mt-4">
+               <Link to="/jobs" className="text-blue-600 underline">
+                 Go back to Jobs
+               </Link>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   if (!job) {
     return (
       <>
@@ -942,6 +1009,23 @@ export default function JobDetails() {
                     {(job.jobTitle || '').length > 30
                       ? (job.jobTitle || '').slice(0, 30) + '...'
                       : (job.jobTitle || '')}
+                    {(user?.role === 'ADMIN' || user?.role === 'admin') && (
+                      <BiCopy 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyTitle();
+                        }}
+                        title="Copy full title"
+                        style={{ 
+                          fontSize: '0.5em', 
+                          marginLeft: '10px', 
+                          cursor: 'pointer',
+                          color: '#64748b',
+                          verticalAlign: 'middle',
+                          display: 'inline-block'
+                        }}
+                      />
+                    )}
                   </h1>
                   <h2 className="company-name">
                     {job.companyName || company?.name}
@@ -1449,6 +1533,15 @@ export default function JobDetails() {
                       className="company-job-item"
                       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     >
+                      <div className="company-job-logo-wrapper">
+                        <img 
+                          src={job.companyLogoUrl || company?.logoUrl} 
+                          alt={job.companyName || company?.name} 
+                          width="48" 
+                          height="48" 
+                          loading="lazy" 
+                        />
+                      </div>
                       <div className="company-job-details">
                         <h4 className="company-job-title">{rJob.jobTitle}</h4>
                         <div className="company-job-meta">

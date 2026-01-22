@@ -10,6 +10,7 @@ export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [companyMap, setCompanyMap] = useState({});
@@ -203,26 +204,8 @@ export default function Jobs() {
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);
-      // toast.error('Unable to connect to the server. Please check your internet connection.', { id: 'fetch-jobs-network-error' });
-      
-      // Fallback to Mock Data
-      toast.error('Backend unreachable. Showing mock data.', { id: 'fetch-jobs-mock' });
-      setJobs(MOCK_JOBS);
-      
-      // Initialize filters for mock data
-      const companies = new Set();
-      const locs = new Set();
-      MOCK_JOBS.forEach(j => {
-          if (j.companyName) companies.add(j.companyName);
-          if (Array.isArray(j.locations)) {
-              j.locations.forEach(l => {
-                  if (l) locs.add(l);
-              });
-          }
-      });
-      setUniqueCompanies(Array.from(companies).sort());
-      setUniqueLocations(Array.from(locs).sort());
-      
+      setError('Unable to connect to the server. Please check your internet connection.');
+      toast.error('Unable to connect to the server.', { id: 'fetch-jobs-network-error' });
     } finally {
       setLoading(false);
     }
@@ -295,6 +278,37 @@ export default function Jobs() {
 
     setFilteredJobs(result);
   }, [jobs, selectedCategory, companyFilter, searchTerm, location, experience, dateFilter, companyMap]);
+
+  if (loading) {
+    return (
+      <div className="pt-32 pb-12 bg-white min-h-screen font-sans flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading jobs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="pt-32 pb-12 bg-white min-h-screen font-sans flex items-center justify-center">
+        <div className="text-center p-8 max-w-md mx-auto">
+           <div className="text-red-500 text-5xl mb-4">
+             <BiXCircle className="inline-block" />
+           </div>
+           <h2 className="text-2xl font-bold text-gray-800 mb-2">Unable to Load Jobs</h2>
+           <p className="text-gray-600 mb-6">{error}</p>
+           <button 
+             onClick={() => { setError(null); fetchJobs(); }}
+             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+           >
+             Try Again
+           </button>
+        </div>
+      </div>
+    );
+  }
 
   const clearFilters = () => {
     setSearchTerm('');

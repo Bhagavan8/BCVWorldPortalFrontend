@@ -9,6 +9,7 @@ import './portal/App.css';
 import AdminLayout from './layouts/AdminLayout';
 import UserLayout from './layouts/UserLayout';
 import { RoleGuard } from './auth/RoleGuard';
+import IdleTimer from './auth/IdleTimer';
 
 import SEO from './portal/components/SEO';
 
@@ -327,6 +328,7 @@ function App() {
         }}
       />
       <ScrollToTop />
+      <IdleTimer />
       <Routes>
         {/* --- Admin Routes --- */}
         <Route path="/admin/auth" element={<BCVWorldAuth />} />
