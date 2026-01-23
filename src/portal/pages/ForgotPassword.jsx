@@ -72,10 +72,10 @@ export default function ForgotPassword() {
         description="Securely reset your BCVWorld account password by verifying your email and setting a new password."
         keywords="forgot password, reset password, BCVWorld login"
       />
-      <div className="h-screen bg-[#0f172a] flex font-sans text-slate-200 overflow-hidden">
+      <div className="min-h-screen lg:h-screen bg-[#0f172a] flex flex-col lg:flex-row font-sans text-slate-200 overflow-y-auto lg:overflow-hidden">
         
         {/* Left Side - Info Content */}
-        <div className="hidden lg:flex lg:w-3/5 flex-col justify-between p-8 relative overflow-hidden">
+        <div className="flex w-full lg:w-3/5 flex-col justify-between p-8 relative overflow-hidden shrink-0">
             {/* Background Decor */}
             <div className="absolute -z-10 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-3xl -top-40 -left-40"></div>
             <div className="absolute -z-10 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-3xl bottom-0 right-0"></div>

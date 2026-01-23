@@ -86,6 +86,7 @@ export default function Header() {
               <Link to="/#hero" className="text-gray-700 hover:text-blue-600 font-medium">Home</Link>
               <Link to="/about" className="text-gray-700 hover:text-blue-600 font-medium">About</Link>
               <Link to="/jobs" className="text-gray-700 hover:text-blue-600 font-medium">Jobs</Link>
+              <Link to="/mentorship" className="text-gray-700 hover:text-blue-600 font-medium">Mentorship</Link>
               <Link to="/suggestion" className="text-gray-700 hover:text-blue-600 font-medium">Suggestion</Link>
               
 
@@ -189,6 +190,7 @@ export default function Header() {
               <Link to="/#hero" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Home</Link>
               <Link to="/about" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">About</Link>
               <Link to="/jobs" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Jobs</Link>
+              <Link to="/mentorship" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Mentorship</Link>
               <Link to="/suggestion" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Suggestion</Link>
               
               <Link to="/#contact" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Contact</Link>
