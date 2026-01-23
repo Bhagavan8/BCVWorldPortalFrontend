@@ -93,8 +93,8 @@ export default function ForgotPassword() {
             </Link>
 
             {/* Main Content */}
-            <div className="flex flex-col justify-center space-y-8 max-w-3xl mt-4">
-                <h1 className="text-5xl font-extrabold leading-tight text-white">
+            <div className="flex flex-col justify-center space-y-6 lg:space-y-8 max-w-3xl mt-4">
+                <h1 className="text-3xl lg:text-5xl font-extrabold leading-tight text-white">
                     Reset your password <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
                     in two simple steps.
@@ -137,9 +137,10 @@ export default function ForgotPassword() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full lg:w-2/5 bg-[#1e293b] border-l border-slate-700/50 h-full overflow-y-auto relative">
+        <div className="w-full lg:w-2/5 bg-[#1e293b] border-l border-slate-700/50 h-auto lg:h-full relative shrink-0">
             <div className="min-h-full flex flex-col items-center justify-center p-8">
             <div className="w-full max-w-sm space-y-6">
+
                 <button
                     type="button"
                     onClick={handleBackToLogin}

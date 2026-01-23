@@ -32,6 +32,7 @@ export default function JobDetails() {
   const [showRightAd, setShowRightAd] = useState(true);
   const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
   const [hideStickyAds, setHideStickyAds] = useState(false);
+  const [isEducationExpanded, setIsEducationExpanded] = useState(false);
   const hasViewed = useRef(false);
   const bottomBarShownRef = useRef(false);
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
@@ -302,22 +303,24 @@ export default function JobDetails() {
             const currentIndex = activeJobs.findIndex(j => j.id === currentId);
 
             if (currentIndex !== -1) {
-              // Previous
-              if (currentIndex > 0) {
-                const prev = activeJobs[currentIndex - 1];
+              if (activeJobs.length > 1) {
+                // Circular Previous
+                const prev = currentIndex > 0 
+                  ? activeJobs[currentIndex - 1] 
+                  : activeJobs[activeJobs.length - 1];
+                
                 setPrevJob({
                   id: prev.id,
                   jobTitle: prev.title || prev.jobTitle,
                   companyName: prev.company || prev.companyName,
                   companyLogoUrl: prev.logoUrl || prev.companyLogoUrl
                 });
-              } else {
-                setPrevJob(null);
-              }
 
-              // Next
-              if (currentIndex < activeJobs.length - 1) {
-                const next = activeJobs[currentIndex + 1];
+                // Circular Next
+                const next = currentIndex < activeJobs.length - 1 
+                  ? activeJobs[currentIndex + 1] 
+                  : activeJobs[0];
+                
                 setNextJob({
                   id: next.id,
                   jobTitle: next.title || next.jobTitle,
@@ -325,6 +328,7 @@ export default function JobDetails() {
                   companyLogoUrl: next.logoUrl || next.companyLogoUrl
                 });
               } else {
+                setPrevJob(null);
                 setNextJob(null);
               }
             } else {
@@ -789,7 +793,7 @@ export default function JobDetails() {
           <i className="bi bi-list"></i>
         </button>
         <div className="mobile-logo">
-          <Link to="/">BCV World</Link>
+          <Link to="/">BCVWorld</Link>
         </div>
         <button className="mobile-share-btn" onClick={() => handleShare('copy')} aria-label="Copy job link">
           <i className="bi bi-share"></i>
@@ -997,11 +1001,8 @@ export default function JobDetails() {
                 <div className="company-details">
                   <h1
                     className="job-title"
-                    title={job.jobTitle || ''}
                   >
-                    {(job.jobTitle || '').length > 30
-                      ? (job.jobTitle || '').slice(0, 30) + '...'
-                      : (job.jobTitle || '')}
+                    {job.jobTitle || ''}
                     {(user?.role === 'ADMIN' || user?.role === 'admin') && (
                       <BiCopy 
                         onClick={(e) => {
@@ -1108,8 +1109,27 @@ export default function JobDetails() {
                            return s;
                         });
                         const full = formattedLevels.join(', ');
-                        const display = full.length > 25 ? `${full.slice(0, 25)}...` : full;
-                        return <span className="meta-value" title={full}>{display}</span>;
+                        const shouldTruncate = full.length > 25;
+
+                        return (
+                          <span className="meta-value">
+                            {shouldTruncate && !isEducationExpanded ? (
+                              <>
+                                <span title={full}>{full.slice(0, 25)}...</span>
+                                <i 
+                                  className="bi bi-plus-circle-fill" 
+                                  style={{ fontSize: '0.9em', marginLeft: '4px', cursor: 'pointer', color: '#0066cc' }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsEducationExpanded(true);
+                                  }}
+                                ></i>
+                              </>
+                            ) : (
+                              <span>{full}</span>
+                            )}
+                          </span>
+                        );
                       })()}
                     </div>
                   </div>
@@ -1611,7 +1631,7 @@ export default function JobDetails() {
                   >
                     <div className="nav-job-details">
                       <span className="nav-direction-label">
-                        {nextJob.id > Number(id) ? 'Next Opportunity' : 'Previous Opportunity'}
+                        Next Opportunity
                       </span>
                       <h4 className="nav-job-title">{nextJob.jobTitle}</h4>
                       <span className="nav-company-name">{nextJob.companyName}</span>

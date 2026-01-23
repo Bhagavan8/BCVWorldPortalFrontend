@@ -38,7 +38,7 @@ const Profile = () => {
   if (!user) {
     return (
       <div className="profile-page">
-        <SEO title="My Profile" description="View and manage your BCV World profile." />
+        <SEO title="My Profile" description="View and manage your BCVWorld profile." />
         <div className="profile-container">
           <div className="profile-empty-state">
             <div className="empty-illustration">
@@ -143,7 +143,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <SEO title="My Profile" description="View and manage your BCV World profile." />
+      <SEO title="My Profile" description="View and manage your BCVWorld profile." />
       
       {/* Header */}
       <header className="profile-header">

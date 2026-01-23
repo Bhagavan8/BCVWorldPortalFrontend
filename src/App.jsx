@@ -19,6 +19,7 @@ import JobDetails from './portal/pages/JobDetails';
 import NewsList from './portal/pages/NewsList';
 import NewsDetail from './portal/pages/NewsDetail';
 import AboutUs from './portal/pages/AboutUs';
+import Mentorship from './portal/pages/Mentorship';
 import Suggestion from './portal/pages/Suggestion';
 import FinanceCalculators from './portal/pages/FinanceCalculators';
 import Login from './portal/pages/Login';
@@ -367,6 +368,7 @@ function App() {
             <Route path="/news" element={<NewsList />} />
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/mentorship" element={<Mentorship />} />
             <Route path="/suggestion" element={<Suggestion />} />
             <Route path="/calculators" element={<FinanceCalculators />} />
             <Route path="/contact" element={<Home />} />

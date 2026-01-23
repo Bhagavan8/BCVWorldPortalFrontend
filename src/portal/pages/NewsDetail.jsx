@@ -73,7 +73,7 @@ const NewsDetail = () => {
                                 </div>
                                 <div className="d-flex align-items-center gap-2">
                                     <FaUser />
-                                    <span>{news.author || 'BCV World'}</span>
+                                    <span>{news.author || 'BCVWorld'}</span>
                                 </div>
                             </div>
                         </div>

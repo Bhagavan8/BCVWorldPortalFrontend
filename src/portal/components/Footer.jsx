@@ -26,7 +26,7 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-legal-links">
-             <span>&copy; {currentYear} BCV World. All Rights Reserved.</span>
+             <span>&copy; {currentYear} BCVWorld. All Rights Reserved.</span>
              <span className="separator">|</span>
              <a href="/disclaimer">Disclaimer</a>
              <span className="separator">|</span>

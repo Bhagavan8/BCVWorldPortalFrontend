@@ -261,7 +261,7 @@ export default function Login() {
         description="Login to your BCVWORLD account to access job referrals, mentoring, and financial tools." 
         keywords="login, sign in, bcvworld login, career portal, job portal login"
       />
-      <div className="w-full lg:w-1/2 bg-[#0f172a] text-white p-8 lg:p-12 lg:pb-20 flex flex-col justify-between relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0f172a] text-white p-8 lg:p-12 lg:pb-20 flex-col justify-between relative overflow-hidden">
         {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600 rounded-full opacity-10 blur-[100px]"></div>
