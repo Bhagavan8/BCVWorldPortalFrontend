@@ -7,6 +7,36 @@ import SEO from '../components/SEO';
 import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
 
+// Helper for robust fetching with retry and timeout
+const fetchWithRetry = async (url, options = {}, retries = 3, timeout = 20000) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(id);
+      
+      // If successful or client error (4xx except 429), return response
+      if (response.ok || (response.status >= 400 && response.status < 500)) {
+        return response;
+      }
+      
+      // If 5xx, throw to trigger retry
+      if (response.status >= 500) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+      
+      return response;
+    } catch (error) {
+      if (i === retries) throw error;
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = 1000 * Math.pow(2, i);
+      console.log(`Fetch failed, retrying in ${delay}ms... (${url})`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
 
 export default function JobDetails() {
   const [searchParams] = useSearchParams();
@@ -180,7 +210,7 @@ export default function JobDetails() {
           }
         }
 
-        const response = await fetch(url, { headers });
+        const response = await fetchWithRetry(url, { headers });
         if (response.ok) {
           const rawData = await response.json();
           // Normalize data to match component expectations (same as Jobs.jsx)
@@ -241,7 +271,7 @@ export default function JobDetails() {
     if (job && job.companyName) {
       (async () => {
         try {
-          const res = await fetch(`${API_BASE}/api/jobs`);
+          const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
           if (res.ok) {
             let allJobs = await res.json();
             allJobs = Array.isArray(allJobs) ? allJobs : [];
@@ -289,7 +319,7 @@ export default function JobDetails() {
       // Fetch Previous and Next Jobs (Active Only)
       const fetchNeighbors = async () => {
         try {
-          const res = await fetch(`${API_BASE}/api/jobs`);
+          const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
           if (res.ok) {
             let allJobs = await res.json();
             allJobs = Array.isArray(allJobs) ? allJobs : [];
@@ -719,13 +749,13 @@ export default function JobDetails() {
   }, []);
 
   useEffect(() => {
-    if (!loading && !job) {
+    if (!loading && !job && !error) {
       const timer = setTimeout(() => {
         navigate('/jobs');
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [loading, job, navigate]);
+  }, [loading, job, error, navigate]);
 
   const handleCopyTitle = () => {
     if (job && job.jobTitle) {
@@ -870,9 +900,9 @@ export default function JobDetails() {
     return (
       <>
         {mobileNav}
-        <div className="loading-screen">
-          <div className="spinner"></div>
-          <p>Loading job details...</p>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-white z-50 fixed inset-0">
+          <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-600 font-medium animate-pulse">Loading job details...</p>
         </div>
       </>
     );
@@ -882,21 +912,24 @@ export default function JobDetails() {
     return (
       <>
         {mobileNav}
-        <div className="not-found-container">
-          <div className="not-found-content">
-            <h2 className="text-red-600">Connection Error</h2>
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn-primary mt-4"
-            >
-              Retry
-            </button>
-            <div className="mt-4">
-               <Link to="/jobs" className="text-blue-600 underline">
-                 Go back to Jobs
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
+          <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
+             <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="bi bi-wifi-off text-3xl text-red-500"></i>
+             </div>
+             <h2 className="text-xl font-bold text-gray-900 mb-2">Connection Issue</h2>
+             <p className="text-gray-600 mb-6 text-sm md:text-base leading-relaxed">{error}</p>
+             <button 
+               onClick={() => window.location.reload()} 
+               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform active:scale-95"
+             >
+               <i className="bi bi-arrow-clockwise"></i> Retry Connection
+             </button>
+             <div className="mt-6">
+               <Link to="/jobs" className="text-gray-500 hover:text-blue-600 text-sm font-medium transition duration-200 flex items-center justify-center gap-1">
+                 <i className="bi bi-arrow-left"></i> Go back to Jobs
                </Link>
-            </div>
+             </div>
           </div>
         </div>
       </>
@@ -907,12 +940,15 @@ export default function JobDetails() {
     return (
       <>
         {mobileNav}
-        <div className="not-found-container">
-          <div className="not-found-content">
-            <h2>Job Not Found</h2>
-            <p>The job you are looking for does not exist or has been removed.</p>
-            <p className="text-muted small mb-4">Redirecting to jobs page in 5 seconds...</p>
-            <Link to="/jobs" className="btn-primary">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
+           <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
+            <div className="bg-yellow-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="bi bi-exclamation-triangle text-3xl text-yellow-500"></i>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Job Not Found</h2>
+            <p className="text-gray-600 mb-2 text-sm md:text-base">The job you are looking for does not exist or has been removed.</p>
+            <p className="text-gray-400 text-xs mb-6">Redirecting to jobs page automatically...</p>
+            <Link to="/jobs" className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg">
               Browse All Jobs Now
             </Link>
           </div>

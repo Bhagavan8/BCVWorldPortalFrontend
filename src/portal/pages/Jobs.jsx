@@ -6,6 +6,39 @@ import { BsPatchCheckFill } from 'react-icons/bs';
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
 
+// Helper for robust fetching with retry and timeout
+const fetchWithRetry = async (url, options = {}, retries = 3, timeout = 20000) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(id);
+      
+      // If successful or client error (4xx except 429), return response
+      // We treat 429 (Too Many Requests) as something to retry potentially, but standard fetch doesn't handle backoff headers automatically here.
+      // For now, retry only on network errors or 5xx server errors.
+      if (response.ok || (response.status >= 400 && response.status < 500)) {
+        return response;
+      }
+      
+      // If 5xx, throw to trigger retry
+      if (response.status >= 500) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+      
+      return response;
+    } catch (error) {
+      if (i === retries) throw error;
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = 1000 * Math.pow(2, i);
+      console.log(`Fetch failed, retrying in ${delay}ms... (${url})`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -175,7 +208,7 @@ export default function Jobs() {
         if (uniqueIds.length) {
           const results = await Promise.all(uniqueIds.map(async (cid) => {
             try {
-              const r = await fetch(`${API_BASE}/api/companies/${cid}`);
+              const r = await fetchWithRetry(`${API_BASE}/api/companies/${cid}`);
               if (r.ok) {
                 const c = await r.json();
                 return [cid, { name: c.name, website: c.website, about: c.about, logoUrl: c.logoUrl }];

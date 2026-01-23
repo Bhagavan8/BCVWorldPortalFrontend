@@ -111,6 +111,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 </Link>
                             </li>
 
+                            <li className="nav-item">
+                                <Link className={`nav-link ${isActive('/admin/mentorship') ? 'active' : ''}`} to="/admin/mentorship">
+                                    <i className="bi bi-calendar-check"></i>
+                                    <span>Mentorship</span>
+                                </Link>
+                            </li>
+
                             <li className="nav-item dropdown">
                                 <a
                                     className={`nav-link dropdown-toggle ${financeOpen ? '' : 'collapsed'}`}
