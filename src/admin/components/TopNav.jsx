@@ -134,6 +134,18 @@ const TopNav = ({ toggleSidebar }) => {
         <nav className="top-nav">
             <style>
                 {`
+                    .notifications-dropdown-menu {
+                        width: 360px;
+                        max-width: 90vw;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        border-radius: 12px;
+                        overflow-x: hidden;
+                        right: 0 !important;
+                        left: auto !important;
+                        transform: none !important;
+                    }
+
                     @media (max-width: 768px) {
                         .notifications-dropdown-responsive {
                             position: fixed !important;
@@ -144,6 +156,9 @@ const TopNav = ({ toggleSidebar }) => {
                             max-width: 360px !important;
                             right: auto !important;
                             max-height: 80vh !important;
+                            margin-top: 0 !important;
+                            z-index: 1060 !important;
+                            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
                         }
                     }
                 `}
@@ -157,7 +172,7 @@ const TopNav = ({ toggleSidebar }) => {
 
             <div className="top-nav-actions">
                 {currentUser && (
-                    <div className="dropdown me-3" id="notificationsDropdownContainer" ref={notifRef}>
+                    <div className="dropdown me-3 position-relative" id="notificationsDropdownContainer" ref={notifRef}>
                         <button 
                             className={`btn position-relative p-0 ${showNotifications ? 'show' : ''}`} 
                             type="button" 
@@ -172,8 +187,8 @@ const TopNav = ({ toggleSidebar }) => {
                                 </span>
                             )}
                         </button>
-                        <div className={`dropdown-menu dropdown-menu-end p-0 shadow-lg border-0 mt-2 notifications-dropdown-responsive ${showNotifications ? 'show' : ''}`} style={{width: '360px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto', borderRadius: '12px'}}>
-                            <div className="d-flex justify-content-between align-items-center py-3 px-3 border-bottom sticky-top bg-white">
+                        <div className={`dropdown-menu dropdown-menu-end p-0 shadow-lg border-0 mt-2 notifications-dropdown-menu notifications-dropdown-responsive ${showNotifications ? 'show' : ''}`}>
+                            <div className="d-flex justify-content-between align-items-center py-3 px-3 border-bottom sticky-top bg-white" style={{ borderTopLeftRadius: '12px', borderTopRightRadius: '12px', zIndex: 1 }}>
                                 <h6 className="mb-0 fw-bold text-dark">Notifications</h6>
                                 {unreadCount > 0 && (
                                     <button className="btn btn-link btn-sm text-decoration-none p-0 fw-semibold" style={{fontSize: '0.85rem'}} onClick={handleMarkAllRead}>

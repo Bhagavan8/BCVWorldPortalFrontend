@@ -118,7 +118,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
             
             {/* Hero Content */}
-            <div className="w-full lg:w-1/2" data-aos="fade-up" data-aos-delay="200">
+            <div className="w-full lg:w-1/2">
               <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-6">
                 <BiRocket className="mr-2 text-lg" />
                 Accelerating Your Career Growth
@@ -154,7 +154,7 @@ export default function Home() {
                 height="490"
                 srcSet="/images/illustration-1.webp 637w"
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                decoding="async"
+                decoding="sync"
                 fetchPriority="high"
               />
               <div className="absolute -bottom-6 -left-6 md:bottom-6 md:left-6 bg-white p-4 rounded-xl shadow-xl border border-gray-100 max-w-xs hidden sm:block">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
@@ -46,6 +46,79 @@ const fetchWithRetry = async (url, options = {}, retries = 3, timeout = 20000) =
     }
   }
 };
+
+const KEYWORDS = [
+  'fresher', 'freshers', 'graduates', 'postgraduates', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
+  'job description', 'key skills', 'qualifications', 'education', 'education branches', 'benefits', 'summary', 'engineer', 'engineering', 'bachelor', 'computer science', 'computer science and engineering', 'computer science engineering',
+  'communication skills', 'english communication', 'analytical', 'healthcare', 'compliance', 'security', 'regulatory',
+  'voice process', 'voice-based', 'voice', 'customer support', 'customer support process', 'international voice process', 'night shift', 'night shifts',
+  'cse', 'ece', 'ec', 'eee', 'cs', 'it', 'information technology', 'information technology engineering',
+  'electronics and communication engineering', 'electrical and electronics engineering', 'electronics engineering', 'electrical engineering', 'telecommunication engineering',
+  'mechanical engineering', 'civil engineering', 'chemical engineering', 'biomedical engineering', 'aeronautical engineering', 'automobile engineering', 'industrial engineering', 'instrumentation engineering',
+  'commerce', 'science', 'arts', 'business administration', 'computer applications',
+  'bcom', 'b.com', 'bsc', 'b.sc', 'ba', 'b.a', 'bba', 'bca', 'be', 'b.e', 'btech', 'b.tech', 'b.ed',
+  'mcom', 'm.com', 'msc', 'm.sc', 'ma', 'm.a', 'mba', 'mca', 'me', 'm.e', 'mtech', 'm.tech', 'm.ed',
+  'phd', 'doctorate',
+  'diploma', 'polytechnic', 'ug', 'pg',
+  'software testing', 'automation testing', 'manual testing', 'test cases', 'test scenarios', 'qa', 'api',
+  'front-end', 'front end', 'back-end', 'back end', 'database', 'unix', 'linux', 'sql', 'ai', 'istqb',
+];
+
+const TECH_STACK = [
+  'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker',
+  'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel',
+  'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API',
+  'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
+];
+
+
+
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const formatDateDDMMMYYYY = (dateString) => {
+    if (!dateString) return '';
+    let date;
+
+    // Handle YYYY-MM-DD manually to prevent timezone shifts
+    if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [y, m, d] = dateString.split('-');
+      date = new Date(y, parseInt(m) - 1, d);
+    } else {
+      date = new Date(dateString);
+    }
+
+    if (isNaN(date.getTime())) return dateString;
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('en-GB', { month: 'short' });
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
+
+  const getApplyHref = (val) => {
+    if (!val) return '#';
+    const s = String(val).trim();
+    if (!s) return '#';
+    if (/^(mailto|tel):/i.test(s)) return s;
+    if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) return s;
+    if (/^https?:\/\//i.test(s)) return s;
+    if (s.includes('@') && !s.includes('/')) return `mailto:${s}`;
+    if (s.startsWith('www.')) return `https://${s}`;
+    if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(s)) return `https://${s}`;
+    return s;
+  };
 
 export default function JobDetails() {
   const [searchParams] = useSearchParams();
@@ -277,24 +350,32 @@ export default function JobDetails() {
     })();
   }, [id, API_BASE]);
 
+  // Consolidated Side Effects for Related Jobs & Neighbors
   useEffect(() => {
-    if (job && job.companyName) {
-      setLoadingRelated(true);
-      (async () => {
-        try {
-          const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
-          if (res.ok) {
-            let allJobs = await res.json();
-            allJobs = Array.isArray(allJobs) ? allJobs : [];
+    if (!job || !id) return;
 
-            // Filter by SAME COMPANY instead of Category
-            const filtered = allJobs.filter(j => {
+    let isMounted = true;
+    setLoadingRelated(true);
+
+    const fetchRelatedAndNeighbors = async () => {
+      try {
+        // Fetch all jobs once for both "Related" and "Neighbors" logic
+        // Ideally, the backend should support /api/jobs?company=X or /api/jobs/neighbors/ID
+        const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
+        if (!res.ok || !isMounted) return;
+
+        let allJobs = await res.json();
+        allJobs = Array.isArray(allJobs) ? allJobs : [];
+
+        // 1. Process Related Jobs (Same Company)
+        if (job.companyName) {
+          const related = allJobs
+            .filter(j => {
               const cName = j.company || j.companyName;
-              const jId = j.id;
-              return cName && cName.toLowerCase() === job.companyName.toLowerCase() && String(jId) !== String(job.id);
-            });
-
-            const mapped = filtered.slice(0, 3).map(j => ({
+              return cName && cName.toLowerCase() === job.companyName.toLowerCase() && String(j.id) !== String(job.id);
+            })
+            .slice(0, 3)
+            .map(j => ({
               id: j.id,
               jobTitle: j.title || j.jobTitle,
               companyName: j.company || j.companyName,
@@ -302,157 +383,87 @@ export default function JobDetails() {
               companyLogoUrl: j.logoUrl || j.companyLogoUrl,
               postedDate: j.postedDate
             }));
-            setRelatedJobs(mapped);
-          }
-        } catch (e) {
-          console.error('Error fetching company jobs', e);
-        } finally {
-          setLoadingRelated(false);
+          
+          if (isMounted) setRelatedJobs(related);
         }
-      })();
-    }
-  }, [job, API_BASE]);
 
-  // Fetch Comments and Neighbor Jobs
+        // 2. Process Previous/Next Jobs (Neighbors)
+        const activeJobs = allJobs
+          .filter(j => j.isActive === true || j.isActive === 'true' || String(j.isActive) === 'true')
+          .sort((a, b) => a.id - b.id);
+
+        const currentId = Number(id);
+        const currentIndex = activeJobs.findIndex(j => j.id === currentId);
+
+        if (currentIndex !== -1 && activeJobs.length > 1) {
+          // Circular Previous
+          const prev = currentIndex > 0 
+            ? activeJobs[currentIndex - 1] 
+            : activeJobs[activeJobs.length - 1];
+          
+          // Circular Next
+          const next = currentIndex < activeJobs.length - 1 
+            ? activeJobs[currentIndex + 1] 
+            : activeJobs[0];
+
+          if (isMounted) {
+            setPrevJob({
+              id: prev.id,
+              jobTitle: prev.title || prev.jobTitle,
+              companyName: prev.company || prev.companyName,
+              companyLogoUrl: prev.logoUrl || prev.companyLogoUrl
+            });
+            setNextJob({
+              id: next.id,
+              jobTitle: next.title || next.jobTitle,
+              companyName: next.company || next.companyName,
+              companyLogoUrl: next.logoUrl || next.companyLogoUrl
+            });
+          }
+        } else if (isMounted) {
+          setPrevJob(null);
+          setNextJob(null);
+        }
+
+      } catch (e) {
+        console.error('Error fetching related/neighbor jobs', e);
+      } finally {
+        if (isMounted) setLoadingRelated(false);
+      }
+    };
+
+    fetchRelatedAndNeighbors();
+
+    return () => { isMounted = false; };
+  }, [job, id, API_BASE]); // Depend on 'job' to ensure we have companyName, and 'id' for neighbors
+
+  // Fetch Comments independently
   useEffect(() => {
-    if (id) {
-      // Fetch Comments
-      (async () => {
-        try {
-          const res = await fetch(`${API_BASE}/api/jobs/${id}/comments`);
-          if (res.ok) {
-            const data = await res.json();
-            setComments(data);
-          }
-        } catch (error) {
-          console.error('Error fetching comments:', error);
+    if (!id) return;
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/jobs/${id}/comments`);
+        if (res.ok) {
+          const data = await res.json();
+          setComments(data);
         }
-      })();
-
-      // Fetch Previous and Next Jobs (Active Only)
-      const fetchNeighbors = async () => {
-        try {
-          const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
-          if (res.ok) {
-            let allJobs = await res.json();
-            allJobs = Array.isArray(allJobs) ? allJobs : [];
-            
-            // Filter active jobs and sort by ID
-            const activeJobs = allJobs
-              .filter(j => j.isActive === true || j.isActive === 'true' || String(j.isActive) === 'true')
-              .sort((a, b) => a.id - b.id);
-
-            const currentId = Number(id);
-            const currentIndex = activeJobs.findIndex(j => j.id === currentId);
-
-            if (currentIndex !== -1) {
-              if (activeJobs.length > 1) {
-                // Circular Previous
-                const prev = currentIndex > 0 
-                  ? activeJobs[currentIndex - 1] 
-                  : activeJobs[activeJobs.length - 1];
-                
-                setPrevJob({
-                  id: prev.id,
-                  jobTitle: prev.title || prev.jobTitle,
-                  companyName: prev.company || prev.companyName,
-                  companyLogoUrl: prev.logoUrl || prev.companyLogoUrl
-                });
-
-                // Circular Next
-                const next = currentIndex < activeJobs.length - 1 
-                  ? activeJobs[currentIndex + 1] 
-                  : activeJobs[0];
-                
-                setNextJob({
-                  id: next.id,
-                  jobTitle: next.title || next.jobTitle,
-                  companyName: next.company || next.companyName,
-                  companyLogoUrl: next.logoUrl || next.companyLogoUrl
-                });
-              } else {
-                setPrevJob(null);
-                setNextJob(null);
-              }
-            } else {
-              setPrevJob(null);
-              setNextJob(null);
-            }
-          }
-        } catch (e) {
-          console.error('Error fetching neighbors:', e);
-        }
-      };
-
-      fetchNeighbors();
-    }
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+    fetchComments();
   }, [id, API_BASE]);
 
-  const parseJwt = (token) => {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      return null;
-    }
-  };
-
-  const formatDateDDMMMYYYY = (dateString) => {
-    if (!dateString) return '';
-    let date;
-
-    // Handle YYYY-MM-DD manually to prevent timezone shifts
-    if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      const [y, m, d] = dateString.split('-');
-      date = new Date(y, parseInt(m) - 1, d);
-    } else {
-      date = new Date(dateString);
-    }
-
-    if (isNaN(date.getTime())) return dateString;
-
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('en-GB', { month: 'short' });
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
-  };
-
-  const highlightContent = (htmlContent) => {
-    if (!htmlContent) return '';
-
-    const keywords = [
-      'fresher', 'freshers', 'graduates', 'postgraduates', 'experience', 'mandatory', 'required', 'preferred', 'responsibilities', 'role', 'salary', 'location',
-      'job description', 'key skills', 'qualifications', 'education', 'education branches', 'benefits', 'summary', 'engineer', 'engineering', 'bachelor', 'computer science', 'computer science and engineering', 'computer science engineering',
-      'communication skills', 'english communication', 'analytical', 'healthcare', 'compliance', 'security', 'regulatory',
-      'voice process', 'voice-based', 'voice', 'customer support', 'customer support process', 'international voice process', 'night shift', 'night shifts',
-      'cse', 'ece', 'ec', 'eee', 'cs', 'it', 'information technology', 'information technology engineering',
-      'electronics and communication engineering', 'electrical and electronics engineering', 'electronics engineering', 'electrical engineering', 'telecommunication engineering',
-      'mechanical engineering', 'civil engineering', 'chemical engineering', 'biomedical engineering', 'aeronautical engineering', 'automobile engineering', 'industrial engineering', 'instrumentation engineering',
-      'commerce', 'science', 'arts', 'business administration', 'computer applications',
-      'bcom', 'b.com', 'bsc', 'b.sc', 'ba', 'b.a', 'bba', 'bca', 'be', 'b.e', 'btech', 'b.tech', 'b.ed',
-      'mcom', 'm.com', 'msc', 'm.sc', 'ma', 'm.a', 'mba', 'mca', 'me', 'm.e', 'mtech', 'm.tech', 'm.ed',
-      'phd', 'doctorate',
-      'diploma', 'polytechnic', 'ug', 'pg',
-      'software testing', 'automation testing', 'manual testing', 'test cases', 'test scenarios', 'qa', 'api',
-      'front-end', 'front end', 'back-end', 'back end', 'database', 'unix', 'linux', 'sql', 'ai', 'istqb',
-      ...(job?.skills ? job.skills.split(',').map(s => s.trim()) : [])
-    ];
-
-    const techStack = [
-      'Java', 'Python', 'C++', 'C#', '.NET', 'JavaScript', 'React', 'Angular', 'Vue', 'Node.js', 'Spring Boot', 'AWS', 'Azure', 'Docker',
-      'Kubernetes', 'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'HTML', 'CSS', 'TypeScript', 'Go', 'Rust', 'PHP', 'Laravel',
-      'Django', 'Flask', 'TensorFlow', 'PyTorch', 'Linux', 'Unix', 'Agile', 'Scrum', 'Jira', 'Junit', 'Selenium', 'Rest API',
-      'GraphQL', 'Machine Learning', 'AI', 'Data Science', 'DevOps', 'CI/CD', 'Jenkins'
-    ];
-
-    const allKeywords = [...new Set([...keywords, ...techStack])].filter(k => k && k.length > 1);
+  const keywordPattern = useMemo(() => {
+    const extraSkills = job?.skills ? job.skills.split(',').map(s => s.trim()) : [];
+    const allKeywords = [...new Set([...KEYWORDS, ...TECH_STACK, ...extraSkills])].filter(k => k && k.length > 1);
     allKeywords.sort((a, b) => b.length - a.length);
     const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return `\\b(${allKeywords.map(escapeRegExp).join('|')})\\b`;
+  }, [job?.skills]);
+
+  const highlightContent = useCallback((htmlContent) => {
+    if (!htmlContent) return '';
 
     let processed = htmlContent;
     const safeReplace = (text, pattern, replacement) => {
@@ -464,7 +475,6 @@ export default function JobDetails() {
       }
     };
 
-    const keywordPattern = `\\b(${allKeywords.map(escapeRegExp).join('|')})\\b`;
     processed = safeReplace(processed, keywordPattern, '<b>$1</b>');
 
     const numberPattern = `(?<![&#\\w])\\b\\d+(\\.\\d+)?\\+?\\b`;
@@ -487,9 +497,9 @@ export default function JobDetails() {
     processed = linkify(processed);
 
     return processed;
-  };
+  }, [keywordPattern]);
 
-  const renderEnhancedContent = (htmlContent) => {
+  const renderEnhancedContent = useCallback((htmlContent) => {
     if (!htmlContent) return '';
     const hasBlocks = /<(p|ul|ol|table|br)[^>]*>/i.test(htmlContent);
     if (hasBlocks) {
@@ -508,9 +518,44 @@ export default function JobDetails() {
     }
     const html = paras.map(p => `<p>${p}</p>`).join('');
     return highlightContent(html);
-  };
+  }, [highlightContent]);
 
-  const handlePostComment = async () => {
+  const walkinDetails = useMemo(() => {
+    if (!job?.walkin_details || typeof job.walkin_details !== 'string') return null;
+    const text = String(job.walkin_details || '');
+    const plain = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const timeRangeMatch = plain.match(/(\d{1,2}[.:]\d{2}\s*(AM|PM))\s*-\s*(\d{1,2}[.:]\d{2}\s*(AM|PM))/i);
+    const startTime = timeRangeMatch ? timeRangeMatch[1] : null;
+    const endTime = timeRangeMatch ? timeRangeMatch[3] : null;
+    const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : null;
+    const dateMatch = plain.match(/\b(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+\d{4})?)\b/);
+    const date = dateMatch ? dateMatch[1] : null;
+    let venue = null;
+    const contactIdx = plain.toLowerCase().indexOf('contact');
+    if (timeRangeMatch) {
+      const afterTime = plain.slice(plain.indexOf(timeRangeMatch[0]) + timeRangeMatch[0].length).trim();
+      const contactAfterIdx = afterTime.toLowerCase().indexOf('contact');
+      venue = afterTime ? (contactAfterIdx > -1 ? afterTime.slice(0, contactAfterIdx).trim() : afterTime) : null;
+    }
+    const emailMatch = plain.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/);
+    const phoneMatch = plain.match(/(\+?\d[\d\s-]{9,}\d)/);
+    let contactName = null;
+    if (contactIdx > -1) {
+      const cText = plain.slice(contactIdx + 'contact'.length).trim();
+      const nameMatch = cText.match(new RegExp('[-:' + '\u2013' + ']\\s*([A-Za-z ]+)')) || cText.match(/^\s*([A-Za-z ]+)/);
+      contactName = nameMatch ? nameMatch[1].trim() : null;
+    }
+    const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
+    const contactParts = [contactName, phoneMatch ? phoneMatch[1] : null, emailMatch ? emailMatch[0] : null].filter(Boolean);
+    
+    const mapQuery = (venue && venue.trim().length > 0)
+      ? venue
+      : (locationsArr.length > 0 ? locationsArr.join(', ') : '');
+
+    return { date, timeRange, venue, locationsArr, contactParts, mapQuery };
+  }, [job?.walkin_details]);
+
+  const handlePostComment = useCallback(async () => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
       toast.error('Please login to comment');
@@ -570,7 +615,7 @@ export default function JobDetails() {
 
       if (response.ok) {
         const newComment = await response.json();
-        setComments([newComment, ...comments]);
+        setComments(prev => [newComment, ...prev]);
         setCommentText('');
         toast.success('Comment posted successfully!');
       } else {
@@ -584,9 +629,9 @@ export default function JobDetails() {
     } finally {
       setPostingComment(false);
     }
-  };
+  }, [commentText, API_BASE, id]);
 
-  const handleLike = async () => {
+  const handleLike = useCallback(async () => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
       toast.error('Please login to like this job');
@@ -668,9 +713,9 @@ export default function JobDetails() {
       console.error('Error toggling like:', error);
       toast.error('Something went wrong');
     }
-  };
+  }, [API_BASE, id]);
 
-  const handleSaveJob = async () => {
+  const handleSaveJob = useCallback(async () => {
     // Attempt to bookmark the page
     const title = document.title;
     const url = window.location.href;
@@ -703,8 +748,8 @@ export default function JobDetails() {
     }
 
     // Also toggle local state just for visual feedback
-    setIsSaved(!isSaved);
-  };
+    setIsSaved(prev => !prev);
+  }, []);
 
 
   useEffect(() => {
@@ -773,15 +818,15 @@ export default function JobDetails() {
     }
   }, [loading, job, error, navigate]);
 
-  const handleCopyTitle = () => {
+  const handleCopyTitle = useCallback(() => {
     if (job && job.jobTitle) {
       navigator.clipboard.writeText(job.jobTitle)
         .then(() => toast.success('Job title copied!'))
         .catch(() => toast.error('Failed to copy title'));
     }
-  };
+  }, [job]);
 
-  const handleShare = (platform) => {
+  const handleShare = useCallback((platform) => {
     const url = window.location.href;
     const title = job?.jobTitle || 'Job Opportunity';
     const companyName = job?.companyName || company?.name || 'BCVWORLD';
@@ -812,25 +857,19 @@ export default function JobDetails() {
         return;
     }
     window.open(shareUrl, '_blank');
-  };
-
-  const getApplyHref = (val) => {
-    if (!val) return '#';
-    const s = String(val).trim();
-    if (!s) return '#';
-    if (/^(mailto|tel):/i.test(s)) return s;
-    if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) return s;
-    if (/^https?:\/\//i.test(s)) return s;
-    if (s.includes('@') && !s.includes('/')) return `mailto:${s}`;
-    if (s.startsWith('www.')) return `https://${s}`;
-    if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(s)) return `https://${s}`;
-    return s;
-  };
+  }, [job, company]);
 
   const applyTargetValue = job?.applicationLink || job?.applicationEmail || job?.applicationLinkOrEmail;
   const applyHref = getApplyHref(applyTargetValue);
   const isApplyMailto = /^mailto:/i.test(applyHref);
   const applyDisplayValue = isApplyMailto ? applyHref.replace(/^mailto:/i, '') : applyTargetValue;
+
+  const handleApply = useCallback((e) => {
+    if (applyHref === '#') {
+      e.preventDefault();
+      toast.error('Application link not available');
+    }
+  }, [applyHref]);
 
   const mobileNav = (
     <>
@@ -1048,7 +1087,7 @@ export default function JobDetails() {
                         height="80"
                         sizes="(max-width: 640px) 60px, 80px"
                         style={{ objectFit: 'contain' }}
-                        decoding="async"
+                        decoding="sync"
                         loading="eager"
                       />
                     </div>
@@ -1168,10 +1207,12 @@ export default function JobDetails() {
                         return (
                           <span className="meta-value" style={{ display: 'block' }}>
                             {shouldTruncate && !isEducationExpanded ? (
-                              <span style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-                                <span title={full} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{full.slice(0, 30)}...</span>
+                              <span style={{ display: 'flex', alignItems: 'center' }}>
+                                <span title={full} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: '0 1 auto' }}>
+                                  {full}
+                                </span>
                                 <BiPlusCircle 
-                                  style={{ fontSize: '1.2em', cursor: 'pointer', color: '#0066cc', flexShrink: 0 }}
+                                  style={{ fontSize: '1.2em', cursor: 'pointer', color: '#0066cc', marginLeft: '4px', flexShrink: 0 }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setIsEducationExpanded(true);
@@ -1317,62 +1358,32 @@ export default function JobDetails() {
                 </div>
                 {typeof job.walkin_details === 'string' ? (
                   <div className="section-content">
-                    {(() => {
-                      const text = String(job.walkin_details || '');
-                      const plain = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                      const timeRangeMatch = plain.match(/(\d{1,2}[.:]\d{2}\s*(AM|PM))\s*-\s*(\d{1,2}[.:]\d{2}\s*(AM|PM))/i);
-                      const startTime = timeRangeMatch ? timeRangeMatch[1] : null;
-                      const endTime = timeRangeMatch ? timeRangeMatch[3] : null;
-                      const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : null;
-                      const dateMatch = plain.match(/\b(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+\d{4})?)\b/);
-                      const date = dateMatch ? dateMatch[1] : null;
-                      let venue = null;
-                      const contactIdx = plain.toLowerCase().indexOf('contact');
-                      if (timeRangeMatch) {
-                        const afterTime = plain.slice(plain.indexOf(timeRangeMatch[0]) + timeRangeMatch[0].length).trim();
-                        const contactAfterIdx = afterTime.toLowerCase().indexOf('contact');
-                        venue = afterTime ? (contactAfterIdx > -1 ? afterTime.slice(0, contactAfterIdx).trim() : afterTime) : null;
-                      }
-                      const emailMatch = plain.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/);
-                      const phoneMatch = plain.match(/(\+?\d[\d\s-]{9,}\d)/);
-                      let contactName = null;
-                      if (contactIdx > -1) {
-                        const cText = plain.slice(contactIdx + 'contact'.length).trim();
-                        const nameMatch = cText.match(new RegExp('[-:' + '\u2013' + ']\\s*([A-Za-z ]+)')) || cText.match(/^\s*([A-Za-z ]+)/);
-                        contactName = nameMatch ? nameMatch[1].trim() : null;
-                      }
-                      const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
-                      const contactParts = [contactName, phoneMatch ? phoneMatch[1] : null, emailMatch ? emailMatch[0] : null].filter(Boolean);
-                      return (
-                        <div>
-                          <div style={{ textAlign: 'center', fontWeight: 700 }}>Time and Venue</div>
-                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                            {(date ? `${formatDateDDMMMYYYY(date)} , ` : '')}{timeRange || 'Missing'}
-                          </div>
-                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                            {locationsArr.length > 0 ? locationsArr.join(', ') : (venue || 'Missing')}
-                            {(() => {
-                              const mapQuery = (venue && venue.trim().length > 0)
-                                ? venue
-                                : (locationsArr.length > 0 ? locationsArr.join(', ') : '');
-                              return mapQuery ? (
-                                <a
-                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  style={{ color: '#0d6efd', marginLeft: 8 }}
-                                >
-                                  (View on map)
-                                </a>
-                              ) : null;
-                            })()}
-                          </div>
-                          <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                            Contact - {contactParts.length > 0 ? contactParts.join(', ') : 'Missing'}
-                          </div>
+                    {walkinDetails ? (
+                      <div>
+                        <div style={{ textAlign: 'center', fontWeight: 700 }}>Time and Venue</div>
+                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                          {(walkinDetails.date ? `${formatDateDDMMMYYYY(walkinDetails.date)} , ` : '')}{walkinDetails.timeRange || 'Missing'}
                         </div>
-                      );
-                    })()}
+                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                          {walkinDetails.locationsArr.length > 0 ? walkinDetails.locationsArr.join(', ') : (walkinDetails.venue || 'Missing')}
+                          {walkinDetails.mapQuery ? (
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(walkinDetails.mapQuery)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#0d6efd', marginLeft: 8 }}
+                            >
+                              (View on map)
+                            </a>
+                          ) : null}
+                        </div>
+                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
+                          Contact - {walkinDetails.contactParts.length > 0 ? walkinDetails.contactParts.join(', ') : 'Missing'}
+                        </div>
+                      </div>
+                    ) : (
+                      <div dangerouslySetInnerHTML={{ __html: renderEnhancedContent(String(job.walkin_details)) }} />
+                    )}
                   </div>
                 ) : Array.isArray(job.walkin_details) ? (
                   <div className="section-content">
@@ -1653,12 +1664,7 @@ export default function JobDetails() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-primary"
-                    onClick={(e) => {
-                      if (applyHref === '#') {
-                        e.preventDefault();
-                        toast.error('Application link not available');
-                      }
-                    }}
+                    onClick={handleApply}
                   >
                     <BiLinkExternal className="bi" /> Click here to Apply Now
                   </a>
@@ -1748,12 +1754,7 @@ export default function JobDetails() {
               target={isApplyMailto ? undefined : "_blank"}
               rel={isApplyMailto ? undefined : "noopener noreferrer"}
               className="bottom-btn apply-btn"
-              onClick={(e) => {
-                if (applyHref === '#') {
-                  e.preventDefault();
-                  toast.error('Application link not available');
-                }
-              }}
+              onClick={handleApply}
             >
               <BiLinkExternal className="bi" />
               <span>Apply Now</span>
