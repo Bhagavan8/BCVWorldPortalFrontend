@@ -127,6 +127,7 @@ export default function Home() {
                 src="/images/illustration-1.webp" 
                 alt="Career Growth Illustration" 
                 className="w-full h-auto drop-shadow-2xl animate-float"
+                style={{ aspectRatio: '637/490' }}
                 width="637"
                 height="490"
                 decoding="async"

@@ -980,7 +980,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <GoogleAd slot="3196528375" />
+              <GoogleAd slot="3196528375" minHeight="600px" />
             </div>
           </div>
         )}
@@ -992,7 +992,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <i className="bi bi-x-lg"></i>
               </button>
-              <GoogleAd slot="6272433641" />
+              <GoogleAd slot="6272433641" minHeight="600px" />
             </div>
           </div>
         )}

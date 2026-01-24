@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' } }) {
+function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px' }) {
   const adRef = useRef(null);
 
   useEffect(() => {
@@ -29,15 +29,17 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
   }, []);
 
   return (
-    <ins
-      ref={adRef}
-      className={`adsbygoogle${className ? ` ${className}` : ''}`}
-      style={style}
-      data-ad-client="ca-pub-6284022198338659"
-      data-ad-slot={slot}
-      data-ad-format={format}
-      data-full-width-responsive={fullWidthResponsive}
-    ></ins>
+    <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc' }}>
+      <ins
+        ref={adRef}
+        className={`adsbygoogle${className ? ` ${className}` : ''}`}
+        style={{ ...style, display: 'block', width: '100%' }}
+        data-ad-client="ca-pub-6284022198338659"
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive={fullWidthResponsive}
+      ></ins>
+    </div>
   );
 }
 

@@ -7,6 +7,7 @@ import {
   CheckCircle, 
   Star, 
   ChevronRight, 
+  ChevronDown,
   User, 
   Video, 
   MessageSquare,
@@ -61,6 +62,7 @@ const Mentorship = () => {
   const [bookingStep, setBookingStep] = useState(0); // 0: Select, 1: Date/Time, 2: Details, 3: Payment
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', goal: '' });
 
   // Prefill user data if logged in
@@ -336,7 +338,65 @@ const Mentorship = () => {
         </div>
       </section>
 
-      {/* 3. Session Types & Pricing - List Layout (No Cards) */}
+      {/* 3. Meet Your Mentor - Human Connection */}
+      <section className="py-20 bg-slate-50 border-t border-slate-200">
+        <div className="container mx-auto px-4 max-w-4xl">
+           <div className="flex flex-col md:flex-row items-center gap-12">
+              <div className="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 bg-gray-200 rounded-full overflow-hidden border-4 border-white shadow-lg relative">
+                 {/* Placeholder for mentor image, using generic avatar if no image */}
+                 <div className="w-full h-full bg-slate-300 flex items-center justify-center text-slate-500">
+                    <User className="w-16 h-16" />
+                 </div>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                 <h2 className="text-3xl font-bold text-slate-900 mb-4">Hi, I’m CV 👋</h2>
+                 <p className="text-slate-600 leading-relaxed text-lg mb-6">
+                    I’ve helped <span className="font-bold text-slate-900">students</span> crack interviews at top product companies and startups. 
+                    I’ve been on both sides of the table — candidate and interviewer.
+                 </p>
+                 <p className="text-slate-600 leading-relaxed text-lg">
+                    In our session, you won’t get theory. You’ll get <span className="font-bold text-slate-900">real, practical advice</span> that actually works.
+                 </p>
+                 
+                 <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4">
+                    {["7+ years industry experience", "Expert Interviewer", "Senior Software Engineer"].map((tag, i) => (
+                       <span key={i} className="bg-white border border-slate-200 px-4 py-2 rounded-full text-sm font-medium text-slate-700 shadow-sm">
+                          {tag}
+                       </span>
+                    ))}
+                 </div>
+              </div>
+           </div>
+        </div>
+      </section>
+
+      {/* 4. Who is this for? - Segmentation */}
+      <section className="py-20 bg-white border-t border-slate-200">
+        <div className="container mx-auto px-4 max-w-3xl">
+           <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Is This Mentorship Right for You?</h2>
+           <div className="space-y-4">
+              {[
+                 "Preparing for product-based company interviews",
+                 "Confused about DSA/System Design roadmap",
+                 "Resume not getting shortlisted",
+                 "Switching from service → product company",
+                 "Final year or 0–3 years experience"
+              ].map((item, i) => (
+                 <div key={i} className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
+                       <Check className="w-4 h-4 text-green-600" />
+                    </div>
+                    <span className="text-lg text-slate-700 font-medium">{item}</span>
+                 </div>
+              ))}
+           </div>
+           <p className="text-center text-slate-500 mt-10 font-medium">
+              If you said <span className="text-blue-600 font-bold">"yes"</span> to even one, this session will save you months of trial and error.
+           </p>
+        </div>
+      </section>
+
+      {/* 5. Sessions pricing - Urgency Added */}
       <section id="sessions" className="py-24 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="mb-16">
@@ -365,22 +425,82 @@ const Mentorship = () => {
 
                 {/* Price & Action */}
                 <div className="md:col-span-4 flex flex-col items-start md:items-end justify-center border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8">
-                  <div className="mb-1">
+                  <div className="mb-6">
                      <span className="text-3xl font-bold text-slate-900">₹{session.price}</span>
                      <span className="text-slate-400 text-sm"> / session</span>
                   </div>
-                  <div className="text-sm text-slate-400 mb-6">{session.duration} duration</div>
+
                   <button 
                     onClick={() => handleBookClick(session)}
                     className="w-full md:w-auto px-8 py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2"
                   >
                     Book Now
                   </button>
+                  <p className="text-[10px] text-slate-400 text-center mt-2 w-full md:w-auto">Takes only 2 minutes to book</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
+      </section>
+
+      {/* 6. What you’ll walk away with - Outcome */}
+      <section className="py-20 bg-slate-900 text-white">
+         <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-16">
+               <h2 className="text-3xl font-bold mb-4">What You’ll Walk Away With</h2>
+               <p className="text-slate-400">Users don’t buy “30 mins”. They buy results.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+               {[
+                  { icon: <Target className="w-6 h-6" />, title: "Clear Roadmap", desc: "Step-by-step plan tailored to your goal." },
+                  { icon: <CheckCircle className="w-6 h-6" />, title: "Resume Fixes", desc: "Changes you can apply immediately." },
+                  { icon: <Zap className="w-6 h-6" />, title: "Interview Secrets", desc: "Mistakes you didn't know you were making." },
+                  { icon: <Video className="w-6 h-6" />, title: "Action Plan", desc: "Recording + notes after session." }
+               ].map((item, i) => (
+                  <div key={i} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                     <div className="text-blue-400 mb-4">{item.icon}</div>
+                     <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                     <p className="text-slate-400 text-sm">{item.desc}</p>
+                  </div>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* 7. Before vs After - Psychological */}
+      <section className="py-20 bg-white">
+         <div className="container mx-auto px-4 max-w-4xl">
+            <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Before vs After Mentorship</h2>
+            <div className="grid md:grid-cols-2 gap-8 md:gap-0 border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+               <div className="bg-slate-50 p-8 md:border-r border-slate-200">
+                  <h3 className="text-xl font-bold text-slate-500 mb-6 flex items-center gap-2">
+                     <span className="w-2 h-2 rounded-full bg-slate-400"></span> Before
+                  </h3>
+                  <ul className="space-y-4">
+                     {["Random YouTube prep", "100s of problems, no clarity", "Rejections & frustration", "Guessing resume changes"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-500">
+                           <span className="text-slate-400">✕</span> {item}
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+               <div className="bg-blue-50/50 p-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-blue-100 rounded-bl-full -mr-10 -mt-10 z-0"></div>
+                  <h3 className="text-xl font-bold text-blue-700 mb-6 flex items-center gap-2 relative z-10">
+                     <span className="w-2 h-2 rounded-full bg-blue-600"></span> After
+                  </h3>
+                  <ul className="space-y-4 relative z-10">
+                     {["Clear, focused roadmap", "Focused top 20 patterns", "Confident interviews", "Exact fixes that work"].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-slate-800 font-medium">
+                           <Check className="w-5 h-5 text-blue-600" /> {item}
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+            </div>
+         </div>
       </section>
 
       {/* 4. Booking Flow - Clean Steps */}
@@ -586,6 +706,9 @@ const Mentorship = () => {
                         <div className="text-center">
                            <div className="text-4xl font-bold text-slate-900 mb-2">₹{selectedSession?.price}</div>
                            <p className="text-sm text-slate-500">Scan with any UPI App</p>
+                           <p className="text-xs text-green-600 font-medium mt-2 flex items-center justify-center gap-1">
+                              <ShieldCheck className="w-3 h-3" /> 100% Secure Payment
+                           </p>
                         </div>
                     </div>
 
@@ -677,85 +800,62 @@ const Mentorship = () => {
         </section>
       )}
 
-      {/* 5. How it works - Minimalist Steps */}
-      <section className="py-24 border-t border-slate-100">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-12">
-            {[
-              { step: "01", title: "Book a Slot", desc: "Choose a time that works for you from the calendar." },
-              { step: "02", title: "Join the Call", desc: "Connect via the Google Meet link sent to your email." },
-              { step: "03", title: "Get Results", desc: "Receive actionable feedback and resources after the session." }
-            ].map((item, i) => (
-              <div key={i} className="relative group">
-                <div className="text-6xl font-bold text-slate-100 mb-4 group-hover:text-blue-50 transition-colors">
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-slate-900">{item.title}</h3>
-                <p className="text-slate-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Success Stories - Clean Grid */}
-      <section className="py-24 bg-slate-900 text-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl font-bold mb-16">Real Stories, Real Growth</h2>
-          <div className="grid md:grid-cols-3 gap-12 border-t border-slate-800 pt-12">
-            {[
-              { 
-                name: "Priya Sharma", 
-                role: "SDE-1 at Amazon", 
-                quote: "The mock interview session was a game changer. I realized my approach to DP problems was inefficient. Two weeks later, I cleared the Amazon loop!",
-              },
-              { 
-                name: "Rahul Verma", 
-                role: "Frontend Dev at Swiggy", 
-                quote: "I was stuck in a service-based company. The career guidance session helped me restructure my resume and portfolio. Highly recommended!",
-              },
-              { 
-                name: "Ananya Gupta", 
-                role: "Data Analyst at Flipkart", 
-                quote: "Honest feedback is rare. The mentor didn't sugarcoat things, which is exactly what I needed to improve my SQL and Python skills.",
-              }
-            ].map((story, i) => (
-              <div key={i} className="space-y-6">
-                <p className="text-slate-300 italic leading-relaxed text-lg">"{story.quote}"</p>
-                <div>
-                  <h4 className="font-bold text-white">{story.name}</h4>
-                  <p className="text-xs text-blue-400 uppercase tracking-wider mt-1">{story.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FAQ - Clean List */}
-      <section className="py-24 border-t border-slate-100">
+      {/* 9. FAQ - Accordion Style */}
+      <section className="py-24 border-t border-slate-100 bg-slate-50/50">
         <div className="container mx-auto px-4 max-w-3xl">
           <h2 className="text-3xl font-bold text-slate-900 mb-12">FAQ</h2>
-          <div className="space-y-8">
+          <div className="space-y-4">
             {[
               { q: "What happens if I miss the session?", a: "We offer one free reschedule if you inform us 24 hours in advance." },
               { q: "Is the payment refundable?", a: "Payments are non-refundable but can be used for future sessions in case of rescheduling." },
-              { q: "Do you review resumes?", a: "Yes! In the 1:1 Career Guidance session, we dedicate time to detailed resume reviews." }
+              { q: "Do you review resumes?", a: "Yes! In the 1:1 Career Guidance session, we dedicate time to detailed resume reviews." },
+              { q: "How do I join the session?", a: "You'll receive a Google Meet link via email and WhatsApp 10 minutes before the session." },
+              { q: "Can I record the session?", a: "Yes! We also provide a recording and summary notes after the session." },
+              { q: "Do you provide referrals?", a: "Yes, if your profile matches an opening in my network, I will happily refer you." },
+              { q: "What if I'm a complete beginner?", a: "No problem! We'll start from scratch and build a roadmap that suits your current level." }
             ].map((faq, i) => (
-              <div key={i} className="pb-8 border-b border-slate-100 last:border-0">
-                <h3 className="font-bold text-lg mb-2 text-slate-900">{faq.q}</h3>
-                <p className="text-slate-500">{faq.a}</p>
+              <div 
+                key={i} 
+                className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${openFaqIndex === i ? 'border-blue-500 shadow-md' : 'border-slate-200 hover:border-blue-300'}`}
+              >
+                <button 
+                  onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                  className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                >
+                  <span className={`font-bold text-lg ${openFaqIndex === i ? 'text-blue-700' : 'text-slate-900'}`}>{faq.q}</span>
+                  {openFaqIndex === i ? (
+                     <ChevronDown className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                  ) : (
+                     <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                  )}
+                </button>
+                
+                <AnimatePresence>
+                  {openFaqIndex === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      <div className="px-6 pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. Legal Footer */}
+      {/* 10. Friendly Legal */}
       <section className="py-12 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto px-4 max-w-4xl text-center">
-          <p className="text-xs text-slate-400 leading-relaxed">
-            BCVWorld Mentorship Platform connects users with independent industry experts. We do not guarantee job offers, interview calls, or specific career outcomes. The advice provided during sessions is based on the personal experience of the mentor and should be used for educational purposes only. Payments are processed securely via third-party gateways. Refunds are subject to our cancellation policy (must cancel 24h prior). By booking a session, you agree to our Terms of Service and Privacy Policy. All rights reserved &copy; {new Date().getFullYear()} BCVWorld.
+          <p className="text-sm text-slate-500 leading-relaxed">
+            Mentorship sessions are for learning and guidance purposes. While we share proven strategies, outcomes depend on your effort and preparation. 
+            Payments are secure and sessions can be rescheduled with prior notice. We’re here to genuinely help you grow 🚀
           </p>
         </div>
       </section>
