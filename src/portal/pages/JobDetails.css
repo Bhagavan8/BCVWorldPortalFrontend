@@ -659,6 +659,7 @@
   font-size: 16px;
   font-weight: 600;
   color: #333;
+  min-height: 2.5em; /* Reserve space for 2 lines to prevent CLS */
 }
 
 .meta-value.salary {
@@ -1022,6 +1023,31 @@
   white-space: pre-wrap; /* Preserves newlines */
 }
 
+.community-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  color: white;
+}
+
+.community-btn:hover {
+  opacity: 0.9;
+}
+
+.community-btn.btn-whatsapp {
+  background: #075e54;
+}
+
+.community-btn.btn-telegram {
+  background: #006699;
+}
+
 /* Mobile Responsive Tweaks for Comments */
 @media (max-width: 640px) {
   .comments-section {
@@ -1120,7 +1146,7 @@
 }
 
 .share-button.whatsapp {
-  background: #128c7e; /* Darker WhatsApp Teal */
+  background: #05443c; /* Accessible WhatsApp Dark Teal */
   color: white;
 }
 
@@ -1140,7 +1166,7 @@
 }
 
 .share-button.telegram {
-  background: #0088cc; /* Telegram Blue - darker */
+  background: #004d73; /* Accessible Telegram Blue */
   color: white;
 }
 

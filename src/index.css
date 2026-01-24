@@ -25,6 +25,11 @@ body {
   font-family: var(--app-font);
 }
 
+/* Prevent overflow warnings for replaced elements */
+img, video, canvas {
+  overflow: hidden;
+}
+
 /* Global Overrides to fix Bootstrap Conflicts */
 a, nav a, .nav-link, header a {
   text-decoration: none !important;
@@ -76,4 +81,3 @@ a:hover, nav a:hover, .nav-link:hover, header a:hover {
 html {
   scroll-behavior: smooth;
 }
-

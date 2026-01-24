@@ -38,7 +38,7 @@ const JobDetailsSkeleton = () => {
                   <div className="w-6 h-6 bg-gray-200 rounded flex-shrink-0"></div>
                   <div className="flex-1 space-y-2">
                     <div className="h-3 bg-gray-200 rounded w-16"></div>
-                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                    <div className="h-10 bg-gray-200 rounded w-full max-w-[120px]"></div>
                   </div>
                 </div>
               ))}

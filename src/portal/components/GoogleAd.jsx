@@ -11,6 +11,17 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     const loadAd = () => {
         if (adLoaded) return;
         
+        // Ensure the element is visible and has dimensions before pushing
+        if (!adRef.current || adRef.current.offsetWidth === 0 || adRef.current.offsetHeight === 0) {
+            // Check again in a moment if it might be a layout timing issue
+            setTimeout(() => {
+                 if (adRef.current && adRef.current.offsetWidth > 0) {
+                     loadAd();
+                 }
+            }, 500);
+            return;
+        }
+
         const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
         const scriptExists = Array.from(document.getElementsByTagName('script')).some(s => s.src === src);
         
@@ -24,12 +35,15 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
 
         const adElement = adRef.current;
         if (adElement && !adElement.getAttribute('data-adsbygoogle-status')) {
-            try {
-                (window.adsbygoogle = window.adsbygoogle || []).push({});
-                setAdLoaded(true);
-            } catch (e) {
-                console.error('AdSense error:', e);
-            }
+            // Use requestAnimationFrame to avoid forced reflow during the push
+            requestAnimationFrame(() => {
+                try {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                    setAdLoaded(true);
+                } catch (e) {
+                    console.error('AdSense error:', e);
+                }
+            });
         }
     };
 

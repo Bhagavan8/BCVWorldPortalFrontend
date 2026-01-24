@@ -13,7 +13,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['react-icons', 'lucide-react', 'react-hot-toast'],
+          'vendor-ui': ['react-icons', 'lucide-react', 'react-hot-toast', 'bootstrap'],
+          'vendor-charts': ['chart.js', 'react-chartjs-2'],
+          'vendor-anim': ['aos', 'framer-motion'],
           'vendor-utils': ['axios']
         }
       }
