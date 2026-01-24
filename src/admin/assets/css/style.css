@@ -1,34 +1,34 @@
 /* Add your custom styles here */
-.container {
+.admin-dashboard .container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
 /* Add these styles to your existing CSS */
-.form-label {
+.admin-dashboard .form-label {
     font-weight: 500;
 }
 
-.card {
+.admin-dashboard .card {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.card-header {
+.admin-dashboard .card-header {
     background-color: #f8f9fa;
     font-weight: 500;
 }
 
-textarea {
+.admin-dashboard textarea {
     resize: vertical;
 }
 
-.preview-image {
+.admin-dashboard .preview-image {
     max-width: 200px;
     border-radius: 4px;
     margin-top: 10px;
 }
 
-.btn-primary {
+.admin-dashboard .btn-primary {
     padding: 0.5rem 2rem;
 }
 
@@ -102,12 +102,28 @@ textarea {
 .sidebar .nav-link {
     color: #ffffff !important;
     opacity: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
 }
 
-.sidebar .nav-link i,
+.sidebar .nav-link .sidebar-icon {
+    margin-right: 12px !important;
+    color: #ffffff !important;
+    width: 20px !important;
+    text-align: center !important;
+    font-size: 1.2rem !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
 .sidebar .nav-link span,
 .sidebar .nav-link .dropdown-arrow {
     color: #ffffff !important;
+}
+
+.sidebar .nav-link span {
+    flex-grow: 1;
 }
 
 .sidebar .nav-link:hover {
@@ -159,7 +175,7 @@ textarea {
     color: #ffffff !important;
 }
 
-.sidebar .sub-menu .nav-link i {
+.sidebar .sub-menu .nav-link .sidebar-icon {
     margin-right: 12px !important; /* Slightly more space for icon */
     color: #ffffff !important;
     width: 20px !important; /* Fixed width for alignment */
@@ -197,7 +213,7 @@ textarea {
     background: linear-gradient(45deg, #ffca2c, #ffaa2c);
 }
 
-.back-to-portal-btn i {
+.back-to-portal-btn .sidebar-icon {
     color: #000 !important;
     font-weight: bold;
 }
@@ -228,7 +244,7 @@ textarea {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.user-profile .profile-img-placeholder i {
+.user-profile .profile-img-placeholder .sidebar-icon {
     font-size: 1.6rem;
     color: #fff;
 }

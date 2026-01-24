@@ -2,7 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
-import { BiCopy } from 'react-icons/bi';
+import { 
+  BiCopy, BiListUl, BiShare, BiX, BiHome, BiChevronRight, BiBriefcase, BiBulb, 
+  BiUserCircle, BiSolidUserBadge, BiLogOut, BiLogIn, BiUserPlus, 
+  BiWifiOff, BiRefresh, BiError, BiSolidUser, 
+  BiSolidBadgeCheck, BiMapPin, BiPlusCircle, BiSolidGraduation, BiCalendar, BiShow, 
+  BiHeart, BiSolidHeart, BiHash, BiMoney, BiBookmark, BiSolidBookmark, BiFile, 
+  BiWrench, BiCheckCircle, BiInfoCircle, BiShareAlt, BiLogoWhatsapp, BiLogoLinkedin, 
+  BiLogoFacebook, BiLogoTwitter, BiLogoTelegram, BiLink, BiBuilding, BiCommentDots, 
+  BiChat, BiLinkExternal, BiEnvelope, BiChevronLeft 
+} from 'react-icons/bi';
 import SEO from '../components/SEO';
 import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
@@ -58,6 +67,7 @@ export default function JobDetails() {
   const [postingComment, setPostingComment] = useState(false);
   const [user, setUser] = useState(null);
   const [relatedJobs, setRelatedJobs] = useState([]);
+  const [loadingRelated, setLoadingRelated] = useState(false);
   const [showLeftAd, setShowLeftAd] = useState(true);
   const [showRightAd, setShowRightAd] = useState(true);
   const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
@@ -269,6 +279,7 @@ export default function JobDetails() {
 
   useEffect(() => {
     if (job && job.companyName) {
+      setLoadingRelated(true);
       (async () => {
         try {
           const res = await fetchWithRetry(`${API_BASE}/api/jobs`);
@@ -295,6 +306,8 @@ export default function JobDetails() {
           }
         } catch (e) {
           console.error('Error fetching company jobs', e);
+        } finally {
+          setLoadingRelated(false);
         }
       })();
     }
@@ -714,11 +727,14 @@ export default function JobDetails() {
     let ticking = false;
     const update = () => {
       const doc = document.documentElement;
+      // READ phase - batch layout reads
       const total = doc.scrollHeight - doc.clientHeight;
       const scrolledPercent = total > 0 ? (doc.scrollTop / total) * 100 : 0;
+      const isMobile = window.innerWidth <= 640;
+
+      // WRITE phase - perform DOM updates
       const bar = document.getElementById('readingProgress');
       if (bar) bar.style.width = `${scrolledPercent}%`;
-      const isMobile = window.innerWidth <= 640;
 
       if (!isMobile) {
         setShowMobileBottomBar(false);
@@ -820,13 +836,13 @@ export default function JobDetails() {
     <>
       <div className="mobile-header font-sans">
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Open mobile menu" aria-expanded={sidebarOpen}>
-          <i className="bi bi-list"></i>
+          <BiListUl className="bi" />
         </button>
         <div className="mobile-logo">
           <Link to="/">BCVWorld</Link>
         </div>
         <button className="mobile-share-btn" onClick={() => handleShare('copy')} aria-label="Copy job link">
-          <i className="bi bi-share"></i>
+          <BiShare className="bi" />
         </button>
       </div>
 
@@ -834,22 +850,22 @@ export default function JobDetails() {
 
       <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
         <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
-          <i className="bi bi-x-lg"></i>
+          <BiX className="bi" />
         </button>
 
         <div className="sidebar-section">
           <h4>Navigation</h4>
           <Link to="/" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><i className="bi bi-house-door"></i> Home</span>
-            <i className="bi bi-chevron-right"></i>
+            <span><BiHome className="bi" /> Home</span>
+            <BiChevronRight className="bi" />
           </Link>
           <Link to="/jobs" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><i className="bi bi-briefcase"></i> Browse Jobs</span>
-            <i className="bi bi-chevron-right"></i>
+            <span><BiBriefcase className="bi" /> Browse Jobs</span>
+            <BiChevronRight className="bi" />
           </Link>
           <Link to="/suggestion" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><i className="bi bi-lightbulb"></i> Suggestions</span>
-            <i className="bi bi-chevron-right"></i>
+            <span><BiBulb className="bi" /> Suggestions</span>
+            <BiChevronRight className="bi" />
           </Link>
         </div>
 
@@ -858,11 +874,11 @@ export default function JobDetails() {
           {user ? (
             <>
               <div className="info-item">
-                <span><i className="bi bi-person-circle"></i> {user.name}</span>
+                <span><BiUserCircle className="bi" /> {user.name}</span>
               </div>
               <Link to="/profile" className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><i className="bi bi-person-badge"></i> My Profile</span>
-                <i className="bi bi-chevron-right"></i>
+                <span><BiSolidUserBadge className="bi" /> My Profile</span>
+                <BiChevronRight className="bi" />
               </Link>
               <button
                 className="info-item"
@@ -875,19 +891,19 @@ export default function JobDetails() {
                   toast.success('Logged out successfully');
                 }}
               >
-                <span><i className="bi bi-box-arrow-right"></i> Logout</span>
-                <i className="bi bi-chevron-right"></i>
+                <span><BiLogOut className="bi" /> Logout</span>
+                <BiChevronRight className="bi" />
               </button>
             </>
           ) : (
             <>
               <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><i className="bi bi-box-arrow-in-right"></i> Login</span>
-                <i className="bi bi-chevron-right"></i>
+                <span><BiLogIn className="bi" /> Login</span>
+                <BiChevronRight className="bi" />
               </Link>
               <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><i className="bi bi-person-plus"></i> Register</span>
-                <i className="bi bi-chevron-right"></i>
+                <span><BiUserPlus className="bi" /> Register</span>
+                <BiChevronRight className="bi" />
               </Link>
             </>
           )}
@@ -915,7 +931,7 @@ export default function JobDetails() {
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
           <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
              <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-wifi-off text-3xl text-red-500"></i>
+                <BiWifiOff className="text-3xl text-red-500" />
              </div>
              <h2 className="text-xl font-bold text-gray-900 mb-2">Connection Issue</h2>
              <p className="text-gray-600 mb-6 text-sm md:text-base leading-relaxed">{error}</p>
@@ -923,11 +939,11 @@ export default function JobDetails() {
                onClick={() => window.location.reload()} 
                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform active:scale-95"
              >
-               <i className="bi bi-arrow-clockwise"></i> Retry Connection
+               <BiRefresh /> Retry Connection
              </button>
              <div className="mt-6">
                <Link to="/jobs" className="text-gray-500 hover:text-blue-600 text-sm font-medium transition duration-200 flex items-center justify-center gap-1">
-                 <i className="bi bi-arrow-left"></i> Go back to Jobs
+                 <BiChevronLeft /> Go back to Jobs
                </Link>
              </div>
           </div>
@@ -943,7 +959,7 @@ export default function JobDetails() {
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
            <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
             <div className="bg-yellow-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i className="bi bi-exclamation-triangle text-3xl text-yellow-500"></i>
+              <BiError className="text-3xl text-yellow-500" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Job Not Found</h2>
             <p className="text-gray-600 mb-2 text-sm md:text-base">The job you are looking for does not exist or has been removed.</p>
@@ -978,7 +994,7 @@ export default function JobDetails() {
           <div className="ad-column ad-left" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
             <div className="ad-sidebar">
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
-                <i className="bi bi-x-lg"></i>
+                <BiX className="bi" />
               </button>
               <GoogleAd slot="3196528375" minHeight="600px" />
             </div>
@@ -990,7 +1006,7 @@ export default function JobDetails() {
           <div className="ad-column ad-right" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
             <div className="ad-sidebar">
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
-                <i className="bi bi-x-lg"></i>
+                <BiX className="bi" />
               </button>
               <GoogleAd slot="6272433641" minHeight="600px" />
             </div>
@@ -1003,7 +1019,7 @@ export default function JobDetails() {
           {/* Back Navigation */}
           <div className="back-navigation-bar">
             <Link to="/jobs" className="back-btn">
-              <i className="bi bi-arrow-left"></i> Back to Jobs
+              <BiChevronLeft className="bi" /> Back to Jobs
             </Link>
             <div className="breadcrumb-nav">
               <Link to="/">Home</Link> ›
@@ -1031,7 +1047,9 @@ export default function JobDetails() {
                         width="80"
                         height="80"
                         sizes="(max-width: 640px) 60px, 80px"
+                        style={{ objectFit: 'contain' }}
                         decoding="async"
+                        loading="eager"
                       />
                     </div>
                 <div className="company-details">
@@ -1084,14 +1102,14 @@ export default function JobDetails() {
                         justifyContent: 'center',
                         color: '#64748b'
                       }}>
-                        <i className="bi bi-person-fill" style={{ fontSize: '18px' }}></i>
+                        <BiSolidUser style={{ fontSize: '18px' }} />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
                             By {job.postedByName}
                           </span>
-                          <i className="bi bi-patch-check-fill" style={{ color: '#0066cc', fontSize: '14px' }}></i>
+                          <BiSolidBadgeCheck style={{ color: '#0066cc', fontSize: '14px' }} />
                         </div>
                         <span style={{ fontSize: '12px', color: '#64748b' }}>
                           Published on: {new Date(job.postedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -1105,7 +1123,7 @@ export default function JobDetails() {
               <div className="job-meta-section">
                 <div className="meta-grid">
                   <div className="meta-item">
-                    <i className="bi bi-geo-alt"></i>
+                    <BiMapPin className="bi" />
                     <div>
                       <span className="meta-label">Location</span>
                       <span className="meta-value">
@@ -1114,7 +1132,7 @@ export default function JobDetails() {
                             <>
                               {job.locations.slice(0, 2).join(', ')}
                               <span className="location-more">
-                                <i className="bi bi-plus-circle-fill" style={{ fontSize: '0.9em', marginLeft: '4px' }}></i>
+                                <BiPlusCircle style={{ fontSize: '0.9em', marginLeft: '4px' }} />
                                 <span className="location-tooltip">
                                   {job.locations.slice(2).join(', ')}
                                 </span>
@@ -1130,7 +1148,7 @@ export default function JobDetails() {
                     </div>
                   </div>
                   <div className="meta-item">
-                    <i className="bi bi-mortarboard"></i>
+                    <BiSolidGraduation className="bi" />
                     <div>
                       <span className="meta-label">Education</span>
                       {(() => {
@@ -1145,24 +1163,23 @@ export default function JobDetails() {
                            return s;
                         });
                         const full = formattedLevels.join(', ');
-                        const shouldTruncate = full.length > 25;
+                        const shouldTruncate = full.length > 30;
 
                         return (
-                          <span className="meta-value">
+                          <span className="meta-value" style={{ display: 'block' }}>
                             {shouldTruncate && !isEducationExpanded ? (
-                              <>
-                                <span title={full}>{full.slice(0, 25)}...</span>
-                                <i 
-                                  className="bi bi-plus-circle-fill" 
-                                  style={{ fontSize: '0.9em', marginLeft: '4px', cursor: 'pointer', color: '#0066cc' }}
+                              <span style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                                <span title={full} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{full.slice(0, 30)}...</span>
+                                <BiPlusCircle 
+                                  style={{ fontSize: '1.2em', cursor: 'pointer', color: '#0066cc', flexShrink: 0 }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setIsEducationExpanded(true);
                                   }}
-                                ></i>
-                              </>
+                                />
+                              </span>
                             ) : (
-                              <span>{full}</span>
+                              <span style={{ wordBreak: 'break-word' }}>{full}</span>
                             )}
                           </span>
                         );
@@ -1170,28 +1187,28 @@ export default function JobDetails() {
                     </div>
                   </div>
                   <div className="meta-item">
-                    <i className="bi bi-calendar3"></i>
+                    <BiCalendar className="bi" />
                     <div>
                       <span className="meta-label">Posted</span>
                       <span className="meta-value">{formatDateDDMMMYYYY(job.postedDate)}</span>
                     </div>
                   </div>
                   <div className="meta-item">
-                    <i className="bi bi-eye"></i>
+                    <BiShow className="bi" />
                     <div>
                       <span className="meta-label">Views</span>
                       <span className="meta-value">{job.viewCount !== undefined && job.viewCount !== null ? job.viewCount : 0}</span>
                     </div>
                   </div>
                   <div className="meta-item" onClick={handleLike} style={{ cursor: 'pointer' }}>
-                    <i className={`bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
+                    {isLiked ? <BiSolidHeart className="bi" /> : <BiHeart className="bi" />}
                     <div>
                       <span className="meta-label">Likes</span>
                       <span className="meta-value">{likeCount}</span>
                     </div>
                   </div>
                   <div className="meta-item meta-ref-id">
-                    <i className="bi bi-hash"></i>
+                    <BiHash className="bi" />
                     <div>
                       <span className="meta-label">Ref ID</span>
                       <span className="meta-value">{job.referralCode || '—'}</span>
@@ -1199,7 +1216,7 @@ export default function JobDetails() {
                   </div>
                   {job.salary && (
                     <div className="meta-item">
-                      <i className="bi bi-cash"></i>
+                      <BiMoney className="bi" />
                       <div>
                         <span className="meta-label">Salary</span>
                         <span className="meta-value salary">{job.salary}</span>
@@ -1215,11 +1232,11 @@ export default function JobDetails() {
                       onClick={handleSaveJob}
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', fontWeight: '500', height: '40px', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
                     >
-                      <i className={`bi ${isSaved ? 'bi-bookmark-fill' : 'bi-bookmark'}`}></i> {isSaved ? 'Saved' : 'Save'}
+                      {isSaved ? <BiSolidBookmark className="bi" /> : <BiBookmark className="bi" />} {isSaved ? 'Saved' : 'Save'}
                     </button>
 
                     <Link to="/suggestion" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '500', height: '40px' }}>
-                      <i className="bi bi-lightbulb"></i> Suggestion
+                      <BiBulb className="bi" /> Suggestion
                     </Link>
                   </div>
                 </div>
@@ -1235,7 +1252,7 @@ export default function JobDetails() {
             {/* Job Description */}
             <section className="content-section">
               <div className="section-title-bar">
-                <i className="bi bi-file-text-fill"></i>
+                <BiFile className="bi" />
                 <h3>Job Description</h3>
               </div>
               <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.description) }} />
@@ -1247,7 +1264,7 @@ export default function JobDetails() {
             {job.skills && (
               <section className="content-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-tools"></i>
+                  <BiWrench className="bi" />
                   <h3>Required Skills</h3>
                 </div>
                 {/* Desktop View */}
@@ -1274,7 +1291,7 @@ export default function JobDetails() {
             {job.qualifications && (
               <section className="content-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-check-circle-fill"></i>
+                  <BiCheckCircle className="bi" />
                   <h3>Qualifications</h3>
                 </div>
                 <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.qualifications) }} />
@@ -1285,7 +1302,7 @@ export default function JobDetails() {
             {job.details && (
               <section className="content-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-info-circle-fill"></i>
+                  <BiInfoCircle className="bi" />
                   <h3>Additional Details</h3>
                 </div>
                 <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.details) }} />
@@ -1295,7 +1312,7 @@ export default function JobDetails() {
             {job.walkin_details && (
               <section className="content-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-geo-alt-fill"></i>
+                  <BiMapPin className="bi" />
                   <h3>Walk-In Details</h3>
                 </div>
                 {typeof job.walkin_details === 'string' ? (
@@ -1321,7 +1338,7 @@ export default function JobDetails() {
                       let contactName = null;
                       if (contactIdx > -1) {
                         const cText = plain.slice(contactIdx + 'contact'.length).trim();
-                        const nameMatch = cText.match(/[-:–]\s*([A-Za-z ]+)/) || cText.match(/^\s*([A-Za-z ]+)/);
+                        const nameMatch = cText.match(new RegExp('[-:' + '\u2013' + ']\\s*([A-Za-z ]+)')) || cText.match(/^\s*([A-Za-z ]+)/);
                         contactName = nameMatch ? nameMatch[1].trim() : null;
                       }
                       const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -1424,44 +1441,44 @@ export default function JobDetails() {
             {/* Share Section */}
             <section className="content-section share-section">
               <div className="section-title-bar">
-                <i className="bi bi-share-fill"></i>
+                <BiShareAlt className="bi" />
                 <h3>Share This Job</h3>
               </div>
               <div className="share-grid">
                 <button className="share-button whatsapp" onClick={() => handleShare('whatsapp')}>
-                  <i className="bi bi-whatsapp"></i>
+                  <BiLogoWhatsapp className="bi" />
                   <span>WhatsApp</span>
                 </button>
                 <button className="share-button linkedin" onClick={() => handleShare('linkedin')}>
-                  <i className="bi bi-linkedin"></i>
+                  <BiLogoLinkedin className="bi" />
                   <span>LinkedIn</span>
                 </button>
                 <button className="share-button facebook" onClick={() => handleShare('facebook')}>
-                  <i className="bi bi-facebook"></i>
+                  <BiLogoFacebook className="bi" />
                   <span>Facebook</span>
                 </button>
                 <button className="share-button twitter" onClick={() => handleShare('twitter')}>
-                  <i className="bi bi-twitter"></i>
+                  <BiLogoTwitter className="bi" />
                   <span>Twitter</span>
                 </button>
                 <button className="share-button telegram" onClick={() => handleShare('telegram')}>
-                  <i className="bi bi-telegram"></i>
+                  <BiLogoTelegram className="bi" />
                   <span>Telegram</span>
                 </button>
                 <button className="share-button copy" onClick={() => handleShare('copy')}>
-                  <i className="bi bi-link-45deg"></i>
+                  <BiLink className="bi" />
                   <span>Copy Link</span>
                 </button>
               </div>
             </section>
 
-            <GoogleAd slot="4257478543" />
+            <GoogleAd slot="4257478543" minHeight="280px" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
               <section className="content-section company-info-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-building"></i>
+                  <BiBuilding className="bi" />
                   <h3>About the Company</h3>
                 </div>
                 <div className="company-info-header">
@@ -1481,7 +1498,7 @@ export default function JobDetails() {
                       <h4>{job.companyName || company?.name}</h4>
                       {(job.companyWebsite || company?.website) && (
                         <a href={job.companyWebsite || company?.website} target="_blank" rel="noopener noreferrer" className="company-website-link">
-                          <i className="bi bi-link-45deg"></i> Visit Website
+                          <BiLinkExternal className="bi" /> Visit Website
                         </a>
                       )}
                     </div>
@@ -1495,19 +1512,19 @@ export default function JobDetails() {
              <GoogleAd slot="7571899411" />
 
             <section className="community-section">
-              <h3 className="community-title"><i className="bi bi-people"></i> Join Our Community</h3>
+              <h3 className="community-title">Join Our Community</h3>
               <div className="community-actions">
                 <a href="https://www.whatsapp.com/channel/0029VasadwXLikgEikBhWE1o" target="_blank" rel="noopener noreferrer" className="community-btn btn-whatsapp">
-                  <i className="bi bi-whatsapp"></i> Join WhatsApp Group
+                  <BiLogoWhatsapp className="bi" /> Join WhatsApp Group
                 </a>
                 <a href="https://t.me/bcvworld" target="_blank" rel="noopener noreferrer" className="community-btn btn-telegram">
-                  <i className="bi bi-telegram"></i> Join Telegram Channel
+                  <BiLogoTelegram className="bi" /> Join Telegram Channel
                 </a>
               </div>
             </section>
 
             <section className="comments-section">
-              <h3 className="comments-title"><i className="bi bi-chat-dots"></i> Comments ({comments.length})</h3>
+              <h3 className="comments-title"><BiCommentDots className="bi" /> Comments ({comments.length})</h3>
 
               <div className="comment-input-area">
                 {user ? (
@@ -1561,21 +1578,32 @@ export default function JobDetails() {
                   ))
                 ) : (
                   <div className="no-comments" style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
-                    <i className="bi bi-chat" style={{ fontSize: '2rem', marginBottom: '12px', display: 'block' }}></i>
+                    <BiChat style={{ fontSize: '2rem', marginBottom: '12px', display: 'block', margin: '0 auto' }} />
                     <p style={{ margin: 0 }}>No comments yet. Be the first to comment!</p>
                   </div>
                 )}
               </div>
             </section>
 
-            {relatedJobs.length > 0 && (
+            {(loadingRelated || relatedJobs.length > 0) && (
               <section className="content-section company-jobs-section">
                 <div className="section-title-bar">
-                  <i className="bi bi-briefcase"></i>
+                  <BiBriefcase className="bi" />
                   <h3>More from {job.companyName}</h3>
                 </div>
                 <div className="company-jobs-list">
-                  {relatedJobs.map(rJob => (
+                  {loadingRelated ? (
+                     Array.from({ length: 3 }).map((_, idx) => (
+                      <div key={idx} className="company-job-item" style={{ pointerEvents: 'none' }}>
+                         <div className="company-job-logo-wrapper" style={{ background: '#f0f0f0', border: 'none' }}></div>
+                         <div className="company-job-details" style={{ width: '100%' }}>
+                            <div style={{ height: '20px', width: '70%', background: '#f0f0f0', borderRadius: '4px', marginBottom: '8px' }}></div>
+                            <div style={{ height: '14px', width: '40%', background: '#f0f0f0', borderRadius: '4px' }}></div>
+                         </div>
+                      </div>
+                    ))
+                  ) : (
+                    relatedJobs.map(rJob => (
                     <Link
                       to={`/job?job_id=${rJob.id}`}
                       key={rJob.id}
@@ -1595,16 +1623,16 @@ export default function JobDetails() {
                         <h4 className="company-job-title">{rJob.jobTitle}</h4>
                         <div className="company-job-meta">
                           {rJob.locations && rJob.locations.length > 0 && (
-                            <span className="company-job-location"><i className="bi bi-geo-alt"></i> {rJob.locations[0]}</span>
+                            <span className="company-job-location"><BiMapPin className="bi" /> {rJob.locations[0]}</span>
                           )}
                           <span className="company-job-date">Posted {rJob.postedDate ? formatDateDDMMMYYYY(rJob.postedDate) : 'Recently'}</span>
                         </div>
                       </div>
                       <div className="company-job-arrow">
-                        <i className="bi bi-chevron-right"></i>
+                        <BiChevronRight className="bi" />
                       </div>
                     </Link>
-                  ))}
+                  )))}
                 </div>
               </section>
             )}
@@ -1614,7 +1642,7 @@ export default function JobDetails() {
                 <div className="job-link-row">
                   <span className="job-link-label">Job Link:</span>
                   <a href={applyHref} className="email-apply-link">
-                    <i className="bi bi-envelope"></i> {applyDisplayValue}
+                    <BiEnvelope className="bi" /> {applyDisplayValue}
                   </a>
                 </div>
               ) : (
@@ -1632,7 +1660,7 @@ export default function JobDetails() {
                       }
                     }}
                   >
-                    <i className="bi bi-box-arrow-up-right"></i> Click here to Apply Now
+                    <BiLinkExternal className="bi" /> Click here to Apply Now
                   </a>
                 </div>
               )}
@@ -1645,7 +1673,7 @@ export default function JobDetails() {
                     to={`/job?type=private&job_id=${prevJob.id}&slug=${(prevJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(prevJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                     className="nav-job-item previous-job"
                   >
-                    <div className="nav-arrow-circle"><i className="bi bi-chevron-left"></i></div>
+                    <BiChevronLeft className="bi text-3xl text-gray-500" />
                     <div className="nav-logo-wrapper">
                       {(prevJob.companyLogoUrl) ? (
                         <img src={prevJob.companyLogoUrl} alt={prevJob.companyName || ''} className="nav-logo-img" width="48" height="48" loading="lazy" decoding="async" />
@@ -1674,12 +1702,12 @@ export default function JobDetails() {
                     </div>
                     <div className="nav-logo-wrapper">
                       {(nextJob.companyLogoUrl) ? (
-                        <img src={nextJob.companyLogoUrl} alt={nextJob.companyName || ''} className="nav-logo-img" width="48" height="48" loading="lazy" decoding="async" />
+                        <img src={nextJob.companyLogoUrl} alt={nextJob.companyName || ''} className="nav-logo-img" width="48" height="48" loading="lazy" decoding="async" sizes="(max-width: 640px) 48px, 48px" />
                       ) : (
                         <div className="nav-logo-img"></div>
                       )}
                     </div>
-                    <div className="nav-arrow-circle"><i className="bi bi-chevron-right"></i></div>
+                    <BiChevronRight className="bi text-3xl text-gray-500" />
                   </Link>
                 )}
               </div>
@@ -1727,7 +1755,7 @@ export default function JobDetails() {
                 }
               }}
             >
-              <i className="bi bi-box-arrow-up-right"></i>
+              <BiLinkExternal className="bi" />
               <span>Apply Now</span>
             </a>
           </div>

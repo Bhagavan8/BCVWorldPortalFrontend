@@ -611,11 +611,11 @@
   font-size: 0.95rem;
 }
 
-.suggestions li i {
+.suggestions li svg {
   color: #10b981;
 }
 
-.suggestions li i.bi-circle {
+.suggestions li .bi-circle {
   color: rgba(255, 255, 255, 0.5);
 }
 

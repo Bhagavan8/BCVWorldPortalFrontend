@@ -1,45 +1,54 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 import './portal/App.css';
 
-import AdminLayout from './layouts/AdminLayout';
-import UserLayout from './layouts/UserLayout';
 import { RoleGuard } from './auth/RoleGuard';
 import IdleTimer from './auth/IdleTimer';
 
 import SEO from './portal/components/SEO';
 
-import Home from './portal/pages/Home';
-import Jobs from './portal/pages/Jobs';
-import JobDetails from './portal/pages/JobDetails';
-import NewsList from './portal/pages/NewsList';
-import NewsDetail from './portal/pages/NewsDetail';
-import AboutUs from './portal/pages/AboutUs';
-import Mentorship from './portal/pages/Mentorship';
-import Suggestion from './portal/pages/Suggestion';
-import FinanceCalculators from './portal/pages/FinanceCalculators';
-import Login from './portal/pages/Login';
-import Register from './portal/pages/Register';
-import Profile from './portal/pages/Profile';
-import Terms from './portal/pages/Terms';
-import ForgotPassword from './portal/pages/ForgotPassword';
-import JobManagement from './admin/pages/JobManagement';
-import MarketingAdsFinance from './admin/pages/MarketingAdsFinance';
-import TotalFinanceOverview from './admin/pages/TotalFinanceOverview';
-import FinanceTracking from './admin/pages/FinanceTracking';
-import UsersManagement from './admin/pages/UsersManagement';
-import MessagesSuggestions from './admin/pages/MessagesSuggestions';
-import CommentsManagement from './admin/pages/CommentsManagement';
-import MentorshipAdmin from './admin/pages/MentorshipAdmin';
+// Layouts
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+const UserLayout = lazy(() => import('./layouts/UserLayout'));
 
-import BCVWorldAuth from './admin/pages/BCVWorldAuth';
-import Dashboard from './admin/pages/Dashboard';
-import JobUploadForm from './admin/components/JobUploadForm';
-import NewsUpload from './admin/pages/NewsUpload';
+// Portal Pages
+const Home = lazy(() => import('./portal/pages/Home'));
+const Jobs = lazy(() => import('./portal/pages/Jobs'));
+const JobDetails = lazy(() => import('./portal/pages/JobDetails'));
+const NewsList = lazy(() => import('./portal/pages/NewsList'));
+const NewsDetail = lazy(() => import('./portal/pages/NewsDetail'));
+const AboutUs = lazy(() => import('./portal/pages/AboutUs'));
+const Mentorship = lazy(() => import('./portal/pages/Mentorship'));
+const Suggestion = lazy(() => import('./portal/pages/Suggestion'));
+const FinanceCalculators = lazy(() => import('./portal/pages/FinanceCalculators'));
+const Login = lazy(() => import('./portal/pages/Login'));
+const Register = lazy(() => import('./portal/pages/Register'));
+const Profile = lazy(() => import('./portal/pages/Profile'));
+const Terms = lazy(() => import('./portal/pages/Terms'));
+const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
+
+// Admin Pages
+const JobManagement = lazy(() => import('./admin/pages/JobManagement'));
+const MarketingAdsFinance = lazy(() => import('./admin/pages/MarketingAdsFinance'));
+const TotalFinanceOverview = lazy(() => import('./admin/pages/TotalFinanceOverview'));
+const FinanceTracking = lazy(() => import('./admin/pages/FinanceTracking'));
+const UsersManagement = lazy(() => import('./admin/pages/UsersManagement'));
+const MessagesSuggestions = lazy(() => import('./admin/pages/MessagesSuggestions'));
+const CommentsManagement = lazy(() => import('./admin/pages/CommentsManagement'));
+const MentorshipAdmin = lazy(() => import('./admin/pages/MentorshipAdmin'));
+const BCVWorldAuth = lazy(() => import('./admin/pages/BCVWorldAuth'));
+const Dashboard = lazy(() => import('./admin/pages/Dashboard'));
+const JobUploadForm = lazy(() => import('./admin/components/JobUploadForm'));
+const NewsUpload = lazy(() => import('./admin/pages/NewsUpload'));
+
+// Loading Component
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen bg-slate-50">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+);
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -61,7 +70,7 @@ function ScrollToTop() {
   return null;
 }
 
-function SimplePage({ title, description, iconClass, heading, subtitle, children }) {
+function SimplePage({ title, description, Icon, heading, subtitle, children }) {
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-slate-50">
       <SEO title={title} description={description} />
@@ -72,8 +81,8 @@ function SimplePage({ title, description, iconClass, heading, subtitle, children
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 lg:p-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-                {iconClass ? <i className={`${iconClass} me-2`}></i> : null}
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center">
+                {Icon && <Icon className="me-3 text-blue-600" />}
                 {heading}
               </h1>
               {subtitle ? (
@@ -101,7 +110,7 @@ function DisclaimerPage() {
     <SimplePage
       title="Disclaimer"
       description="Important usage disclaimer for BCVWorld job, finance, and news content."
-      iconClass="bi bi-file-text"
+      Icon={FaFileAlt}
       heading="Disclaimer"
     >
       <div className="grid gap-10 lg:grid-cols-3">
@@ -153,7 +162,7 @@ function DisclaimerPage() {
         <aside className="lg:col-span-1">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 space-y-4 text-sm">
             <div className="flex items-center gap-2">
-              <i className="bi bi-exclamation-triangle-fill text-amber-500"></i>
+              <FaExclamationTriangle className="text-amber-500 text-lg" />
               <span className="font-semibold text-slate-900">Quick summary</span>
             </div>
             <ul className="list-disc pl-4 space-y-2">
@@ -173,7 +182,7 @@ function AdsDisclosurePage() {
     <SimplePage
       title="Ads Disclosure"
       description="Information about advertisements and sponsored content on BCVWorld."
-      iconClass="bi bi-window-sidebar"
+      Icon={FaAd}
       heading="Ads Disclosure"
     >
       <div className="grid gap-10 lg:grid-cols-3">
@@ -208,7 +217,7 @@ function AdsDisclosurePage() {
         <aside className="lg:col-span-1">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 space-y-4 text-sm">
             <div className="flex items-center gap-2">
-              <i className="bi bi-lightning-charge-fill text-blue-500"></i>
+              <FaBolt className="text-blue-500 text-lg" />
               <span className="font-semibold text-slate-900">What this means for you</span>
             </div>
             <ul className="list-disc pl-4 space-y-2">
@@ -228,7 +237,7 @@ function PrivacyPage() {
     <SimplePage
       title="Privacy Policy"
       description="How BCVWorld handles your data, privacy, and security."
-      iconClass="bi bi-lock"
+      Icon={FaLock}
       heading="Privacy Policy"
     >
       <div className="grid gap-10 lg:grid-cols-3">
@@ -272,7 +281,7 @@ function PrivacyPage() {
         <aside className="lg:col-span-1">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 space-y-4 text-sm">
             <div className="flex items-center gap-2">
-              <i className="bi bi-shield-lock-fill text-emerald-500"></i>
+              <FaUserShield className="text-emerald-500 text-lg" />
               <span className="font-semibold text-slate-900">Stay safe online</span>
             </div>
             <ul className="list-disc pl-4 space-y-2">
@@ -288,107 +297,103 @@ function PrivacyPage() {
 }
 
 function App() {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      offset: 100,
-    });
-  }, []);
-
   return (
     <Router>
-      <Toaster 
-        position="top-right" 
-        reverseOrder={false}
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-            borderRadius: '8px',
-            padding: '12px 16px',
-            fontSize: '14px',
-          },
-          success: {
-            style: {
-              background: '#059669',
-            },
-            iconTheme: {
-              primary: '#fff',
-              secondary: '#059669',
-            },
-          },
-          error: {
-            style: {
-              background: '#DC2626',
-            },
-            iconTheme: {
-              primary: '#fff',
-              secondary: '#DC2626',
-            },
-          },
-        }}
-      />
       <ScrollToTop />
       <IdleTimer />
-      <Routes>
-        {/* --- Admin Routes --- */}
-        <Route path="/admin/auth" element={<BCVWorldAuth />} />
-        
-        <Route path="/admin" element={
-          <RoleGuard allowedRoles={['ADMIN']}>
-            <AdminLayout />
-          </RoleGuard>
-        }>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="job-management" element={<JobManagement />} />
-          <Route path="jobs-upload" element={<JobUploadForm />} />
-          <Route path="jobs-edit/:id" element={<JobUploadForm />} />
-          <Route path="users" element={<UsersManagement />} />
-          <Route path="messages" element={<MessagesSuggestions />} />
-          <Route path="comments" element={<CommentsManagement />} />
-          <Route path="mentorship" element={<MentorshipAdmin />} />
-          
-          <Route path="upload-news" element={<NewsUpload />} />
-          <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />
-          <Route path="bank-jobs-upload" element={<div className="p-4"><h2>Banking Jobs (Placeholder)</h2></div>} />
-          <Route path="profile-upload" element={<div className="p-4"><h2>Profile Upload (Placeholder)</h2></div>} />
-          <Route path="finance/overview" element={<TotalFinanceOverview />} />
-          <Route path="finance/marketing-ads" element={<MarketingAdsFinance />} />
-          <Route path="finance/tracking" element={<FinanceTracking />} />
-        </Route>
+      <div className="min-h-screen bg-white">
+       <Toaster 
+         position="top-right" 
+         reverseOrder={false}
+         toastOptions={{
+           style: {
+             background: '#333',
+             color: '#fff',
+             borderRadius: '8px',
+             padding: '12px 16px',
+             fontSize: '14px',
+           },
+           success: {
+             style: {
+               background: '#059669',
+             },
+             iconTheme: {
+               primary: '#fff',
+               secondary: '#059669',
+             },
+           },
+           error: {
+             style: {
+               background: '#DC2626',
+             },
+             iconTheme: {
+               primary: '#fff',
+               secondary: '#DC2626',
+             },
+           },
+         }}
+       />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* --- Admin Routes --- */}
+            <Route path="/admin/auth" element={<BCVWorldAuth />} />
+            
+            <Route path="/admin" element={
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <AdminLayout />
+              </RoleGuard>
+            }>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="job-management" element={<JobManagement />} />
+              <Route path="jobs-upload" element={<JobUploadForm />} />
+              <Route path="jobs-edit/:id" element={<JobUploadForm />} />
+              <Route path="users" element={<UsersManagement />} />
+              <Route path="messages" element={<MessagesSuggestions />} />
+              <Route path="comments" element={<CommentsManagement />} />
+              <Route path="mentorship" element={<MentorshipAdmin />} />
+              
+              <Route path="upload-news" element={<NewsUpload />} />
+              <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />
+              <Route path="bank-jobs-upload" element={<div className="p-4"><h2>Banking Jobs (Placeholder)</h2></div>} />
+              <Route path="profile-upload" element={<div className="p-4"><h2>Profile Upload (Placeholder)</h2></div>} />
+              <Route path="finance/overview" element={<TotalFinanceOverview />} />
+              <Route path="finance/marketing-ads" element={<MarketingAdsFinance />} />
+              <Route path="finance/tracking" element={<FinanceTracking />} />
+            </Route>
 
-        {/* Redirects for direct access */}
-        <Route path="/jobs-upload" element={<Navigate to="/admin/jobs-upload" replace />} />
+            {/* Redirects for direct access */}
+            <Route path="/jobs-upload" element={<Navigate to="/admin/jobs-upload" replace />} />
 
-        {/* --- User Routes --- */}
-        <Route element={<UserLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/jobs" element={<Jobs />} />
-            <Route path="/job" element={<JobDetails />} />
-            <Route path="/news" element={<NewsList />} />
-            <Route path="/news/:id" element={<NewsDetail />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/mentorship" element={<Mentorship />} />
-            <Route path="/suggestion" element={<Suggestion />} />
-            <Route path="/calculators" element={<FinanceCalculators />} />
-            <Route path="/contact" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/disclaimer" element={<DisclaimerPage />} />
-            <Route path="/ads-disclosure" element={<AdsDisclosurePage />} />
-        </Route>
-        
-        {/* Pages without Header (Login/Register) */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+            {/* --- User Routes --- */}
+            <Route element={<UserLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/job" element={<JobDetails />} />
+                <Route path="/news" element={<NewsList />} />
+                <Route path="/news/:id" element={<NewsDetail />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/mentorship" element={<Mentorship />} />
+                <Route path="/suggestion" element={<Suggestion />} />
+                <Route path="/calculators" element={<FinanceCalculators />} />
+                <Route path="/contact" element={<Home />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/disclaimer" element={<DisclaimerPage />} />
+                <Route path="/ads-disclosure" element={<AdsDisclosurePage />} />
+            </Route>
+            
+            {/* Pages without Header (Login/Register) */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* 404 */}
-        <Route path="*" element={<div className="pt-24 text-center">404 - Page Not Found</div>} />
-      </Routes>
+            {/* 404 */}
+            <Route path="*" element={<div className="pt-24 text-center">404 - Page Not Found</div>} />
+          </Routes>
+        </Suspense>
+      </div>
     </Router>
   );
 }

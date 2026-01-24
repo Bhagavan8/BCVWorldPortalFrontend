@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import CommentService from '../services/CommentService';
 import toast from 'react-hot-toast';
 import { FaSearch, FaTrash, FaCopy } from 'react-icons/fa';
+import { BiChat } from 'react-icons/bi';
 
 const CommentsManagement = () => {
   const [comments, setComments] = useState([]);
@@ -93,7 +94,7 @@ const CommentsManagement = () => {
 
         <div className="card-body p-0">
           <div className="px-4 py-3 border-bottom border-light bg-light text-primary fw-semibold">
-            <i className="bi bi-chat-left-text me-2"></i>User Comments
+            <BiChat className="bi me-2" />User Comments
           </div>
 
           {loading ? (
@@ -162,7 +163,7 @@ const CommentsManagement = () => {
                   disabled={currentPage === 0}
                   onClick={() => setCurrentPage(p => p - 1)}
                 >
-                  <i className="bi bi-chevron-left me-1"></i> Previous
+                  <BiChevronLeft className="bi me-1" /> Previous
                 </button>
                 <span className="text-muted small">Page {currentPage + 1}</span>
                 <button 
@@ -170,7 +171,7 @@ const CommentsManagement = () => {
                   disabled={currentPage >= totalPages - 1}
                   onClick={() => setCurrentPage(p => p + 1)}
                 >
-                  Next <i className="bi bi-chevron-right ms-1"></i>
+                  Next <BiChevronRight className="bi ms-1" />
                 </button>
             </div>
           </div>

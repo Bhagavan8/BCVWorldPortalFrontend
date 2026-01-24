@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { 
+    BiListUl, BiBell, BiBellOff, BiSolidUserPlus, BiSolidChat, BiSolidBulb, 
+    BiSolidUser, BiChevronDown, BiLogOut, BiLogIn, BiUserPlus, BiUser
+} from 'react-icons/bi';
 import AuthService from '../services/AuthService';
 import NotificationService from '../services/NotificationService';
 
@@ -9,6 +13,26 @@ const TopNav = ({ toggleSidebar }) => {
     const [currentUser, setCurrentUser] = useState(undefined);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const dropdownRef = React.useRef(null);
+    const notifRef = React.useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowUserMenu(false);
+            }
+            if (notifRef.current && !notifRef.current.contains(event.target)) {
+                setShowNotifications(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -99,7 +123,7 @@ const TopNav = ({ toggleSidebar }) => {
                 return 'Manage Jobs';
             case '/admin/users':
                 return 'Users Management';
-            case '/admin/profile':
+            case '/profile':
                 return 'Profile';
             default:
                 return 'Dashboard Overview';
@@ -108,25 +132,47 @@ const TopNav = ({ toggleSidebar }) => {
 
     return (
         <nav className="top-nav">
+            <style>
+                {`
+                    @media (max-width: 768px) {
+                        .notifications-dropdown-responsive {
+                            position: fixed !important;
+                            top: 70px !important;
+                            left: 50% !important;
+                            transform: translateX(-50%) !important;
+                            width: 90vw !important;
+                            max-width: 360px !important;
+                            right: auto !important;
+                            max-height: 80vh !important;
+                        }
+                    }
+                `}
+            </style>
             <div className="d-flex align-items-center">
                 <button className="sidebar-toggle d-lg-none me-3" onClick={toggleSidebar}>
-                    <i className="bi bi-list"></i>
+                    <BiListUl className="bi" />
                 </button>
                 <h4 className="page-title mb-0">{getPageTitle(location.pathname)}</h4>
             </div>
 
             <div className="top-nav-actions">
                 {currentUser && (
-                    <div className="dropdown me-3" id="notificationsDropdownContainer">
-                        <button className="btn position-relative p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{overflow: 'visible'}}>
-                            <i className="bi bi-bell fs-4"></i>
+                    <div className="dropdown me-3" id="notificationsDropdownContainer" ref={notifRef}>
+                        <button 
+                            className={`btn position-relative p-0 ${showNotifications ? 'show' : ''}`} 
+                            type="button" 
+                            onClick={() => setShowNotifications(!showNotifications)}
+                            aria-expanded={showNotifications}
+                            style={{overflow: 'visible'}}
+                        >
+                            <BiBell className="bi fs-4" />
                             {unreadCount > 0 && (
                                 <span className="position-absolute badge rounded-pill bg-danger" style={{top: '-5px', right: '-5px', zIndex: 1050, border: '2px solid white'}}>
                                     {unreadCount}
                                 </span>
                             )}
                         </button>
-                        <div className="dropdown-menu dropdown-menu-end p-0 shadow-lg border-0 mt-2" style={{width: '360px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto', borderRadius: '12px'}}>
+                        <div className={`dropdown-menu dropdown-menu-end p-0 shadow-lg border-0 mt-2 notifications-dropdown-responsive ${showNotifications ? 'show' : ''}`} style={{width: '360px', maxWidth: '90vw', maxHeight: '80vh', overflowY: 'auto', borderRadius: '12px'}}>
                             <div className="d-flex justify-content-between align-items-center py-3 px-3 border-bottom sticky-top bg-white">
                                 <h6 className="mb-0 fw-bold text-dark">Notifications</h6>
                                 {unreadCount > 0 && (
@@ -139,7 +185,7 @@ const TopNav = ({ toggleSidebar }) => {
                                 {notifications.length === 0 ? (
                                     <div className="text-center p-5 text-muted">
                                         <div className="mb-3">
-                                            <i className="bi bi-bell-slash fs-1 text-secondary opacity-50"></i>
+                                            <BiBellOff className="bi fs-1 text-secondary opacity-50" />
                                         </div>
                                         <p className="mb-0 fw-medium">No new notifications</p>
                                     </div>
@@ -159,11 +205,9 @@ const TopNav = ({ toggleSidebar }) => {
                                                 notif.type === 'COMMENT' ? 'bg-primary bg-opacity-10 text-primary' :
                                                 'bg-warning bg-opacity-10 text-warning'
                                             }`} style={{ width: '42px', height: '42px' }}>
-                                                <i className={`bi ${
-                                                    notif.type === 'USER' ? 'bi-person-plus-fill' :
-                                                    notif.type === 'COMMENT' ? 'bi-chat-right-text-fill' :
-                                                    'bi-lightbulb-fill'
-                                                } fs-5`}></i>
+                                                {notif.type === 'USER' ? <BiSolidUserPlus className="bi fs-5" /> :
+                                                 notif.type === 'COMMENT' ? <BiSolidChat className="bi fs-5" /> :
+                                                 <BiSolidBulb className="bi fs-5" />}
                                             </div>
                                             <div className="flex-grow-1 min-w-0">
                                                 <div className="d-flex justify-content-between align-items-baseline mb-1">
@@ -192,37 +236,46 @@ const TopNav = ({ toggleSidebar }) => {
                 )}
                 
                 {currentUser ? (
-                    <div className="user-menu" id="userMenuDropdown">
-                        <button className="user-dropdown d-flex align-items-center border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div className="user-menu" id="userMenuDropdown" ref={dropdownRef}>
+                        <button 
+                            className={`user-dropdown d-flex align-items-center border-0 bg-transparent ${showUserMenu ? 'show' : ''}`} 
+                            type="button" 
+                            onClick={() => setShowUserMenu(!showUserMenu)}
+                            aria-expanded={showUserMenu}
+                        >
                             <div className="rounded-circle me-2 d-flex align-items-center justify-content-center bg-light text-primary" style={{width: '36px', height: '36px'}}>
-                                <i className="bi bi-person-fill"></i>
+                                <BiSolidUser className="bi" />
                             </div>
                             <span className="d-none d-md-block fw-medium">{currentUser.name || 'User'}</span>
-                            <i className="bi bi-chevron-down ms-2 small"></i>
+                            <BiChevronDown className="bi ms-2 small" />
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
-                            <li><Link className="dropdown-item py-2" to="/profile"><i className="bi bi-person me-2"></i>My Profile</Link></li>
-                            <li><Link className="dropdown-item py-2" to="/settings"><i className="bi bi-gear me-2"></i>Settings</Link></li>
+                        <ul className={`dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 ${showUserMenu ? 'show' : ''}`}>
+                            <li><Link className="dropdown-item py-2 d-flex align-items-center" to="/profile"><BiUser className="bi me-2" />My Profile</Link></li>
                             <li><hr className="dropdown-divider" /></li>
-                            <li><button className="dropdown-item py-2 text-danger" onClick={handleLogout}><i className="bi bi-box-arrow-right me-2"></i>Logout</button></li>
+                            <li><button className="dropdown-item py-2 text-danger d-flex align-items-center" onClick={handleLogout}><BiLogOut className="bi me-2" />Logout</button></li>
                         </ul>
                     </div>
                 ) : (
-                    <div className="user-menu">
-                        <button className="user-dropdown d-flex align-items-center border-0 bg-transparent fw-medium" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div className="user-menu" ref={dropdownRef}>
+                        <button 
+                            className={`user-dropdown d-flex align-items-center border-0 bg-transparent fw-medium ${showUserMenu ? 'show' : ''}`} 
+                            type="button" 
+                            onClick={() => setShowUserMenu(!showUserMenu)}
+                            aria-expanded={showUserMenu}
+                        >
                             Account
-                            <i className="bi bi-chevron-down ms-2 small"></i>
+                            <BiChevronDown className="bi ms-2 small" />
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                        <ul className={`dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 ${showUserMenu ? 'show' : ''}`}>
                             <li>
-                                <Link className="dropdown-item py-2" to="/admin/auth" state={{ isRegister: false }}>
-                                    <i className="bi bi-box-arrow-in-right me-2 text-primary"></i>
+                                <Link className="dropdown-item py-2 d-flex align-items-center" to="/admin/auth" state={{ isRegister: false }}>
+                                    <BiLogIn className="bi me-2 text-primary" />
                                     Sign In
                                 </Link>
                             </li>
                             <li>
-                                <Link className="dropdown-item py-2" to="/admin/auth" state={{ isRegister: true }}>
-                                    <i className="bi bi-person-plus me-2 text-primary"></i>
+                                <Link className="dropdown-item py-2 d-flex align-items-center" to="/admin/auth" state={{ isRegister: true }}>
+                                    <BiUserPlus className="bi me-2 text-primary" />
                                     Sign Up
                                 </Link>
                             </li>

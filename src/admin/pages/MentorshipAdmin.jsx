@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthService from '../../admin/services/AuthService';
 import { toast } from 'react-hot-toast';
-import { format, isValid, parseISO, parse } from 'date-fns';
 import { 
     Check, 
     X, 
@@ -83,8 +82,17 @@ const MentorshipAdmin = () => {
         if (!timeStr) return '';
         if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
         try {
-            const date = parse(timeStr, 'hh:mm a', new Date());
-            if (isValid(date)) return format(date, 'HH:mm');
+             // Expects "hh:mm a" e.g. "02:30 PM"
+             const [time, modifier] = timeStr.split(' ');
+             if (!time || !modifier) return timeStr;
+             let [hours, minutes] = time.split(':');
+             
+             if (modifier.toLowerCase() === 'pm' && hours !== '12') {
+                 hours = parseInt(hours, 10) + 12;
+             } else if (modifier.toLowerCase() === 'am' && hours === '12') {
+                 hours = '00';
+             }
+             return `${hours.toString().padStart(2, '0')}:${minutes}`;
         } catch (e) {}
         return timeStr;
     };
@@ -92,8 +100,13 @@ const MentorshipAdmin = () => {
     const formatTimeForPayload = (timeStr) => {
         if (!timeStr) return '';
         try {
-            const date = parse(timeStr, 'HH:mm', new Date());
-            if (isValid(date)) return format(date, 'hh:mm a');
+            // Expects "HH:mm" e.g. "14:30"
+            const [hours, minutes] = timeStr.split(':');
+            let h = parseInt(hours, 10);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; 
+            return `${h.toString().padStart(2, '0')}:${minutes} ${ampm}`;
         } catch (e) {}
         return timeStr;
     };
@@ -101,10 +114,13 @@ const MentorshipAdmin = () => {
     const formatDateForInput = (dateStr) => {
         if (!dateStr) return '';
         try {
-            const date = parseISO(dateStr);
-            if (isValid(date)) return format(date, 'yyyy-MM-dd');
-            const simpleDate = new Date(dateStr);
-            if (isValid(simpleDate)) return format(simpleDate, 'yyyy-MM-dd');
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
         } catch(e) {}
         return dateStr;
     };
@@ -162,16 +178,10 @@ const MentorshipAdmin = () => {
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
-        // Try parsing ISO string first
         try {
-            const date = parseISO(dateString);
-            if (isValid(date)) {
-                return format(date, 'MMM dd, yyyy');
-            }
-            // Fallback for simple date strings if backend sends YYYY-MM-DD
-            const simpleDate = new Date(dateString);
-            if (isValid(simpleDate)) {
-                return format(simpleDate, 'MMM dd, yyyy');
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+                return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
             }
         } catch (e) {
             console.error("Date parsing error", e);

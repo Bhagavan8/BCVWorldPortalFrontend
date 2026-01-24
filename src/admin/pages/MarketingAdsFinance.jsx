@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
+import {
+    BiMoney,
+    BiTrendingUp,
+    BiTransfer,
+    BiCalendarWeek,
+    BiCalendarEvent,
+    BiPlus,
+    BiCalendar,
+} from 'react-icons/bi';
+import { FaCoins, FaTrash, FaEllipsisV, FaPiggyBank } from 'react-icons/fa';
 import adminApi from '../../api/admin';
 
 const PAGE_SIZE = 5;
@@ -308,7 +318,7 @@ const MarketingAdsFinance = () => {
                             <h6 className="card-subtitle mb-2 opacity-75">Total Spend</h6>
                             <h2 className="card-title mb-0 fw-bold">{formatCurrency(adSummary.totalSpend)}</h2>
                             <small className="opacity-75 d-block mt-1">All Time</small>
-                            <i className="bi bi-cash-stack card-icon-bg"></i>
+                            <BiMoney className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -324,7 +334,7 @@ const MarketingAdsFinance = () => {
                             <h6 className="card-subtitle mb-2 opacity-75">This Month Spend</h6>
                             <h2 className="card-title mb-0 fw-bold">{formatCurrency(adSummary.thisMonthSpend)}</h2>
                             <small className="opacity-75 d-block mt-1">Compared to last month</small>
-                            <i className="bi bi-graph-up-arrow card-icon-bg"></i>
+                            <BiTrendingUp className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -343,7 +353,7 @@ const MarketingAdsFinance = () => {
                                 {formatCurrency(monthDiff)}
                             </h2>
                             <small className="opacity-75 d-block mt-1">This month vs last month</small>
-                            <i className="bi bi-arrow-left-right card-icon-bg"></i>
+                            <BiTransfer className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -359,7 +369,7 @@ const MarketingAdsFinance = () => {
                             <h6 className="card-subtitle mb-2 opacity-75">This Week Spend</h6>
                             <h2 className="card-title mb-0 fw-bold">{formatCurrency(adSummary.thisWeekSpend)}</h2>
                             <small className="opacity-75 d-block mt-1">Including today</small>
-                            <i className="bi bi-calendar-week card-icon-bg"></i>
+                            <BiCalendarWeek className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -374,7 +384,7 @@ const MarketingAdsFinance = () => {
                         <div className="card-body">
                             <h6 className="card-subtitle mb-2 opacity-75">Today Spend</h6>
                             <h2 className="card-title mb-0 fw-bold">{formatCurrency(adSummary.todaySpend)}</h2>
-                            <i className="bi bi-calendar-event card-icon-bg"></i>
+                            <BiCalendarEvent className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -384,11 +394,11 @@ const MarketingAdsFinance = () => {
                 <div className="card-header bg-white border-bottom-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 className="mb-0 fw-bold">Recent Transactions</h5>
                     <button
-                        className="btn btn-primary rounded-pill"
+                        className="btn btn-primary rounded-pill d-flex align-items-center"
                         data-bs-toggle="modal"
                         data-bs-target="#addAdTransactionModal"
                     >
-                        <i className="bi bi-plus-lg me-1" /> Add Transaction
+                        <BiPlus className="bi me-1" /> Add Transaction
                     </button>
                 </div>
                 <div className="card-body p-0">
@@ -419,7 +429,7 @@ const MarketingAdsFinance = () => {
                                             <div>
                                                 <h6 className="mb-1 fw-bold">{t.description || 'Ad Spend'}</h6>
                                                 <small className="text-muted">
-                                                    <i className="bi bi-calendar3 me-1" />
+                                                    <BiCalendar className="bi me-1" />
                                                     {date}
                                                 </small>
                                             </div>
@@ -432,7 +442,7 @@ const MarketingAdsFinance = () => {
                                                     type="button"
                                                     onClick={() => handleDeleteAdTransaction(t.id)}
                                                 >
-                                                    <i className="bi bi-trash" />
+                                                    <FaTrash className="bi" />
                                                 </button>
                                             </div>
                                         </div>
@@ -522,7 +532,7 @@ const MarketingAdsFinance = () => {
                         data-bs-toggle="modal"
                         data-bs-target="#addSubscriptionModal"
                     >
-                        <i className="bi bi-plus-lg me-1" /> Add Subscription
+                        <BiPlus className="bi me-1" /> Add Subscription
                     </button>
                 </div>
 
@@ -553,7 +563,7 @@ const MarketingAdsFinance = () => {
                                                 className="btn btn-link text-muted p-0"
                                                 data-bs-toggle="dropdown"
                                             >
-                                                <i className="bi bi-three-dots-vertical" />
+                                                <FaEllipsisV />
                                             </button>
                                             <ul className="dropdown-menu dropdown-menu-end">
                                                 <li>
@@ -599,7 +609,7 @@ const MarketingAdsFinance = () => {
                                 {formatCurrency(webSummary.totalRevenue)}
                             </h2>
                             <small className="opacity-75">From Website</small>
-                            <i className="bi bi-graph-up-arrow card-icon-bg" />
+                            <BiTrendingUp className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -611,7 +621,7 @@ const MarketingAdsFinance = () => {
                                 {formatCurrency(webSummary.totalExpense)}
                             </h2>
                             <small className="opacity-75">Website costs</small>
-                            <i className="bi bi-cash-stack card-icon-bg" />
+                            <BiMoney className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -625,7 +635,7 @@ const MarketingAdsFinance = () => {
                             <small className="opacity-75">
                                 Revenue minus expense
                             </small>
-                            <i className="bi bi-piggy-bank card-icon-bg" />
+                            <FaPiggyBank className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -634,11 +644,11 @@ const MarketingAdsFinance = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h5 className="fw-bold mb-0">Website Transactions</h5>
                 <button
-                    className="btn btn-primary rounded-pill"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addWebsiteTransactionModal"
-                >
-                    <i className="bi bi-plus-lg me-1" /> Add Transaction
+                        className="btn btn-primary rounded-pill d-flex align-items-center"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addWebsiteTransactionModal"
+                    >
+                    <BiPlus className="bi me-1" /> Add Transaction
                 </button>
             </div>
 
@@ -680,7 +690,7 @@ const MarketingAdsFinance = () => {
                                                     <span className={`badge me-2 ${isRevenue ? 'bg-success' : 'bg-danger'}`}>
                                                         {isRevenue ? 'Revenue' : 'Expense'}
                                                     </span>
-                                                    <i className="bi bi-calendar3 me-1" />
+                                                    <BiCalendar className="bi me-1" />
                                                     {date}
                                                 </small>
                                             </div>
@@ -698,7 +708,7 @@ const MarketingAdsFinance = () => {
                                                     type="button"
                                                     onClick={() => handleDeleteWebsiteTransaction(t.id)}
                                                 >
-                                                    <i className="bi bi-trash" />
+                                                    <FaTrash className="bi" />
                                                 </button>
                                             </div>
                                         </div>

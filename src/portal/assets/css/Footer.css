@@ -5,6 +5,7 @@
   padding: 30px 0;
   font-family: var(--app-font);
   border-top: 1px solid #1e293b;
+  min-height: 250px;
 }
 
 /* Footer Bottom Section */

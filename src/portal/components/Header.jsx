@@ -70,11 +70,13 @@ export default function Header() {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
               <img
-                src="/assets/images/logo.webp"
+                src="/assets/images/icon-192x192.webp"
                 alt="BCVWorld logo"
                 className="h-12 w-12 rounded-full"
                 width="48"
                 height="48"
+                srcSet="/assets/images/favicon-96x96.webp 96w, /assets/images/icon-192x192.webp 192w"
+                sizes="48px"
                 decoding="async"
                 loading="lazy"
               />

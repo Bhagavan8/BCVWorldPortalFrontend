@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -23,6 +23,28 @@ export default function Home() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    // Initialize AOS dynamically
+    const initAOS = async () => {
+      try {
+        const AOS = await import('aos');
+        await import('aos/dist/aos.css');
+        // Handle both ES module default export and CommonJS
+        const aosInstance = AOS.default || AOS;
+        aosInstance.init({
+          duration: 800,
+          once: true,
+          offset: 50,
+          disable: 'mobile'
+        });
+      } catch (error) {
+        console.warn('AOS initialization failed:', error);
+      }
+    };
+    
+    initAOS();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -122,7 +144,7 @@ export default function Home() {
             </div>
 
             {/* Hero Image */}
-            <div className="w-full lg:w-1/2 relative" data-aos="zoom-out" data-aos-delay="300">
+            <div className="w-full lg:w-1/2 relative">
               <img 
                 src="/images/illustration-1.webp" 
                 alt="Career Growth Illustration" 
@@ -130,6 +152,8 @@ export default function Home() {
                 style={{ aspectRatio: '637/490' }}
                 width="637"
                 height="490"
+                srcSet="/images/illustration-1.webp 637w"
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 decoding="async"
                 fetchPriority="high"
               />
@@ -144,7 +168,7 @@ export default function Home() {
           {/* Stats Row - Redesigned */}
           <div className="mt-20 md:mt-28" data-aos="fade-up" data-aos-delay="500">
              <div className="bg-white rounded-[2.5rem] shadow-xl p-8 md:p-12 border border-gray-50">
-               <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 lg:gap-4">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:justify-between items-start lg:items-center gap-8 lg:gap-4">
                   {[
                     { icon: BiBriefcase, count: "100+ Referrals", label: "Job Opportunities" },
                     { icon: BiUserVoice, count: "50+ Sessions", label: "1:1 Career Guidance" },
@@ -233,7 +257,18 @@ export default function Home() {
 
             <div className="w-full lg:w-6/12" data-aos="zoom-out" data-aos-delay="300">
               <div className="relative">
-                <img src="/images/Career-Guidance-Session.webp" alt="Session" className="rounded-2xl shadow-2xl w-full" width="800" height="600" loading="lazy" decoding="async" fetchPriority="low" />
+                <img 
+                  src="/images/Career-Guidance-Session.webp" 
+                  alt="Session" 
+                  className="rounded-2xl shadow-2xl w-full" 
+                  width="800" 
+                  height="600" 
+                  srcSet="/images/Career-Guidance-Session.webp 800w"
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  loading="lazy" 
+                  decoding="async" 
+                  fetchPriority="low" 
+                />
                 <div className="absolute bottom-8 right-8 bg-white p-6 rounded-xl shadow-xl animate-bounce-slow hidden md:block">
                   <h3 className="text-3xl font-bold text-blue-600 mb-1">50+ <span className="text-gray-900 text-lg font-normal">Success</span></h3>
                   <p className="text-gray-500 text-sm">Stories in career enhancement</p>
@@ -262,7 +297,7 @@ export default function Home() {
                   className={`px-6 py-3 rounded-lg text-sm font-medium transition capitalize ${
                     activeTab === tab 
                       ? 'bg-white text-blue-600 shadow-sm' 
-                      : 'text-gray-500 hover:text-gray-700'
+                      : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
                   {tab === 'career' ? 'Career Growth' : tab}
@@ -291,7 +326,17 @@ export default function Home() {
                   </ul>
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Career-Growth-Illustration.webp" alt="Career Growth" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
+                  <img 
+                    src="/images/Career-Growth-Illustration.webp" 
+                    alt="Career Growth" 
+                    className="w-full h-auto" 
+                    width="637" 
+                    height="490" 
+                    loading="lazy" 
+                    decoding="async" 
+                    srcSet="/images/Career-Growth-Illustration.webp 637w"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 </div>
               </div>
             )}
@@ -317,7 +362,17 @@ export default function Home() {
                  
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Learning-Resources-Illustration.webp" alt="Learning" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
+                  <img 
+                    src="/images/Learning-Resources-Illustration.webp" 
+                    alt="Learning" 
+                    className="w-full h-auto" 
+                    width="637" 
+                    height="490" 
+                    loading="lazy" 
+                    decoding="async"
+                    srcSet="/images/Learning-Resources-Illustration.webp 637w"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 </div>
               </div>
             )}
@@ -341,7 +396,17 @@ export default function Home() {
                   <p className="text-gray-600 italic">Build your financial future with expert guidance on investment planning and wealth management.</p>
                 </div>
                 <div className="w-full lg:w-1/2 order-1 lg:order-2">
-                  <img src="/images/Investment Planning Illustration.webp" alt="Investment" className="w-full h-auto" width="637" height="490" loading="lazy" decoding="async" />
+                  <img 
+                    src="/images/Investment Planning Illustration.webp" 
+                    alt="Investment" 
+                    className="w-full h-auto" 
+                    width="637" 
+                    height="490" 
+                    loading="lazy" 
+                    decoding="async" 
+                    srcSet="/images/Investment Planning Illustration.webp 637w"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 </div>
               </div>
             )}
@@ -467,7 +532,7 @@ export default function Home() {
       <section className="py-20 bg-blue-600 text-white text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="zoom-in">
           <h3 className="text-3xl md:text-4xl font-bold mb-6">Start Your Career Journey Today</h3>
-          <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
+          <p className="text-blue-50 text-lg mb-10 max-w-2xl mx-auto">
             Join our community of successful professionals. Get access to exclusive job referrals, career
             guidance, and investment planning resources.
           </p>
@@ -490,7 +555,7 @@ export default function Home() {
             <div className="space-y-8" data-aos="fade-up" data-aos-delay="200">
               <div className="bg-blue-600 p-8 rounded-2xl text-white h-full">
                 <h3 className="text-2xl font-bold text-white mb-4">Contact Info</h3>
-                <p className="text-blue-100 mb-8 leading-relaxed">
+                <p className="text-blue-50 mb-8 leading-relaxed">
                   Reach out to us for career guidance, job referrals, or any queries about our services.
                 </p>
 
@@ -501,8 +566,8 @@ export default function Home() {
                     </div>
                     <div className="ml-4">
                       <h4 className="font-bold text-white text-lg">Our Location</h4>
-                      <p className="text-blue-100 mt-1">Bangalore, Karnataka</p>
-                      <p className="text-blue-100">India</p>
+                      <p className="text-blue-50 mt-1">Bangalore, Karnataka</p>
+                      <p className="text-blue-50">India</p>
                     </div>
                   </div>
                   
@@ -512,8 +577,8 @@ export default function Home() {
                     </div>
                     <div className="ml-4">
                       <h4 className="font-bold text-white text-lg">Contact Hours</h4>
-                      <p className="text-blue-100 mt-1">Mon-Fri: 9:00 AM - 9:00 PM</p>
-                      <p className="text-blue-100">Sat: 9:00 AM - 1:00 PM</p>
+                      <p className="text-blue-50 mt-1">Mon-Fri: 9:00 AM - 9:00 PM</p>
+                      <p className="text-blue-50">Sat: 9:00 AM - 1:00 PM</p>
                     </div>
                   </div>
                   
@@ -523,7 +588,7 @@ export default function Home() {
                     </div>
                     <div className="ml-4">
                       <h4 className="font-bold text-white text-lg">Email Address</h4>
-                      <p className="text-blue-100 mt-1">help.bcv@bcvworld.com</p>
+                      <p className="text-blue-50 mt-1">help.bcv@bcvworld.com</p>
                     </div>
                   </div>
                 </div>

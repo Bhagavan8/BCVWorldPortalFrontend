@@ -23,11 +23,12 @@
 }
 
 /* Base Styles */
-body {
+.admin-dashboard {
     font-family: var(--app-font);
     background-color: #f5f7fb;
     color: var(--dark-color);
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 .admin-dashboard {

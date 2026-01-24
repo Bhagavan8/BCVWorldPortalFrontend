@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { 
+    BiWallet, BiTrendingDown, BiMoney, BiSolidMegaphone, 
+    BiSolidBank, BiRevision, BiGlobe, BiWorld 
+} from 'react-icons/bi';
+import { FaCoins } from 'react-icons/fa';
 import adminApi from '../../api/admin';
 
 const formatCurrency = (value) => {
@@ -91,7 +96,7 @@ const TotalFinanceOverview = () => {
                             <small className="opacity-75 d-block mt-2">
                                 Income - (Expenses + Ads)
                             </small>
-                            <i className="bi bi-wallet-fill card-icon-bg" />
+                            <BiWallet className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -111,7 +116,7 @@ const TotalFinanceOverview = () => {
                             <small className="opacity-75 d-block mt-2">
                                 Ads + Expenses + Subscriptions
                             </small>
-                            <i className="bi bi-graph-down-arrow card-icon-bg" />
+                            <BiTrendingDown className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -131,7 +136,7 @@ const TotalFinanceOverview = () => {
                             <small className="opacity-75 d-block mt-2">
                                 All Sources
                             </small>
-                            <i className="bi bi-cash-coin card-icon-bg" />
+                            <BiMoney className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -229,7 +234,7 @@ const TotalFinanceOverview = () => {
                                 {formatCurrency(summary.totalAdSpend)}
                             </h3>
                             <small className="opacity-75 d-block mt-1">Marketing</small>
-                            <i className="bi bi-megaphone card-icon-bg" />
+                            <BiSolidMegaphone className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -247,7 +252,7 @@ const TotalFinanceOverview = () => {
                                 {formatCurrency(summary.totalInvestments)}
                             </h3>
                             <small className="opacity-75 d-block mt-1">Current Value</small>
-                            <i className="bi bi-piggy-bank card-icon-bg" />
+                            <FaCoins className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -265,7 +270,7 @@ const TotalFinanceOverview = () => {
                                 {formatCurrency(summary.totalLoans)}
                             </h3>
                             <small className="opacity-75 d-block mt-1">Remaining Balance</small>
-                            <i className="bi bi-bank card-icon-bg" />
+                            <BiSolidBank className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -283,7 +288,7 @@ const TotalFinanceOverview = () => {
                                 {formatCurrency(summary.totalRecurring)}
                             </h3>
                             <small className="opacity-75 d-block mt-1">Subscriptions</small>
-                            <i className="bi bi-arrow-repeat card-icon-bg" />
+                            <BiRevision className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -307,7 +312,7 @@ const TotalFinanceOverview = () => {
                             <small className="opacity-75 d-block mt-1">
                                 Total Income from Website
                             </small>
-                            <i className="bi bi-globe card-icon-bg" />
+                            <BiGlobe className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -327,7 +332,7 @@ const TotalFinanceOverview = () => {
                             <small className="opacity-75 d-block mt-1">
                                 Total Costs for Website
                             </small>
-                            <i className="bi bi-globe2 card-icon-bg" />
+                            <BiWorld className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import JobService from '../services/JobService';
+import { BiInfoCircle, BiBuilding, BiEnvelope } from 'react-icons/bi';
+import { FaArrowRight, FaArrowLeft, FaCog, FaCheckCircle, FaSearch } from 'react-icons/fa';
 
 const JobUploadForm = () => {
     const { id } = useParams();
@@ -121,16 +123,13 @@ const JobUploadForm = () => {
         }));
     };
 
-    const locationBtnRef = useRef(null);
-    const eduBtnRef = useRef(null);
+    // Custom dropdown state management
+    const [openDropdown, setOpenDropdown] = useState(null);
 
-    const closeDropdown = (btnRefId) => {
-        const btn = btnRefId === 'location' ? locationBtnRef.current : eduBtnRef.current;
-        if (!btn) return;
-        const menu = btn.nextElementSibling;
-        btn.setAttribute('aria-expanded', 'false');
-        btn.classList.remove('show');
-        if (menu) menu.classList.remove('show');
+    const toggleDropdown = (e, name) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpenDropdown(prev => prev === name ? null : name);
     };
 
     const handleMultiSelectChange = (e, field) => {
@@ -138,33 +137,21 @@ const JobUploadForm = () => {
         setFormData(prev => {
             const list = prev[field];
             if (checked) {
-                const updated = { ...prev, [field]: [...list, value] };
-                if (field === 'locations') closeDropdown('location');
-                if (field === 'educationLevels') closeDropdown('edu');
-                return updated;
+                return { ...prev, [field]: [...list, value] };
             } else {
-                const updated = { ...prev, [field]: list.filter(item => item !== value) };
-                if (field === 'locations') closeDropdown('location');
-                if (field === 'educationLevels') closeDropdown('edu');
-                return updated;
+                return { ...prev, [field]: list.filter(item => item !== value) };
             }
         });
     };
 
     useEffect(() => {
-        const handleDocumentClick = (evt) => {
-            const locBtn = locationBtnRef.current;
-            const eduBtn = eduBtnRef.current;
-            const clickedInsideDropdown =
-                (locBtn && (locBtn.contains(evt.target) || (locBtn.nextElementSibling && locBtn.nextElementSibling.contains(evt.target)))) ||
-                (eduBtn && (eduBtn.contains(evt.target) || (eduBtn.nextElementSibling && eduBtn.nextElementSibling.contains(evt.target))));
-            if (!clickedInsideDropdown) {
-                closeDropdown('location');
-                closeDropdown('edu');
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.custom-dropdown-wrapper')) {
+                setOpenDropdown(null);
             }
         };
-        document.addEventListener('click', handleDocumentClick);
-        return () => document.removeEventListener('click', handleDocumentClick);
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const handleLogoChange = async (e) => {
@@ -394,7 +381,7 @@ const JobUploadForm = () => {
                         {step === 1 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><i className="bi bi-info-circle me-2"></i>Basic Job Information</h5>
+                                    <h5 className="mb-0"><BiInfoCircle className="me-2" />Basic Job Information</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
@@ -443,7 +430,7 @@ const JobUploadForm = () => {
                                             <label className="form-label">Experience Required</label>
                                             <select className="form-select" name="experienceRequired" value={formData.experienceRequired} onChange={handleChange} required>
                                                 <option value="">Select Experience</option>
-                                                <option value="Fresher" selected="">Fresher</option>
+                                                <option value="Fresher">Fresher</option>
                                                 <option value="0-1 Years">0-1 Years</option>
                                                 <option value="0-2 Years">0-2 Years</option>
                                                 <option value="0-3 Years">0-3 Years</option>
@@ -464,11 +451,11 @@ const JobUploadForm = () => {
                                         </div>
                                         <div className="col-md-6">
                                             <label className="form-label">Location</label>
-                                            <div className="dropdown">
-                                                <button ref={locationBtnRef} className="form-select text-start" type="button" id="locationBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div className="dropdown custom-dropdown-wrapper">
+                                                <button className={`form-select text-start ${openDropdown === 'location' ? 'show' : ''}`} type="button" onClick={(e) => toggleDropdown(e, 'location')}>
                                                     {formData.locations.length > 0 ? formData.locations.join(", ") : "Select Location"}
                                                 </button>
-                                                <ul className="dropdown-menu w-100 p-2" aria-labelledby="locationBtn" style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                                                <ul className={`dropdown-menu w-100 p-2 ${openDropdown === 'location' ? 'show' : ''}`} style={{ maxHeight: '250px', overflowY: 'auto' }}>
                                                     {locationsList.map(loc => (
                                                         <li key={loc} className="mb-1">
                                                             <label className="d-block">
@@ -490,11 +477,11 @@ const JobUploadForm = () => {
                                     <div className="row mb-3">
                                         <div className="col-md-6">
                                             <label className="form-label">Education Level</label>
-                                            <div className="dropdown">
-                                                <button ref={eduBtnRef} className="form-select text-start" type="button" id="eduBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div className="dropdown custom-dropdown-wrapper">
+                                                <button className={`form-select text-start ${openDropdown === 'education' ? 'show' : ''}`} type="button" onClick={(e) => toggleDropdown(e, 'education')}>
                                                     {formData.educationLevels.length > 0 ? formData.educationLevels.join(", ") : "Select Education"}
                                                 </button>
-                                                <ul className="dropdown-menu w-100 p-2" aria-labelledby="eduBtn" style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                                                <ul className={`dropdown-menu w-100 p-2 ${openDropdown === 'education' ? 'show' : ''}`} style={{ maxHeight: '250px', overflowY: 'auto' }}>
                                                     {educationList.map(edu => (
                                                         <li key={edu} className="mb-1">
                                                             <label className="d-block">
@@ -556,7 +543,7 @@ const JobUploadForm = () => {
                                     </div>
 
                                     <div className="d-flex justify-content-end">
-                                        <button type="button" className="btn btn-primary" onClick={nextStep}>Next <i className="bi bi-arrow-right"></i></button>
+                                        <button type="button" className="btn btn-primary d-flex align-items-center" onClick={nextStep}>Next <FaArrowRight className="ms-2" /></button>
                                     </div>
                                 </div>
                             </div>
@@ -565,7 +552,7 @@ const JobUploadForm = () => {
                         {step === 2 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><i className="bi bi-building me-2"></i>Company Information</h5>
+                                    <h5 className="mb-0"><BiBuilding className="me-2" />Company Information</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="form-check mb-3">
@@ -578,8 +565,8 @@ const JobUploadForm = () => {
                                             <input type="text" className="form-control" placeholder="Search company by name" value={companySearch} onChange={(e) => setCompanySearch(e.target.value)} />
                                         </div>
                                         <div className="col-auto">
-                                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={searchCompanies}>
-                                                <i className="bi bi-search"></i> Search
+                                            <button type="button" className="btn btn-outline-primary btn-sm d-flex align-items-center" onClick={searchCompanies}>
+                                                <FaSearch className="me-2" /> Search
                                             </button>
                                         </div>
                                     </div>
@@ -590,7 +577,7 @@ const JobUploadForm = () => {
                                                     <span>
                                                         <strong>{c.companyName || c.company_name || c.name}</strong> <span className="text-muted ms-2">{c.companyWebsite || c.company_website || c.website || c.url}</span>
                                                     </span>
-                                                    <i className="bi bi-arrow-right"></i>
+                                                    <FaArrowRight />
                                                 </button>
                                             ))}
                                         </div>
@@ -634,8 +621,8 @@ const JobUploadForm = () => {
                                     </div>
 
                                     <div className="d-flex justify-content-between mt-4">
-                                        <button type="button" className="btn btn-outline-secondary" onClick={prevStep}><i className="bi bi-arrow-left"></i> Previous</button>
-                                        <button type="button" className="btn btn-primary" onClick={nextStep}>Next <i className="bi bi-arrow-right"></i></button>
+                                        <button type="button" className="btn btn-outline-secondary d-flex align-items-center" onClick={prevStep}><FaArrowLeft className="me-2" /> Previous</button>
+                                        <button type="button" className="btn btn-primary d-flex align-items-center" onClick={nextStep}>Next <FaArrowRight className="ms-2" /></button>
                                     </div>
                                 </div>
                             </div>
@@ -644,7 +631,7 @@ const JobUploadForm = () => {
                         {step === 3 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><i className="bi bi-envelope me-2"></i>Application Method</h5>
+                                    <h5 className="mb-0"><BiEnvelope className="me-2" />Application Method</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
@@ -664,8 +651,8 @@ const JobUploadForm = () => {
                                     </div>
 
                                     <div className="d-flex justify-content-between mt-4">
-                                        <button type="button" className="btn btn-outline-secondary" onClick={prevStep}><i className="bi bi-arrow-left"></i> Previous</button>
-                                        <button type="button" className="btn btn-primary" onClick={nextStep}>Next <i className="bi bi-arrow-right"></i></button>
+                                        <button type="button" className="btn btn-outline-secondary d-flex align-items-center" onClick={prevStep}><FaArrowLeft className="me-2" /> Previous</button>
+                                        <button type="button" className="btn btn-primary d-flex align-items-center" onClick={nextStep}>Next <FaArrowRight className="ms-2" /></button>
                                     </div>
                                 </div>
                             </div>
@@ -674,7 +661,7 @@ const JobUploadForm = () => {
                         {step === 4 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><i className="bi bi-gear me-2"></i>Admin Settings</h5>
+                                    <h5 className="mb-0"><FaCog className="me-2" />Admin Settings</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
@@ -688,7 +675,7 @@ const JobUploadForm = () => {
                                         </div>
                                         <div className="col-md-6">
                                             <label className="form-label">Job Status</label>
-                                            <select className="form-select" name="isActive" value={formData.isActive} onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })} required>
+                                            <select className="form-select" name="isActive" value={formData.isActive.toString()} onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })} required>
                                                 <option value="true">Active</option>
                                                 <option value="false">Inactive</option>
                                             </select>
@@ -702,9 +689,9 @@ const JobUploadForm = () => {
                                     </div>
 
                                     <div className="d-flex justify-content-between mt-4">
-                                        <button type="button" className="btn btn-outline-secondary" onClick={prevStep}><i className="bi bi-arrow-left"></i> Previous</button>
-                                        <button type="submit" className="btn btn-success" disabled={loading}>
-                                            {loading ? 'Posting...' : 'Post Job'} <i className="bi bi-check-circle"></i>
+                                        <button type="button" className="btn btn-outline-secondary d-flex align-items-center" onClick={prevStep}><FaArrowLeft className="me-2" /> Previous</button>
+                                        <button type="submit" className="btn btn-success d-flex align-items-center" disabled={loading}>
+                                            {loading ? 'Posting...' : 'Post Job'} <FaCheckCircle className="ms-2" />
                                         </button>
                                     </div>
                                 </div>

@@ -158,7 +158,9 @@ const FinanceCalculators = () => {
           .replace(/E/g, 'Math.E')
           .replace(/\^/g, '**')
           .replace(/%/g, '/100');
-        const result = eval(evalExpr);
+        // Use Function constructor instead of eval for better security/practice
+        // Input is controlled via buttons, so this is relatively safe
+        const result = new Function('return ' + evalExpr)();
         setCalcExpression(String(result));
       } catch {
         setCalcExpression('Error');
@@ -936,11 +938,11 @@ const FinanceCalculators = () => {
             <p>Use our EMI, Income Tax, In-Hand Salary, and SIP Investment calculators to plan loans and savings with confidence. Results update instantly and work great on mobile. These tools are designed for India with rupee inputs and monthly compounding where applicable.</p>
             <p>Switch across calculators using the selector and adjust values via sliders or numeric fields. You can toggle loan schedules to view month-by-month breakdowns and download insights as needed.</p>
             <ul className="list-unstyled mb-0">
-              <li><a href="#emi-calculator">EMI Calculator</a> – monthly installment, interest, total payable</li>
-              <li><a href="#tax-calculator">Income Tax Calculator</a> – monthly net and tax amount</li>
-              <li><a href="#salary-calculator">Salary In-Hand</a> – deductions (PF/other) and net monthly</li>
-              <li><a href="#sip-calculator">SIP Investment</a> – principal invested, returns, future value</li>
-              <li><a href="#eligibility-calculator">Loan Eligibility</a> – max loan amount based on income/EMI</li>
+              <li><a href="#emi-calculator">EMI Calculator</a> - monthly installment, interest, total payable</li>
+              <li><a href="#tax-calculator">Income Tax Calculator</a> - monthly net and tax amount</li>
+              <li><a href="#salary-calculator">Salary In-Hand</a> - deductions (PF/other) and net monthly</li>
+              <li><a href="#sip-calculator">SIP Investment</a> - principal invested, returns, future value</li>
+              <li><a href="#eligibility-calculator">Loan Eligibility</a> - max loan amount based on income/EMI</li>
             </ul>
           </div>
           <div className="col-lg-6">

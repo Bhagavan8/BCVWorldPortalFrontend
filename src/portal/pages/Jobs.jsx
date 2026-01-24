@@ -793,7 +793,7 @@ export default function Jobs() {
                       <Link to={jobUrl} className="flex items-center justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="text-xs font-medium text-gray-900 truncate">
-                            {job.jobTitle} – {job.companyName}
+                            {job.jobTitle} - {job.companyName}
                           </div>
                         </div>
                         <div className="flex items-center gap-1 text-xs text-gray-500 shrink-0">

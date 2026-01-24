@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { 
+  BiAward, BiBoltCircle, BiBook, BiBookmark, BiBriefcase, BiBuilding, BiBulb, BiChart, BiCheckCircle, BiCheckShield, BiChevronRight, BiChevronUp, BiCog, BiEnvelope, BiFile, BiFingerprint, BiGlobe, BiGroup, BiHeadphone, BiHome, BiInfoCircle, BiLock, BiLogIn, BiLogOut, BiMap, BiPulse, BiRocket, BiSend, BiShield, BiShow, BiSidebar, BiSolidEnvelope, BiSolidGraduation, BiSolidUserBadge, BiStar, BiTime, BiTrendingUp, BiUpload, BiUser, BiUserCircle, BiUserPlus, BiWorld, BiWrench 
+} from 'react-icons/bi';
+
 import SEO from '../components/SEO';
 import '../assets/css/Profile.css';
 
@@ -33,8 +37,6 @@ const Profile = () => {
     };
   });
 
-  
-
   if (!user) {
     return (
       <div className="profile-page">
@@ -42,7 +44,7 @@ const Profile = () => {
         <div className="profile-container">
           <div className="profile-empty-state">
             <div className="empty-illustration">
-              <i className="bi bi-person-circle"></i>
+              <BiUserCircle className="bi" />
               <div className="empty-shapes">
                 <div className="shape shape-1"></div>
                 <div className="shape shape-2"></div>
@@ -53,25 +55,25 @@ const Profile = () => {
             <p className="empty-subtitle">Sign in to access your personalized dashboard, job matches, and career insights.</p>
             <div className="empty-actions">
               <a className="btn-primary pulse" href="/login">
-                <i className="bi bi-box-arrow-in-right"></i>
+                <BiLogIn className="bi" />
                 <span>Login to Continue</span>
               </a>
               <a className="btn-secondary" href="/register">
-                <i className="bi bi-person-plus"></i>
+                <BiUserPlus className="bi" />
                 <span>Create Account</span>
               </a>
             </div>
             <div className="empty-features">
               <div className="feature">
-                <i className="bi bi-briefcase"></i>
+                <BiBriefcase className="bi" />
                 <span>Personalized Job Matches</span>
               </div>
               <div className="feature">
-                <i className="bi bi-graph-up"></i>
+                <BiChart className="bi" />
                 <span>Career Analytics</span>
               </div>
               <div className="feature">
-                <i className="bi bi-shield-check"></i>
+                <BiCheckShield className="bi" />
                 <span>Secure Profile</span>
               </div>
             </div>
@@ -159,19 +161,19 @@ const Profile = () => {
               <div className="profile-tags">
                 {user.email && (
                   <span className="tag" title={user.email}>
-                    <i className="bi bi-envelope-fill"></i>
+                    <BiSolidEnvelope className="bi" />
                     {truncate(user.email)}
                   </span>
                 )}
                 {user.role && (
                   <span className="tag badge">
-                    <i className="bi bi-award"></i>
+                    <BiAward className="bi" />
                     {String(user.role).toUpperCase()}
                   </span>
                 )}
                 {user.location && (
                   <span className="tag">
-                    <i className="bi bi-geo-alt"></i>
+                    <BiMap className="bi" />
                     {user.location}
                   </span>
                 )}
@@ -182,7 +184,7 @@ const Profile = () => {
           <div className="profile-stats">
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="bi bi-send-check"></i>
+                <BiSend className="bi" />
               </div>
               <div className="stat-content">
                 <h3>{stats.jobsApplied}</h3>
@@ -191,7 +193,7 @@ const Profile = () => {
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="bi bi-bookmark-star"></i>
+                <BiBookmark className="bi" />
               </div>
               <div className="stat-content">
                 <h3>{stats.savedJobs}</h3>
@@ -200,7 +202,7 @@ const Profile = () => {
             </div>
             <div className="stat-card">
               <div className="stat-icon">
-                <i className="bi bi-graph-up-arrow"></i>
+                <BiTrendingUp className="bi" />
               </div>
               <div className="stat-content">
                 <h3>{stats.profileStrength}%</h3>
@@ -218,21 +220,21 @@ const Profile = () => {
             className={`nav-tab ${activeTab === 'overview' ? 'active' : ''}`}
             onClick={() => setActiveTab('overview')}
           >
-            <i className="bi bi-house-door"></i>
+            <BiHome className="bi" />
             Overview
           </button>
           <button 
             className={`nav-tab ${activeTab === 'activity' ? 'active' : ''}`}
             onClick={() => setActiveTab('activity')}
           >
-            <i className="bi bi-activity"></i>
+            <BiPulse className="bi" />
             Activity
           </button>
           <button 
             className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
-            <i className="bi bi-gear"></i>
+            <BiCog className="bi" />
             Settings
           </button>
         </div>
@@ -244,28 +246,28 @@ const Profile = () => {
           <div className="card">
             <div className="card-header">
               <h3>
-                <span className="icon-pill pill-blue"><i className="bi bi-person-badge"></i></span>
+                <span className="icon-pill pill-blue"><BiSolidUserBadge className="bi" /></span>
                 User Info
               </h3>
             </div>
             <div className="account-summary">
               <div className="summary-item">
                 <div className="summary-label">
-                  <i className="bi bi-person"></i>
+                  <BiUser className="bi" />
                   <span>Full Name</span>
                 </div>
                 <div className="summary-value" title={user.name || '—'}>{truncate(user.name || '—')}</div>
               </div>
               <div className="summary-item">
                 <div className="summary-label">
-                  <i className="bi bi-envelope"></i>
+                  <BiEnvelope className="bi" />
                   <span>Email</span>
                 </div>
                 <div className="summary-value" title={user.email || '—'}>{truncate(user.email || '—')}</div>
               </div>
               <div className="summary-item">
                 <div className="summary-label">
-                  <i className="bi bi-shield"></i>
+                  <BiShield className="bi" />
                   <span>Account Type</span>
                 </div>
                 <div className="summary-value summary-badge">
@@ -274,7 +276,7 @@ const Profile = () => {
               </div>
               <div className="summary-item">
                 <div className="summary-label">
-                  <i className="bi bi-fingerprint"></i>
+                  <BiFingerprint className="bi" />
                   <span>User ID</span>
                 </div>
                 <div className="summary-value summary-code">{user.id || user.userId || '—'}</div>
@@ -286,53 +288,53 @@ const Profile = () => {
           <div className="card">
             <div className="card-header">
               <h3>
-                <span className="icon-pill pill-amber"><i className="bi bi-lightning-charge"></i></span>
+                <span className="icon-pill pill-amber"><BiBoltCircle className="bi" /></span>
                 Quick Actions
               </h3>
             </div>
             <div className="action-grid">
               <a className="action-card primary" href="/jobs">
                 <div className="action-icon">
-                  <i className="bi bi-briefcase"></i>
+                  <BiBriefcase className="bi" />
                 </div>
                 <div className="action-content">
                   <h4>Browse Jobs</h4>
                   <p>Find your next opportunity</p>
                 </div>
-                <i className="bi bi-chevron-right action-arrow"></i>
+                <BiChevronRight className="bi action-arrow" />
               </a>
               
               <a className="action-card success" href="/suggestion">
                 <div className="action-icon">
-                  <i className="bi bi-lightbulb"></i>
+                  <BiBulb className="bi" />
                 </div>
                 <div className="action-content">
                   <h4>Get Suggestions</h4>
                   <p>Personalized career advice</p>
                 </div>
-                <i className="bi bi-chevron-right action-arrow"></i>
+                <BiChevronRight className="bi action-arrow" />
               </a>
               
               <a className="action-card warning" href="/resume">
                 <div className="action-icon">
-                  <i className="bi bi-file-earmark-text"></i>
+                  <BiFile className="bi" />
                 </div>
                 <div className="action-content">
                   <h4>Resume Builder</h4>
                   <p>Create professional resume</p>
                 </div>
-                <i className="bi bi-chevron-right action-arrow"></i>
+                <BiChevronRight className="bi action-arrow" />
               </a>
               
               <a className="action-card info" href="/learning">
                 <div className="action-icon">
-                  <i className="bi bi-mortarboard"></i>
+                  <BiSolidGraduation className="bi" />
                 </div>
                 <div className="action-content">
                   <h4>Learning Hub</h4>
                   <p>Upskill with courses</p>
                 </div>
-                <i className="bi bi-chevron-right action-arrow"></i>
+                <BiChevronRight className="bi action-arrow" />
               </a>
             </div>
           </div>
@@ -341,7 +343,7 @@ const Profile = () => {
           <div className="card">
             <div className="card-header">
               <h3>
-                <span className="icon-pill pill-emerald"><i className="bi bi-graph-up-arrow"></i></span>
+                <span className="icon-pill pill-emerald"><BiTrendingUp className="bi" /></span>
                 Profile Strength
               </h3>
             </div>
@@ -357,9 +359,9 @@ const Profile = () => {
                 <span>Excellent</span>
               </div>
               <div className="pill-list">
-                <span className="pill"><i className="bi bi-check-circle"></i> Add your skills</span>
-                <span className="pill"><i className="bi bi-upload"></i> Upload resume</span>
-                <span className="pill"><i className="bi bi-mortarboard"></i> Complete education</span>
+                <span className="pill"><BiCheckCircle className="bi" /> Add your skills</span>
+                <span className="pill"><BiUpload className="bi" /> Upload resume</span>
+                <span className="pill"><BiSolidGraduation className="bi" /> Complete education</span>
               </div>
             </div>
           </div>
@@ -368,14 +370,14 @@ const Profile = () => {
           <div className="card">
             <div className="card-header">
               <h3>
-                <i className="bi bi-clock-history"></i>
+                <BiTime className="bi" />
                 Recent Activity
               </h3>
             </div>
             <div className="activity-grid-horizontal">
               <div className="activity-item">
                 <div className="activity-icon">
-                  <i className="bi bi-eye"></i>
+                  <BiShow className="bi" />
                 </div>
                 <div className="activity-content">
                   <p>Viewed Senior Frontend Developer at TechCorp</p>
@@ -384,7 +386,7 @@ const Profile = () => {
               </div>
               <div className="activity-item">
                 <div className="activity-icon">
-                  <i className="bi bi-send-check"></i>
+                  <BiSend className="bi" />
                 </div>
                 <div className="activity-content">
                   <p>Applied for Product Manager role</p>
@@ -393,7 +395,7 @@ const Profile = () => {
               </div>
               <div className="activity-item">
                 <div className="activity-icon">
-                  <i className="bi bi-bookmark-star"></i>
+                  <BiBookmark className="bi" />
                 </div>
                 <div className="activity-content">
                   <p>Saved UX Designer position</p>
@@ -418,7 +420,7 @@ const Profile = () => {
         <div className="full-row welcome-row">
           <div className="card accent">
             <h3>
-              <span className="icon-pill"><i className="bi bi-globe"></i></span>
+              <span className="icon-pill"><BiGlobe className="bi" /></span>
               Welcome to BCVWorld
             </h3>
             <div className="welcome-horizontal">
@@ -429,7 +431,7 @@ const Profile = () => {
                 <div className="welcome-illustrations">
                   <div className="illustration-card primary">
                     <div className="illustration-icon">
-                      <i className="bi bi-globe-americas"></i>
+                      <BiWorld className="bi" />
                     </div>
                     <div className="illustration-text">
                       <strong>Global Opportunities</strong>
@@ -438,7 +440,7 @@ const Profile = () => {
                   </div>
                   <div className="illustration-card secondary">
                     <div className="illustration-icon">
-                      <i className="bi bi-rocket-takeoff"></i>
+                      <BiRocket className="bi" />
                     </div>
                     <div className="illustration-text">
                       <strong>Career Growth</strong>
@@ -449,42 +451,42 @@ const Profile = () => {
               </div>
               <div className="features-grid">
                 <div className="feature-card">
-                  <i className="bi bi-stars"></i>
+                  <BiStar className="bi" />
                   <div>
                     <strong>Smart Matching</strong>
                     <p>AI-powered job recommendations</p>
                   </div>
                 </div>
                 <div className="feature-card">
-                  <i className="bi bi-shield-check"></i>
+                  <BiCheckShield className="bi" />
                   <div>
                     <strong>Privacy First</strong>
                     <p>Your data stays secure</p>
                   </div>
                 </div>
                 <div className="feature-card">
-                  <i className="bi bi-people"></i>
+                  <BiGroup className="bi" />
                   <div>
                     <strong>Community</strong>
                     <p>Connect with professionals</p>
                   </div>
                 </div>
                 <div className="feature-card">
-                  <i className="bi bi-tools"></i>
+                  <BiWrench className="bi" />
                   <div>
                     <strong>Career Tools</strong>
                     <p>Resume builder and insights</p>
                   </div>
                 </div>
                 <div className="feature-card">
-                  <i className="bi bi-book"></i>
+                  <BiBook className="bi" />
                   <div>
                     <strong>Free Resources</strong>
                     <p>Learn and upskill anytime</p>
                   </div>
                 </div>
                 <div className="feature-card">
-                  <i className="bi bi-headset"></i>
+                  <BiHeadphone className="bi" />
                   <div>
                     <strong>Support</strong>
                     <p>Help when you need it</p>
@@ -499,39 +501,39 @@ const Profile = () => {
         <div className="full-row">
           <div className="card">
             <h3>
-              <i className="bi bi-shield-lock"></i>
+              <BiLock className="bi" />
               Security & Links
             </h3>
             <div className="links-grid">
               <Link className="link-card" to="/about">
-                <i className="bi bi-building"></i>
+                <BiBuilding className="bi" />
                 <span>About Us</span>
               </Link>
               <Link className="link-card" to="/disclaimer">
-                <i className="bi bi-file-text"></i>
+                <BiFile className="bi" />
                 <span>Disclaimer</span>
               </Link>
               <Link className="link-card" to="/ads-disclosure">
-                <i className="bi bi-window-sidebar"></i>
+                <BiSidebar className="bi" />
                 <span>Ads Disclosure</span>
               </Link>
               <a className="link-card" href="/#contact">
-                <i className="bi bi-headset"></i>
+                <BiHeadphone className="bi" />
                 <span>Contact Support</span>
               </a>
               <Link className="link-card" to="/privacy">
-                <i className="bi bi-lock"></i>
+                <BiLock className="bi" />
                 <span>Privacy Policy</span>
               </Link>
               <Link className="link-card" to="/terms">
-                <i className="bi bi-file-earmark-check"></i>
+                <BiFile className="bi" />
                 <span>Terms of Service</span>
               </Link>
             </div>
             
             <div className="security-note">
               <p>
-                <i className="bi bi-info-circle"></i>
+                <BiInfoCircle className="bi" />
                 Your data is stored locally for session convenience. For security, clear storage on public devices.
               </p>
             </div>
@@ -543,7 +545,7 @@ const Profile = () => {
                 window.location.href = '/';
               }}
             >
-              <i className="bi bi-box-arrow-right"></i>
+              <BiLogOut className="bi" />
               <span>Logout from all devices</span>
             </button>
           </div>
@@ -558,7 +560,7 @@ const Profile = () => {
 
       {/* Floating Action Button */}
       <button className="fab" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-        <i className="bi bi-arrow-up"></i>
+        <BiChevronUp className="bi" />
       </button>
     </div>
   );

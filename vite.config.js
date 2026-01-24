@@ -6,6 +6,19 @@ dns.setDefaultResultOrder('verbatim')
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['react-icons', 'lucide-react', 'react-hot-toast'],
+          'vendor-utils': ['axios']
+        }
+      }
+    }
+  },
   server: {
     proxy: {
       '/api': {

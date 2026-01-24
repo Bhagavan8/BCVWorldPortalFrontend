@@ -503,11 +503,11 @@
 
 .breadcrumb-nav {
   font-size: 14px;
-  color: #666;
+  color: #4b5563; /* Darker gray */
 }
 
 .breadcrumb-nav a {
-  color: #666;
+  color: #4b5563; /* Darker gray */
   text-decoration: none;
   margin: 0 5px;
 }
@@ -580,25 +580,39 @@
 }
 
 .meta-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
   width: 100%;
 }
 
+@media (min-width: 768px) {
+  .meta-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .meta-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+}
+
+
 .meta-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  min-width: fit-content;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  min-width: 0; /* Ensures text truncation works */
 }
 
 .meta-item i {
   font-size: 24px;
   color: #6c757d; /* Default fallback */
+  margin-top: 2px; /* Align icon with the top label line */
 }
 
 /* Specific icon colors */
@@ -647,7 +661,7 @@
 }
 
 .exp-label {
-  color: #059669;
+  color: #047857;
   font-weight: 600;
   margin-left: 8px;
 }
@@ -821,7 +835,7 @@
 }
 
 .btn-whatsapp {
-  background-color: #25D366;
+  background-color: #128c7e;
 }
 
 .btn-telegram {
@@ -1101,27 +1115,27 @@
 }
 
 .share-button.whatsapp {
-  background: #25D366;
+  background: #128c7e; /* Darker WhatsApp Teal */
   color: white;
 }
 
 .share-button.linkedin {
-  background: #0077B5;
+  background: #0a66c2; /* Darker LinkedIn Blue */
   color: white;
 }
 
 .share-button.facebook {
-  background: #1877F2;
+  background: #0866ff; /* New Facebook Blue */
   color: white;
 }
 
 .share-button.twitter {
-  background: #1DA1F2;
+  background: #0f1419; /* X Black/Dark Gray */
   color: white;
 }
 
 .share-button.telegram {
-  background: #0088cc;
+  background: #0088cc; /* Telegram Blue - darker */
   color: white;
 }
 
@@ -1325,7 +1339,7 @@
 .company-job-logo-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* Side Ads for Desktop - Removed */

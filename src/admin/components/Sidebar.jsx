@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { 
+    FaTimes, FaTachometerAlt, FaNewspaper, FaBriefcase, FaChevronDown, 
+    FaClipboardList, FaBuilding, FaUsers, FaEnvelope, FaComments, 
+    FaChalkboardTeacher, FaUniversity, FaThLarge, FaBullhorn, FaChartLine, 
+    FaSignOutAlt, FaUserCircle 
+} from 'react-icons/fa';
 import AuthService from '../services/AuthService';
 import logo from '../../portal/assets/logo/logo.png';
 
@@ -38,7 +44,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <span className="fw-bold fs-5 text-white">BCV<span style={{ color: '#4fc3f7' }}>WORLD</span></span>
                 </div>
                 <button className="sidebar-toggle d-lg-none" onClick={toggleSidebar}>
-                    <i className="bi bi-x-lg"></i>
+                    <FaTimes className="sidebar-icon" />
                 </button>
             </div>
 
@@ -46,7 +52,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <ul className="nav flex-column" id="sidebarMenu">
                     <li className="nav-item">
                         <Link className={`nav-link ${isActive('/admin/dashboard') ? 'active' : ''}`} to="/admin/dashboard">
-                            <i className="bi bi-speedometer2"></i>
+                            <FaTachometerAlt className="sidebar-icon" />
                             <span>Dashboard</span>
                             <span className="badge bg-primary rounded-pill ms-auto">New</span>
                         </Link>
@@ -56,7 +62,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         <>
                             <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/upload-news') ? 'active' : ''}`} to="/admin/upload-news">
-                                    <i className="bi bi-newspaper"></i>
+                                    <FaNewspaper className="sidebar-icon" />
                                     <span>Upload News</span>
                                 </Link>
                             </li>
@@ -68,21 +74,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     onClick={(e) => { e.preventDefault(); setJobsOpen(!jobsOpen); }}
                                     aria-expanded={jobsOpen}
                                 >
-                                    <i className="bi bi-briefcase"></i>
+                                    <FaBriefcase className="sidebar-icon" />
                                     <span>Jobs</span>
-                                    <i className="bi bi-chevron-down dropdown-arrow"></i>
+                                    <FaChevronDown className="sidebar-icon dropdown-arrow" />
                                 </a>
                                 <div className={`collapse ${jobsOpen ? 'show' : ''}`} id="jobs-collapse">
                                     <ul className="nav flex-column sub-menu">
                                         <li className="nav-item">
                                             <Link className={`nav-link ${isActive('/admin/job-management') ? 'active' : ''}`} to="/admin/job-management">
-                                                <i className="bi bi-list-check"></i>
+                                                <FaClipboardList className="sidebar-icon" />
                                                 <span>Manage Jobs</span>
                                             </Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link className={`nav-link ${isActive('/admin/jobs-upload') ? 'active' : ''}`} to="/admin/jobs-upload">
-                                                <i className="bi bi-building"></i>
+                                                <FaBuilding className="sidebar-icon" />
                                                 <span>Private Jobs</span>
                                             </Link>
                                         </li>
@@ -92,28 +98,28 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
                             <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/users') ? 'active' : ''}`} to="/admin/users">
-                                    <i className="bi bi-people-fill"></i>
+                                    <FaUsers className="sidebar-icon" />
                                     <span>Users Management</span>
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/messages') ? 'active' : ''}`} to="/admin/messages">
-                                    <i className="bi bi-envelope-paper"></i>
+                                    <FaEnvelope className="sidebar-icon" />
                                     <span>Messages</span>
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/comments') ? 'active' : ''}`} to="/admin/comments">
-                                    <i className="bi bi-chat-left-text"></i>
+                                    <FaComments className="sidebar-icon" />
                                     <span>Comments</span>
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/mentorship') ? 'active' : ''}`} to="/admin/mentorship">
-                                    <i className="bi bi-calendar-check"></i>
+                                    <FaChalkboardTeacher className="sidebar-icon" />
                                     <span>Mentorship</span>
                                 </Link>
                             </li>
@@ -125,9 +131,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     onClick={(e) => { e.preventDefault(); setFinanceOpen(!financeOpen); }}
                                     aria-expanded={financeOpen}
                                 >
-                                    <i className="bi bi-bank"></i>
+                                    <FaUniversity className="sidebar-icon" />
                                     <span>Finance</span>
-                                    <i className="bi bi-chevron-down dropdown-arrow"></i>
+                                    <FaChevronDown className="sidebar-icon dropdown-arrow" />
                                 </a>
                                 <div className={`collapse ${financeOpen ? 'show' : ''}`} id="finance-collapse">
                                     <ul className="nav flex-column sub-menu">
@@ -136,7 +142,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                                 className={`nav-link ${isActive('/admin/finance/overview') ? 'active' : ''}`}
                                                 to="/admin/finance/overview"
                                             >
-                                                <i className="bi bi-grid"></i>
+                                                <FaThLarge className="sidebar-icon" />
                                                 <span>Total Overview</span>
                                             </Link>
                                         </li>
@@ -145,7 +151,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                                 className={`nav-link ${isActive('/admin/finance/marketing-ads') ? 'active' : ''}`}
                                                 to="/admin/finance/marketing-ads"
                                             >
-                                                <i className="bi bi-megaphone"></i>
+                                                <FaBullhorn className="sidebar-icon" />
                                                 <span>Marketing Ads Finance</span>
                                             </Link>
                                         </li>
@@ -154,7 +160,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                                 className={`nav-link ${isActive('/admin/finance/tracking') ? 'active' : ''}`}
                                                 to="/admin/finance/tracking"
                                             >
-                                                <i className="bi bi-line-chart"></i>
+                                                <FaChartLine className="sidebar-icon" />
                                                 <span>Financial Tracking</span>
                                             </Link>
                                         </li>
@@ -164,7 +170,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
                             <li className="nav-item mt-auto pt-4 px-3">
                                 <Link className="nav-link back-to-portal-btn" to="/">
-                                    <i className="bi bi-box-arrow-left"></i>
+                                    <FaSignOutAlt className="sidebar-icon" />
                                     <span>Back to Portal</span>
                                 </Link>
                             </li>
@@ -177,7 +183,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <div className="user-profile-container">
                     <div className="user-profile">
                         <div className="profile-img-placeholder">
-                            <i className="bi bi-person-circle"></i>
+                            <FaUserCircle className="sidebar-icon" />
                         </div>
                         <div className="profile-info">
                             <h6 className="profile-name">{currentUser ? currentUser.name : 'Guest'}</h6>

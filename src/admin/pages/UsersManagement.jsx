@@ -7,8 +7,10 @@ import {
   FaTrash,
   FaUserCog,
   FaCheck,
-  FaBan
+  FaBan,
+  FaUsers
 } from 'react-icons/fa';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import UserService from '../services/UserService';
 import AuthService from '../services/AuthService';
 import './UsersManagement.css';
@@ -127,7 +129,7 @@ const UsersManagement = () => {
                     <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                         <div className="d-flex align-items-center gap-3">
                             <h5 className="mb-0 fw-bold text-primary">
-                                <i className="bi bi-people me-2"></i>All Users
+                                <FaUsers className="bi me-2" />All Users
                             </h5>
                             <span className="badge bg-primary rounded-pill px-3 py-2">{totalUsers} Users</span>
                         </div>
@@ -267,7 +269,7 @@ const UsersManagement = () => {
                                             onClick={() => handlePageChange(currentPage - 1)}
                                             disabled={currentPage === 0}
                                         >
-                                            <i className="bi bi-chevron-left"></i>
+                                            <BiChevronLeft className="bi" />
                                         </button>
                                     </li>
                                     {[...Array(totalPages)].map((_, idx) => (
@@ -288,7 +290,7 @@ const UsersManagement = () => {
                                             onClick={() => handlePageChange(currentPage + 1)}
                                             disabled={currentPage === totalPages - 1}
                                         >
-                                            <i className="bi bi-chevron-right"></i>
+                                            <BiChevronRight className="bi" />
                                         </button>
                                     </li>
                                 </ul>

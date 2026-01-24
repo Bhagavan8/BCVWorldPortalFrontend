@@ -3,16 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar as CalendarIcon, 
   Clock, 
-  CreditCard, 
   CheckCircle, 
-  Star, 
   ChevronRight, 
   ChevronDown,
   User, 
   Video, 
-  MessageSquare,
   ShieldCheck,
-  Award,
   ArrowRight,
   Target,
   Zap,
@@ -50,6 +46,11 @@ const axiosWithRetry = async (url, options = {}, retries = 3, timeout = 20000) =
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
+};
+
+const getAuthHeader = () => {
+  const token = AuthService.getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
 const Mentorship = () => {
@@ -203,15 +204,6 @@ const Mentorship = () => {
     }, 100);
   };
 
-  // Helper to match JobService authentication pattern
-  const getAuthHeader = () => {
-    const token = AuthService.getToken();
-    if (token) {
-        return { 'Authorization': `Bearer ${token}` };
-    }
-    return {};
-  };
-
   const handlePayment = async () => {
     if (!isLegalAccepted) {
       toast.error("Please accept the terms and conditions");
@@ -254,20 +246,16 @@ const Mentorship = () => {
             headers: headers
         });
 
-        setPaymentStatus('verified');
-        
         // 3. Success Animation Delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         setIsProcessing(false);
-        setPaymentStatus('idle');
         setBookingStep(4);
         toast.success("Payment Verified! Booking Confirmed.");
 
     } catch (error) {
         console.error("Booking Error:", error);
         setIsProcessing(false);
-        setPaymentStatus('idle');
         toast.error("Failed to save booking. Please try again.");
     }
   };
@@ -380,7 +368,7 @@ const Mentorship = () => {
                  "Confused about DSA/System Design roadmap",
                  "Resume not getting shortlisted",
                  "Switching from service → product company",
-                 "Final year or 0–3 years experience"
+                 "Final year or 0-3 years experience"
               ].map((item, i) => (
                  <div key={i} className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">

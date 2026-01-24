@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NewsService from '../services/NewsService';
 import toast from 'react-hot-toast';
 import { FaTrash, FaBold, FaTimes, FaPlus, FaInfoCircle } from 'react-icons/fa';
+import { BiDisc } from 'react-icons/bi';
 import '../assets/css/NewsUpload.css';
 
 const NewsUpload = () => {
@@ -237,9 +238,9 @@ const NewsUpload = () => {
                                             {p.subPoints.map((sp, sIndex) => (
                                                 <div key={sIndex} className="input-group mb-2 subpoint-item">
                                                     <span className="input-group-text">
-                                                        <i className="bi bi-dot"></i>
+                                                        <BiDisc />
                                                     </span>
-                                                    <input 
+                                                    <input  
                                                         type="text" 
                                                         className={`form-control ${sp.isBold ? 'fw-bold' : ''}`}
                                                         placeholder="Sub-point"
@@ -347,7 +348,7 @@ const NewsUpload = () => {
                             </button>
                             <button 
                                 type="submit" 
-                                className="btn btn-primary news-action-btn"
+                                className="btn btn-primary news-action-btn d-flex align-items-center"
                                 disabled={loading}
                             >
                                 {loading ? (

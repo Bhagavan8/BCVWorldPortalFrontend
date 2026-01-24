@@ -5,8 +5,12 @@ import toast from 'react-hot-toast';
 import { 
   FaSearch, 
   FaEdit, 
-  FaTrash,
-  FaEye
+  FaTrash, 
+  FaEye,
+  FaInbox,
+  FaPlus,
+  FaCalendarAlt,
+  FaHourglassHalf
 } from 'react-icons/fa';
 import AuthService from '../services/AuthService';
 import './JobManagement.css';
@@ -150,7 +154,7 @@ const JobManagement = () => {
                 style={{whiteSpace: 'nowrap', height: '40px'}}
                 onClick={() => navigate('/admin/jobs-upload')}
               >
-                <i className="bi bi-plus-lg"></i>
+                <FaPlus />
                 <span>Post Job</span>
               </button>
           </div>
@@ -181,7 +185,7 @@ const JobManagement = () => {
                   <tr>
                     <td colSpan="7" className="text-center py-5 text-muted">
                         <div className="py-4">
-                            <i className="bi bi-inbox fs-1 text-light-emphasis d-block mb-2"></i>
+                            <FaInbox className="fs-1 text-light-emphasis d-block mb-2 mx-auto" />
                             No jobs found
                         </div>
                     </td>
@@ -195,13 +199,17 @@ const JobManagement = () => {
                       </td>
                       <td className="text-secondary fw-medium" data-label="Company">{job.companyName}</td>
                       <td className="text-secondary small" data-label="Posted Date">
-                        <i className="bi bi-calendar3 me-1"></i>
-                        {new Date(job.postedDate).toLocaleDateString()}
+                        <div className="d-flex align-items-center text-nowrap">
+                          <FaCalendarAlt className="me-2 text-primary opacity-75" />
+                          {new Date(job.postedDate).toLocaleDateString()}
+                        </div>
                       </td>
                       <td className="text-secondary small" data-label="Deadline">
-                        {job.lastDate 
-                          ? <><i className="bi bi-hourglass-split me-1"></i>{new Date(job.lastDate).toLocaleDateString()}</>
-                          : <span className="text-muted fst-italic">No deadline</span>}
+                        <div className="d-flex align-items-center text-nowrap">
+                          {job.lastDate 
+                            ? <><FaHourglassHalf className="me-2 text-primary opacity-75" />{new Date(job.lastDate).toLocaleDateString()}</>
+                            : <span className="text-muted fst-italic">No deadline</span>}
+                        </div>
                       </td>
                       <td className="text-center" data-label="Views">
                         <span className="badge bg-light text-dark border rounded-pill px-3">

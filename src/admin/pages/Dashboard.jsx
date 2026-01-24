@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { 
+    BiUserCheck, BiUpArrow, BiDownArrow, BiBriefcase, BiGroup, BiTrendingUp, 
+    BiNews, BiShow, BiCalendar, BiCalendarMinus, BiCalendarWeek, BiFile, 
+    BiCommentDots, BiBulb, BiRocket, BiSolidCheckCircle, BiSolidBolt, BiQuestionMark, 
+    BiBarChart, BiHelpCircle
+} from 'react-icons/bi';
 import AuthService from '../services/AuthService';
 import adminApi from '../../api/admin';
 import {
@@ -111,7 +117,7 @@ const Dashboard = () => {
                     <div className="col-12">
                          <div className="card welcome-card h-100 p-5 text-center">
                              <div className="card-body">
-                                <i className="bi bi-person-check display-1 text-primary mb-4"></i>
+                                <BiUserCheck className="bi display-1 text-primary mb-4" />
                                 <h1 className="mb-3">Welcome to BCVWorld Jobs!</h1>
                                 <p className="lead mb-4">You have successfully logged in to your dashboard.</p>
                                 <p className="text-muted">Explore the latest job opportunities and track your applications.</p>
@@ -223,7 +229,7 @@ const Dashboard = () => {
             
             return (
                 <div className={`card-growth ${isPositive ? 'positive' : 'negative'}`}>
-                    <i className={`bi bi-arrow-${isPositive ? 'up' : 'down'}`}></i> {value}%
+                    {isPositive ? <BiUpArrow className="bi" /> : <BiDownArrow className="bi" />} {value}%
                 </div>
             );
         }
@@ -242,7 +248,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-primary">
                         <div className="card-icon">
-                            <i className="bi bi-briefcase"></i>
+                            <BiBriefcase className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.totalJobs}</h3>
@@ -255,7 +261,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-success">
                         <div className="card-icon">
-                            <i className="bi bi-people"></i>
+                            <BiGroup className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.activeUsers}</h3>
@@ -268,7 +274,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-info">
                         <div className="card-icon">
-                            <i className="bi bi-graph-up"></i>
+                            <BiTrendingUp className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.newsViews}</h3>
@@ -281,7 +287,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-warning">
                         <div className="card-icon">
-                            <i className="bi bi-newspaper"></i>
+                            <BiNews className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.newsArticles}</h3>
@@ -294,7 +300,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-danger">
                         <div className="card-icon">
-                            <i className="bi bi-eye"></i>
+                            <BiShow className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.totalJobsViews}</h3>
@@ -307,7 +313,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-secondary">
                         <div className="card-icon">
-                            <i className="bi bi-calendar-day"></i>
+                            <BiCalendar className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.todayJobsViews}</h3>
@@ -320,7 +326,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-dark">
                         <div className="card-icon">
-                            <i className="bi bi-calendar-minus"></i>
+                            <BiCalendarMinus className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.yesterdayJobsViews}</h3>
@@ -333,7 +339,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-purple" style={{ backgroundColor: '#6f42c1', color: 'white' }}>
                         <div className="card-icon">
-                            <i className="bi bi-calendar-week"></i>
+                            <BiCalendarWeek className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.weeklyJobsViews}</h3>
@@ -349,7 +355,7 @@ const Dashboard = () => {
                  <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-success">
                         <div className="card-icon">
-                            <i className="bi bi-file-earmark-check"></i>
+                            <BiFile className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.totalApplies}</h3>
@@ -361,7 +367,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-info">
                         <div className="card-icon">
-                            <i className="bi bi-chat-dots"></i>
+                            <BiCommentDots className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.totalComments}</h3>
@@ -373,7 +379,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-primary">
                         <div className="card-icon">
-                            <i className="bi bi-lightbulb"></i>
+                            <BiBulb className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.totalSuggestions}</h3>
@@ -385,7 +391,7 @@ const Dashboard = () => {
                 <div className="col-md-6 col-lg-3">
                     <div className="stats-card bg-warning">
                         <div className="card-icon">
-                            <i className="bi bi-eye"></i>
+                            <BiShow className="bi" />
                         </div>
                         <div className="card-info">
                             <h3>{stats.monthlyJobViews}</h3>
@@ -401,7 +407,7 @@ const Dashboard = () => {
                 <div className="col-lg-6">
                     <div className="card welcome-card h-100">
                          <div className="card-header">
-                            <h5><i className="bi bi-rocket-takeoff me-2"></i>Welcome to Jobs Admin</h5>
+                            <h5><BiRocket className="bi me-2" />Welcome to Jobs Admin</h5>
                         </div>
                         <div className="card-body">
                             <div className="welcome-content">
@@ -410,29 +416,29 @@ const Dashboard = () => {
 
                                 <ul className="features-list list-unstyled">
                                     <li className="mb-2">
-                                        <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                        <BiSolidCheckCircle className="bi text-success me-2" />
                                         <span>Seamless job posting across multiple categories</span>
                                     </li>
                                     <li className="mb-2">
-                                        <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                        <BiSolidCheckCircle className="bi text-success me-2" />
                                         <span>Integrated news and content management</span>
                                     </li>
                                     <li className="mb-2">
-                                        <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                        <BiSolidCheckCircle className="bi text-success me-2" />
                                         <span>Advanced user profile management</span>
                                     </li>
                                     <li className="mb-2">
-                                        <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                        <BiSolidCheckCircle className="bi text-success me-2" />
                                         <span>Real-time analytics and reporting</span>
                                     </li>
                                 </ul>
 
                                 <div className="welcome-actions mt-4">
                                     <button className="btn btn-primary me-3">
-                                        <i className="bi bi-lightning-charge-fill me-2"></i>Quick Start Guide
+                                        <BiSolidBolt className="bi me-2" />Quick Start Guide
                                     </button>
                                     <button className="btn btn-outline-secondary">
-                                        <i className="bi bi-question-circle me-2"></i>Help Center
+                                        <BiHelpCircle className="bi me-2" />Help Center
                                     </button>
                                 </div>
                             </div>
@@ -444,7 +450,7 @@ const Dashboard = () => {
                 <div className="col-lg-6">
                      <div className="card jobs-overview-card h-100">
                         <div className="card-header d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0"><i className="bi bi-bar-chart me-2"></i>Jobs Overview</h5>
+                            <h5 className="mb-0"><BiBarChart className="bi me-2" />Jobs Overview</h5>
                             <div className="dropdown">
                                 <button 
                                     className="btn btn-sm dropdown-toggle" 

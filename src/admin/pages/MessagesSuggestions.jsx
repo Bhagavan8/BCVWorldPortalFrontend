@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MessageService from '../services/MessageService';
 import toast from 'react-hot-toast';
+import { BiEnvelope, BiUser, BiChevronLeft, BiChevronRight, BiBulb, BiLogoWhatsapp } from 'react-icons/bi';
 
 const MessagesSuggestions = () => {
   const [messages, setMessages] = useState([]);
@@ -67,7 +68,7 @@ const MessagesSuggestions = () => {
           <div className="card shadow-sm border-0 rounded-4 h-100">
             <div className="card-header bg-white py-3 px-4 border-bottom border-light">
               <h5 className="mb-0 fw-bold text-primary">
-                <i className="bi bi-envelope me-2"></i>Contact Messages
+                <BiEnvelope className="bi me-2" />Contact Messages
               </h5>
             </div>
             <div className="card-body p-0">
@@ -93,7 +94,7 @@ const MessagesSuggestions = () => {
                       <p className="text-dark mt-2 mb-2" style={{ whiteSpace: 'pre-wrap' }}>{msg.message}</p>
                       <div className="d-flex justify-content-between align-items-center mt-2">
                         <div className="d-flex align-items-center text-secondary small">
-                          <i className="bi bi-person me-1"></i>
+                          <BiUser className="bi me-1" />
                           {msg.name} <span className="text-muted ms-1">({msg.email})</span>
                         </div>
                       </div>
@@ -110,7 +111,7 @@ const MessagesSuggestions = () => {
                   disabled={messagePage === 0}
                   onClick={() => setMessagePage(p => p - 1)}
                 >
-                  <i className="bi bi-chevron-left me-1"></i> Previous
+                  <BiChevronLeft className="bi me-1" /> Previous
                 </button>
                 <span className="text-muted small">Page {messagePage + 1}</span>
                 <button 
@@ -118,7 +119,7 @@ const MessagesSuggestions = () => {
                   disabled={messagePage >= totalMessagePages - 1}
                   onClick={() => setMessagePage(p => p + 1)}
                 >
-                  Next <i className="bi bi-chevron-right ms-1"></i>
+                  Next <BiChevronRight className="bi ms-1" />
                 </button>
               </div>
             </div>
@@ -130,7 +131,7 @@ const MessagesSuggestions = () => {
           <div className="card shadow-sm border-0 rounded-4 h-100">
             <div className="card-header bg-white py-3 px-4 border-bottom border-light">
               <h5 className="mb-0 fw-bold text-success">
-                <i className="bi bi-lightbulb me-2"></i>Suggestions
+                <BiBulb className="bi me-2" />Suggestions
               </h5>
             </div>
             <div className="card-body p-0">
@@ -157,12 +158,12 @@ const MessagesSuggestions = () => {
                       <p className="text-dark mt-2 mb-2" style={{ whiteSpace: 'pre-wrap' }}>{sug.suggestion}</p>
                       <div className="d-flex flex-wrap gap-3 align-items-center mt-2 small text-secondary">
                         <div className="d-flex align-items-center">
-                          <i className="bi bi-envelope me-1"></i>
+                          <BiEnvelope className="bi me-1" />
                           {sug.email}
                         </div>
                         {sug.whatsapp && (
                           <div className="d-flex align-items-center">
-                            <i className="bi bi-whatsapp me-1 text-success"></i>
+                            <BiLogoWhatsapp className="bi me-1 text-success" />
                             {sug.whatsapp}
                           </div>
                         )}
@@ -180,7 +181,7 @@ const MessagesSuggestions = () => {
                   disabled={suggestionPage === 0}
                   onClick={() => setSuggestionPage(p => p - 1)}
                 >
-                  <i className="bi bi-chevron-left me-1"></i> Previous
+                  <BiChevronLeft className="bi me-1" /> Previous
                 </button>
                 <span className="text-muted small">Page {suggestionPage + 1}</span>
                 <button 
@@ -188,7 +189,7 @@ const MessagesSuggestions = () => {
                   disabled={suggestionPage >= totalSuggestionPages - 1}
                   onClick={() => setSuggestionPage(p => p + 1)}
                 >
-                  Next <i className="bi bi-chevron-right ms-1"></i>
+                  Next <BiChevronRight className="bi ms-1" />
                 </button>
               </div>
             </div>

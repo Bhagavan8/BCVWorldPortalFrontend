@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { 
+    BiWallet, BiDownArrowCircle, BiSolidBank, BiUpArrowCircle, 
+    BiCalendarCheck, BiErrorCircle, BiHistory, BiTrendingUp, 
+    BiPlus, BiReceipt, BiCalendarEvent, 
+    BiCalendarWeek, BiCalendar, BiRevision 
+} from 'react-icons/bi';
+import { FaCoins, FaCog } from 'react-icons/fa';
 import adminApi from '../../api/admin';
 
 const PAGE_SIZE = 10;
@@ -212,7 +219,7 @@ const FinanceTracking = () => {
                             >
                                 Income - Expenses
                             </small>
-                            <i className="bi bi-wallet2 card-icon-bg" />
+                            <BiWallet className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -229,7 +236,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalIncome)}
                             </h2>
-                            <i className="bi bi-arrow-down-circle card-icon-bg" />
+                            <BiDownArrowCircle className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -243,7 +250,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalLoanExpenses)}
                             </h2>
-                            <i className="bi bi-bank card-icon-bg" />
+                            <BiSolidBank className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -260,7 +267,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalOtherExpenses)}
                             </h2>
-                            <i className="bi bi-arrow-up-circle card-icon-bg" />
+                            <BiUpArrowCircle className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -274,7 +281,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.monthlyEmiCommitment)}
                             </h2>
-                            <i className="bi bi-calendar-check card-icon-bg" />
+                            <BiCalendarCheck className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -288,7 +295,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalLoanPrincipal)}
                             </h2>
-                            <i className="bi bi-bank2 card-icon-bg" />
+                            <BiSolidBank className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -302,7 +309,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalOutstandingLoan)}
                             </h2>
-                            <i className="bi bi-exclamation-circle card-icon-bg" />
+                            <BiErrorCircle className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -319,7 +326,7 @@ const FinanceTracking = () => {
                             <h2 className="card-title mb-0 fw-bold">
                                 {formatCurrency(summary.totalPending)}
                             </h2>
-                            <i className="bi bi-clock-history card-icon-bg" />
+                            <BiHistory className="bi card-icon-bg" />
                         </div>
                     </div>
                 </div>
@@ -339,7 +346,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-danger bg-opacity-10 text-danger rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}
                             >
-                                <i className="bi bi-calendar-event fs-4" />
+                                <BiCalendarEvent className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -357,7 +364,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-danger bg-opacity-10 text-danger rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}
                             >
-                                <i className="bi bi-calendar-week fs-4" />
+                                <BiCalendarWeek className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -375,7 +382,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-danger bg-opacity-10 text-danger rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}
                             >
-                                <i className="bi bi-calendar3 fs-4" />
+                                <BiCalendar className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -396,7 +403,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-danger bg-opacity-10 text-danger rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}
                             >
-                                <i className="bi bi-calendar3 fs-4" />
+                                <BiCalendar className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -414,7 +421,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-success bg-opacity-10 text-success rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(25, 135, 84, 0.1)' }}
                             >
-                                <i className="bi bi-piggy-bank fs-4" />
+                                <FaCoins className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -432,7 +439,7 @@ const FinanceTracking = () => {
                                 className="icon-shape bg-primary bg-opacity-10 text-primary rounded-3 p-3"
                                 style={{ backgroundColor: 'rgba(13, 110, 253, 0.1)' }}
                             >
-                                <i className="bi bi-graph-up fs-4" />
+                                <BiTrendingUp className="bi fs-4" />
                             </div>
                         </div>
                     </div>
@@ -446,7 +453,7 @@ const FinanceTracking = () => {
                             <div className="card shadow-sm h-100">
                                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0 fw-bold text-primary">
-                                        <i className="bi bi-bank me-2" />
+                                        <BiSolidBank className="bi me-2" />
                                         Active Loans
                                     </h5>
                                     <button
@@ -454,7 +461,7 @@ const FinanceTracking = () => {
                                         className="btn btn-outline-primary btn-sm"
                                         disabled
                                     >
-                                        <i className="bi bi-plus-lg" />
+                                        <BiPlus />
                                         {' '}
                                         New Loan
                                     </button>
@@ -475,7 +482,7 @@ const FinanceTracking = () => {
                             <div className="card shadow-sm h-100">
                                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0 fw-bold text-success">
-                                        <i className="bi bi-graph-up-arrow me-2" />
+                                        <BiTrendingUp className="bi me-2" />
                                         Investments
                                     </h5>
                                     <button
@@ -483,7 +490,7 @@ const FinanceTracking = () => {
                                         className="btn btn-outline-success btn-sm"
                                         disabled
                                     >
-                                        <i className="bi bi-plus-lg" />
+                                        <BiPlus />
                                         {' '}
                                         New Invest
                                     </button>
@@ -506,7 +513,7 @@ const FinanceTracking = () => {
                         <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 className="mb-0 fw-bold">
-                                    <i className="bi bi-arrow-repeat me-2" />
+                                    <BiRevision className="bi me-2" />
                                     Recurring Payments
                                 </h5>
                             </div>
@@ -515,7 +522,7 @@ const FinanceTracking = () => {
                                 className="btn btn-outline-dark btn-sm"
                                 disabled
                             >
-                                <i className="bi bi-gear-fill me-1" />
+                                <FaCog className="bi me-1" />
                                 Manage
                             </button>
                         </div>
@@ -536,7 +543,7 @@ const FinanceTracking = () => {
                                 data-bs-toggle="modal"
                                 data-bs-target="#addTransactionModal"
                             >
-                                <i className="bi bi-plus-lg me-1" />
+                                <BiPlus className="bi me-1" />
                                 Add New
                             </button>
                         </div>
@@ -617,7 +624,7 @@ const FinanceTracking = () => {
                                     </div>
                                 ) : pageItems.length === 0 ? (
                                     <div className="text-center py-5 text-muted">
-                                        <i className="bi bi-receipt display-4 opacity-25" />
+                                        <BiReceipt className="bi display-4 opacity-25" />
                                         <p className="mt-2">No transactions found</p>
                                     </div>
                                 ) : (
