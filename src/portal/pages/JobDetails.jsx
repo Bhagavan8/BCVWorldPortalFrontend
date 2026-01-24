@@ -15,6 +15,7 @@ import {
 import SEO from '../components/SEO';
 import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
+import JobDetailsSkeleton from '../components/JobDetailsSkeleton';
 
 // Helper for robust fetching with retry and timeout
 const fetchWithRetry = async (url, options = {}, retries = 3, timeout = 20000) => {
@@ -955,10 +956,7 @@ export default function JobDetails() {
     return (
       <>
         {mobileNav}
-        <div className="min-h-screen flex flex-col items-center justify-center bg-white z-50 fixed inset-0">
-          <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600 font-medium animate-pulse">Loading job details...</p>
-        </div>
+        <JobDetailsSkeleton />
       </>
     );
   }
