@@ -1481,36 +1481,38 @@
   }
 
   .company-brand {
-    flex-direction: row;
-    align-items: flex-start; /* Align top */
-    gap: 12px;
+    flex-direction: column;
+    align-items: center; /* Center Logo */
+    gap: 16px; /* Increased gap for Ad space */
   }
 
   .company-logo img {
-    width: 60px;
-    height: 60px;
-    min-width: 60px; /* Prevent shrinking */
+    width: 80px; /* Slightly larger for center focus */
+    height: 80px;
+    min-width: 80px;
   }
 
   .company-details {
-    width: auto;
+    width: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; /* Left align text */
   }
 
   .job-title {
-    font-size: 22px; /* Optimized for mobile */
+    font-size: 22px;
     line-height: 1.3;
     text-align: left;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    width: 100%;
   }
 
   .company-name {
     font-size: 16px;
     text-align: left;
     color: #4b5563;
+    width: 100%;
   }
 
   .posted-by-wrapper {
