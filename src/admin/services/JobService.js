@@ -17,14 +17,22 @@ class JobService {
         return {};
     }
 
-    createJob(job) {
+    async createJob(job) {
         const headers = {
             'Content-Type': 'application/json',
             ...this.getAuthHeader()
         };
-        // Use the dedicated admin endpoint for creating jobs
-        console.log('JobService: Creating job at', ADMIN_API_URL, 'with headers:', headers);
-        return axios.post(ADMIN_API_URL, job, { headers });
+        // Try Admin endpoint first, then fall back to standard endpoint if 403/404
+        try {
+            console.log('JobService: Creating job at', ADMIN_API_URL, 'with headers:', headers);
+            return await axios.post(ADMIN_API_URL, job, { headers });
+        } catch (error) {
+            if (error.response && (error.response.status === 403 || error.response.status === 404)) {
+                console.warn(`Admin endpoint failed (${error.response.status}), trying standard endpoint:`, API_URL);
+                return await axios.post(API_URL, job, { headers });
+            }
+            throw error;
+        }
     }
 
     updateJob(id, job) {

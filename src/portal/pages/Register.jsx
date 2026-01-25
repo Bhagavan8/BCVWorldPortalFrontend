@@ -366,7 +366,7 @@ export default function Register() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col lg:flex-row bg-[#0f172a] overflow-hidden font-sans text-slate-200">
+    <main role="main" className="h-screen w-full flex flex-col lg:flex-row bg-[#0f172a] overflow-hidden font-sans text-slate-200">
       <SEO 
         title="Register" 
         description="Create a BCVWORLD account to unlock job referrals, mentoring, and exclusive career resources." 
@@ -411,7 +411,7 @@ export default function Register() {
                   <CheckCircle className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg leading-tight">Personalized Job Matches</h3>
+                  <h2 className="font-semibold text-lg leading-tight">Personalized Job Matches</h2>
                   <p className="text-gray-400 text-xs mt-1">Get recommendations based on your skills</p>
                 </div>
               </div>
@@ -421,7 +421,7 @@ export default function Register() {
                   <Users className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg leading-tight">Community Access</h3>
+                  <h2 className="font-semibold text-lg leading-tight">Community Access</h2>
                   <p className="text-slate-400 text-xs mt-1">Connect with peers and mentors</p>
                 </div>
               </div>
@@ -431,7 +431,7 @@ export default function Register() {
                   <BookOpen className="w-6 h-6 text-pink-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg leading-tight">Learning Resources</h3>
+                  <h2 className="font-semibold text-lg leading-tight">Learning Resources</h2>
                   <p className="text-slate-400 text-xs mt-1">Access to premium study materials</p>
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function Register() {
                   <Shield className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg leading-tight">Secure & Private</h3>
+                  <h2 className="font-semibold text-lg leading-tight">Secure & Private</h2>
                   <p className="text-slate-400 text-xs mt-1">Your data is encrypted and protected</p>
                 </div>
               </div>
@@ -458,7 +458,7 @@ export default function Register() {
       </div>
 
       {/* Right Panel - Registration Form */}
-      <div className="w-full lg:w-1/2 h-full overflow-y-auto bg-[#1e293b] relative border-l border-slate-700/50">
+      <div className="w-full lg:w-1/2 h-full overflow-y-auto bg-[#1e293b] relative lg:border-l border-slate-700/50">
         <div className="w-full max-w-xl mx-auto p-6 sm:p-8 flex flex-col justify-center min-h-full">
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-6">
@@ -485,29 +485,34 @@ export default function Register() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                  <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                     <input
+                      id="name"
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
+                      className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base min-h-[48px]"
                       required
+                      aria-label="Full Name"
                     />
                   </div>
                 </div>
                 {/* Mobile */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Mobile Number</label>
+                  <label htmlFor="mobile" className="block text-sm font-medium text-slate-300 mb-1">Mobile Number</label>
                   <div className="flex gap-2">
                     <div className="w-24 flex-shrink-0">
                       <select
+                        id="countryCode"
                         name="countryCode"
                         value={formData.countryCode}
                         onChange={handleChange}
-                        className="w-full px-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
+                        className="w-full px-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm min-h-[48px]"
+                        aria-label="Country Code"
+                        title="Country Code"
                       >
                         {COUNTRY_CODES.map(c => (
                           <option key={c.code} value={c.code} className="bg-slate-900 text-white">
@@ -519,14 +524,16 @@ export default function Register() {
                     <div className="relative flex-1">
                       <Phone className="absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                       <input
+                        id="mobile"
                         type="tel"
                         name="mobile"
                         value={formData.mobile}
                         onChange={handleChange}
-                        className="w-full pl-8 pr-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
+                        className="w-full pl-8 pr-2 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base min-h-[48px]"
                         required
                         maxLength={formData.countryCode === '+91' ? 10 : 15}
                         placeholder="1234567890"
+                        aria-label="Mobile Number"
                       />
                     </div>
                   </div>
@@ -537,34 +544,38 @@ export default function Register() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 ${
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 min-h-[48px] ${
                         emailError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-slate-700 focus:ring-blue-500 focus:border-blue-500'
                       }`}
                       required
+                      aria-label="Email Address"
                     />
                   </div>
                   {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
                 </div>
                 {/* DOB */}
                 <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Date of Birth</label>
+                    <label htmlFor="dob" className="block text-sm font-medium text-slate-300 mb-1">Date of Birth</label>
                     <div className="relative">
                       <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                       <input
+                        id="dob"
                         type="date"
                         name="dob"
                         value={formData.dob}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base [color-scheme:dark]"
+                        className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base [color-scheme:dark] min-h-[48px]"
                         required
+                        aria-label="Date of Birth"
                       />
                     </div>
                 </div>
@@ -573,15 +584,17 @@ export default function Register() {
             {/* Row 3: State & City */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">State</label>
+                <label htmlFor="state" className="block text-sm font-medium text-slate-300 mb-1">State</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <select
+                    id="state"
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base"
+                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base min-h-[48px]"
                     required
+                    aria-label="State"
                   >
                     <option value="" className="bg-slate-900 text-slate-400">Select State</option>
                     {Object.keys(INDIAN_STATES_CITIES).map(state => (
@@ -591,16 +604,18 @@ export default function Register() {
                 </div>
                </div>
                <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">City</label>
+                <label htmlFor="city" className="block text-sm font-medium text-slate-300 mb-1">City</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <select
+                    id="city"
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base"
+                    className="w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none text-base min-h-[48px]"
                     required
                     disabled={!formData.state}
+                    aria-label="City"
                   >
                     <option value="" className="bg-slate-900 text-slate-400">Select City</option>
                     {cities.map(city => (
@@ -614,47 +629,53 @@ export default function Register() {
             {/* Password */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <input
+                    id="password"
                     type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     onFocus={() => setShowPasswordCriteria(true)}
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base"
+                    className="w-full pl-10 pr-12 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base min-h-[48px]"
                     required
+                    aria-label="Password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 min-w-[48px] min-h-[48px] flex items-center justify-center"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Confirm Password</label>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-1">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
                   <input
+                    id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 ${
+                    className={`w-full pl-10 pr-12 py-2.5 bg-slate-900 border rounded-lg focus:ring-2 outline-none transition-all text-base text-white placeholder-slate-500 min-h-[48px] ${
                       formData.confirmPassword && formData.password !== formData.confirmPassword
                         ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                         : 'border-slate-700 focus:ring-blue-500 focus:border-blue-500'
                     }`}
                     required
+                    aria-label="Confirm Password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 min-w-[48px] min-h-[48px] flex items-center justify-center"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -697,7 +718,8 @@ export default function Register() {
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="w-4 h-4 border border-slate-600 rounded bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                  className="w-5 h-5 border border-slate-600 rounded bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                  aria-label="I agree to the Terms of Service and Privacy Policy"
                 />
               </div>
               <label htmlFor="terms" className="ml-2 text-xs text-slate-400">
@@ -708,7 +730,8 @@ export default function Register() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed text-sm shadow-lg shadow-blue-900/20"
+              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed text-sm shadow-lg shadow-blue-900/20 min-h-[48px]"
+              aria-label="Create Account"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -724,7 +747,7 @@ export default function Register() {
                 <div className="w-full border-t border-slate-700"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-[#1e293b] text-slate-500">Or continue with</span>
+                <span className="px-2 bg-[#1e293b] text-slate-300">Or continue with</span>
               </div>
             </div>
 
@@ -732,7 +755,8 @@ export default function Register() {
               <button
                 type="button"
                 onClick={() => handleSocialLogin('Google')}
-                className="flex items-center justify-center w-full px-4 py-2 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors bg-slate-900"
+                className="flex items-center justify-center w-full px-4 py-2 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors bg-slate-900 min-h-[48px]"
+                aria-label="Sign in with Google"
               >
                 <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                   <path
@@ -765,6 +789,6 @@ export default function Register() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

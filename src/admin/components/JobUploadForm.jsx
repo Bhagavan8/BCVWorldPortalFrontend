@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import JobService from '../services/JobService';
+import AuthService from '../services/AuthService';
 import { BiInfoCircle, BiBuilding, BiEnvelope } from 'react-icons/bi';
 import { FaArrowRight, FaArrowLeft, FaCog, FaCheckCircle, FaSearch } from 'react-icons/fa';
 
@@ -237,6 +238,16 @@ const JobUploadForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Debug Auth Status
+        const token = AuthService.getToken();
+        const role = AuthService.getRole();
+        console.log('JobUploadForm: Submitting with Auth:', { 
+            hasToken: !!token, 
+            tokenLength: token ? token.length : 0,
+            role 
+        });
+
         if (!validateStep1() || !validateStep3() || !validateStep4()) return;
 
         setLoading(true);
@@ -381,7 +392,7 @@ const JobUploadForm = () => {
                         {step === 1 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><BiInfoCircle className="me-2" />Basic Job Information</h5>
+                                    <h5 className="mb-0 d-flex align-items-center"><BiInfoCircle className="me-2" />Basic Job Information</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
@@ -552,7 +563,7 @@ const JobUploadForm = () => {
                         {step === 2 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><BiBuilding className="me-2" />Company Information</h5>
+                                    <h5 className="mb-0 d-flex align-items-center"><BiBuilding className="me-2" />Company Information</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="form-check mb-3">
@@ -572,8 +583,8 @@ const JobUploadForm = () => {
                                     </div>
                                     {companyResults.length > 0 && (
                                         <div className="list-group mb-3">
-                                            {companyResults.map(c => (
-                                                <button type="button" key={c.id} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onClick={() => selectCompany(c)}>
+                                            {companyResults.map((c, index) => (
+                                                <button type="button" key={c.id || index} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onClick={() => selectCompany(c)}>
                                                     <span>
                                                         <strong>{c.companyName || c.company_name || c.name}</strong> <span className="text-muted ms-2">{c.companyWebsite || c.company_website || c.website || c.url}</span>
                                                     </span>
@@ -631,7 +642,7 @@ const JobUploadForm = () => {
                         {step === 3 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><BiEnvelope className="me-2" />Application Method</h5>
+                                    <h5 className="mb-0 d-flex align-items-center"><BiEnvelope className="me-2" />Application Method</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
@@ -661,7 +672,7 @@ const JobUploadForm = () => {
                         {step === 4 && (
                             <div className="card shadow-sm">
                                 <div className="card-header bg-white">
-                                    <h5 className="mb-0"><FaCog className="me-2" />Admin Settings</h5>
+                                    <h5 className="mb-0 d-flex align-items-center"><FaCog className="me-2" />Admin Settings</h5>
                                 </div>
                                 <div className="card-body">
                                     <div className="row mb-3">
