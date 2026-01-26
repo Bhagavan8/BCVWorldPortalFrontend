@@ -705,6 +705,8 @@
   width: 100%;
 }
 
+
+
 @media (min-width: 768px) {
   .meta-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1635,18 +1637,18 @@
   /* Meta Grid - 2 per row on mobile */
   .meta-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
     margin-top: 20px;
   }
   
-  /* Stack meta grid on very small screens */
-  @media (max-width: 400px) {
+  /* Stack meta grid on very small screens - DISABLED per user request for 2 columns */
+  /* @media (max-width: 400px) {
     .meta-grid {
       grid-template-columns: 1fr;
       gap: 10px;
     }
-  }
+  } */
 
   .meta-item {
     width: 100%;

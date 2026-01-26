@@ -18,6 +18,7 @@ import {
   Code
 } from 'lucide-react';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 
 const AboutUs = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
@@ -43,7 +44,6 @@ const AboutUs = () => {
     setIsSubmitting(true);
     
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
       await axios.post(`${API_BASE_URL}/api/contact`, {
         ...formData,
         subject: 'Contact from About Us Page'

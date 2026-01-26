@@ -13,6 +13,7 @@ import {
   FaHourglassHalf
 } from 'react-icons/fa';
 import AuthService from '../services/AuthService';
+import { API_BASE_URL } from '../../utils/config';
 import './JobManagement.css';
 
 const JobManagement = () => {
@@ -43,7 +44,6 @@ const JobManagement = () => {
     try {
       setLoading(true);
       const token = AuthService.getToken();
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 
       const response = await axios.get(`${API_BASE_URL}/api/admin/jobs/management`, {
         params: {
@@ -76,7 +76,6 @@ const JobManagement = () => {
   const confirmDelete = async (id) => {
     try {
       const token = AuthService.getToken();
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
       await axios.delete(`${API_BASE_URL}/api/admin/jobs/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
       });

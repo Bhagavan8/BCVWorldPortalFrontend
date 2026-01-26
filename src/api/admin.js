@@ -1,7 +1,6 @@
 import axios from 'axios';
 import AuthService from '../admin/services/AuthService';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+import { API_BASE_URL } from '../utils/config';
 
 const adminApi = axios.create({
   baseURL: `${API_BASE_URL}/api/admin`,

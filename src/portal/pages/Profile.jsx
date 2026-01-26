@@ -5,6 +5,7 @@ import {
 } from 'react-icons/bi';
 
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 import '../assets/css/Profile.css';
 
 const Profile = () => {

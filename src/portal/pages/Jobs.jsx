@@ -5,6 +5,7 @@ import { BsPatchCheckFill } from 'react-icons/bs';
 
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 
 // Helper for robust fetching with retry and timeout
 const fetchWithRetry = async (url, options = {}, retries = 3, timeout = 20000) => {
@@ -47,8 +48,7 @@ export default function Jobs() {
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [companyMap, setCompanyMap] = useState({});
-  const rawBase = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
-  const API_BASE = (typeof rawBase === 'string' ? rawBase.trim() : '');
+  const API_BASE = API_BASE_URL;
   
   // Filter States
   // Helper for local date string YYYY-MM-DD
@@ -152,7 +152,7 @@ export default function Jobs() {
       const base = API_BASE ? API_BASE : '';
       const jobsUrl = `${base}/api/jobs`;
       
-      const response = await fetch(jobsUrl); // Fetch all jobs
+      const response = await fetchWithRetry(jobsUrl); // Fetch all jobs
       if (response.ok) {
         let rawData = await response.json();
         rawData = Array.isArray(rawData) ? rawData : [];

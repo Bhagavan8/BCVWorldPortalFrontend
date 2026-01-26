@@ -115,7 +115,8 @@ export default function Login() {
                 navigate(isAdmin ? '/admin' : safeReturn);
               }, 1000);
             } catch (err) {
-              toast.error(err.response?.data?.message || 'Google login failed');
+              const msg = err.response?.data?.message || (err.code === 'ERR_NETWORK' ? 'Network error. Please check your connection.' : 'Google login failed');
+              toast.error(msg);
             } finally {
               setIsLoading(false);
             }
@@ -140,9 +141,8 @@ export default function Login() {
       }, 1200);
 
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || `${provider} login failed`
-      );
+      const msg = err.response?.data?.message || (err.code === 'ERR_NETWORK' ? 'Network error. Please check your connection.' : `${provider} login failed`);
+      toast.error(msg);
     } finally {
       if (provider !== 'Google') setIsLoading(false);
     }
@@ -246,9 +246,8 @@ export default function Login() {
       }, 1200);
 
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || 'Invalid email or password'
-      );
+      const msg = err.response?.data?.message || (err.code === 'ERR_NETWORK' ? 'Network error. Please check your connection.' : 'Invalid email or password');
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }

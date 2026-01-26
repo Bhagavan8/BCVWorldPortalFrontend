@@ -19,8 +19,7 @@ import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 import axios from 'axios';
 import AuthService from '../../admin/services/AuthService';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+import { API_BASE_URL } from '../../utils/config';
 
 // Helper for robust Axios requests with retry and timeout
 const axiosWithRetry = async (url, options = {}, retries = 3, timeout = 20000) => {
@@ -243,7 +242,9 @@ const Mentorship = () => {
         console.log("Mentorship: Sending request to", `${API_BASE_URL}/api/mentorship/book`);
         console.log("Mentorship: Headers:", headers);
 
-        await axios.post(`${API_BASE_URL}/api/mentorship/book`, bookingData, {
+        await axiosWithRetry(`${API_BASE_URL}/api/mentorship/book`, {
+            method: 'POST',
+            data: bookingData,
             headers: headers
         });
 

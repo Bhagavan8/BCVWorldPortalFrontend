@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import api from '../../api/axios';
 import AuthService from '../../admin/services/AuthService';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 import { 
   Eye, 
   EyeOff, 
@@ -194,7 +195,8 @@ export default function Register() {
                 navigate(isAdmin ? '/admin' : safeReturn);
               }, 1000);
             } catch (err) {
-              toast.error(err.response?.data?.message || 'Google login failed');
+              const msg = err.response?.data?.message || (err.code === 'ERR_NETWORK' ? 'Network error. Please check your connection.' : 'Google login failed');
+              toast.error(msg);
             } finally {
               setIsLoading(false);
             }
@@ -290,7 +292,6 @@ export default function Register() {
         ...rest,
         mobile: `${countryCode}${mobile}`
       };
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 
       const response = await fetch(`${API_BASE_URL}/api/admin/auth/register`, {
         method: 'POST',
@@ -358,8 +359,8 @@ export default function Register() {
         toast.error(data.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      toast.error(err.message || 'Unable to connect to server. Please check your connection.');
       console.error(err);
+      toast.error('Network error. Please check your connection.');
     } finally {
       setIsLoading(false);
     }

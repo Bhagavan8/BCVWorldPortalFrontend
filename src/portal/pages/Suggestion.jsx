@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import api from '../../api/general';
 import { BiSend, BiLogoWhatsapp, BiHelpCircle, BiSearchAlt } from 'react-icons/bi';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 import '../assets/css/Suggestion.css';
 
 // Import WhatsApp QR if available, otherwise use placeholder or text
@@ -81,9 +82,7 @@ const Suggestion = () => {
 
     setIsSubmitting(true);
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
-
-    const submitPromise = axios.post(`${API_BASE_URL}/api/suggestion`, formData)
+    const submitPromise = api.post('/suggestion', formData)
       .then(response => {
         if (!response.data.success) {
           throw new Error('Something went wrong. Please try again.');

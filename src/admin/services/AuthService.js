@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/config';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
 const API_URL = `${API_BASE_URL}/api/admin/auth`;
 
 class AuthService {

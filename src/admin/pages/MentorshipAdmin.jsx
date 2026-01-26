@@ -17,8 +17,7 @@ import {
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+import { API_BASE_URL } from '../../utils/config';
 
 const MentorshipAdmin = () => {
     const [bookings, setBookings] = useState([]);

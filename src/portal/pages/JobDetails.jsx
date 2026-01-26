@@ -13,6 +13,7 @@ import {
   BiChat, BiLinkExternal, BiEnvelope, BiChevronLeft 
 } from 'react-icons/bi';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 import GoogleAd from '../components/GoogleAd';
 import './JobDetails.css';
 import JobDetailsSkeleton from '../components/JobDetailsSkeleton';
@@ -130,7 +131,7 @@ export default function JobDetails() {
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
+  const API_BASE = API_BASE_URL;
   const [company, setCompany] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);

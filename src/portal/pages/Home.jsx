@@ -9,6 +9,7 @@ import {
   BiMap, BiPhone, BiEnvelope, BiChevronRight, BiChevronDown, BiStar
 } from 'react-icons/bi';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../../utils/config';
 
 
 export default function Home() {
@@ -59,7 +60,6 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bcvworldwebsitebackend-production.up.railway.app';
       // Use relative path - Vite proxy will handle the rest
       await axios.post(`${API_BASE_URL}/api/contact`, formData);
       toast.success('Message sent successfully!');
