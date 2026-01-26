@@ -14,6 +14,7 @@ import {
   Zap,
   Check
 } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 import axios from 'axios';
@@ -635,7 +636,7 @@ const Mentorship = () => {
                           />
                         </div>
                         <div className="group">
-                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Phone Number</label>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">Phone Number <FaWhatsapp className="text-green-500 text-lg" /></label>
                           <input 
                             type="tel" 
                             className="w-full py-3 bg-transparent border-b border-slate-200 focus:border-slate-900 outline-none transition-colors text-lg"
@@ -643,6 +644,9 @@ const Mentorship = () => {
                             onChange={e => setFormData({...formData, phone: e.target.value})}
                             placeholder="+91 9876543210"
                           />
+                          <p className="text-xs text-red-500 mt-2 font-medium">
+                             * Please ensure your details are correct. We will send the meeting link to this email/number.
+                          </p>
                         </div>
                      </div>
                      
@@ -659,17 +663,17 @@ const Mentorship = () => {
                      </div>
                   </div>
 
-                  <div className="pt-8 flex justify-between items-center border-t border-slate-100 mt-8">
+                  <div className="pt-8 flex items-center gap-4 border-t border-slate-100 mt-8">
                     <button 
                       onClick={() => setBookingStep(1)}
-                      className="text-slate-500 font-bold hover:text-slate-900"
+                      className="text-slate-500 font-bold hover:text-slate-900 shrink-0"
                     >
                       Back
                     </button>
                     <button 
-                      disabled={!formData.name || !formData.email}
+                      disabled={!formData.name || !formData.email || !formData.phone || !formData.goal}
                       onClick={() => setBookingStep(3)}
-                      className="px-8 py-4 bg-blue-600 text-white font-bold disabled:opacity-50 hover:bg-blue-700 transition-colors w-full sm:w-auto sm:ml-auto"
+                      className="px-8 py-4 bg-blue-600 text-white font-bold disabled:opacity-50 hover:bg-blue-700 transition-colors flex-1 sm:w-auto sm:flex-none sm:ml-auto"
                     >
                       Proceed to Pay
                     </button>
@@ -705,6 +709,18 @@ const Mentorship = () => {
                        <div>
                           <h4 className="font-bold text-lg mb-4 text-slate-900">Verify Payment</h4>
                           <p className="text-slate-500 text-sm mb-6">Enter the 12-digit UTR/Transaction ID from your payment app to confirm your booking.</p>
+                          <a 
+                             href="https://wa.me/917013765836" 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="bg-green-50 p-4 rounded-lg mb-6 border border-green-100 flex items-start gap-3 hover:bg-green-100 transition-colors cursor-pointer group/whatsapp"
+                          >
+                             <FaWhatsapp className="text-green-600 text-xl mt-1 shrink-0 group-hover/whatsapp:scale-110 transition-transform" />
+                             <div className="text-sm text-green-800">
+                               <p className="font-bold mb-1 underline decoration-green-800/30 underline-offset-2">Send Payment Screenshot</p>
+                               <p>Click here to send screenshot to: <span className="font-bold">+91 7013765836</span></p>
+                             </div>
+                          </a>
                           
                           <div className="group mb-6">
                             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Transaction ID</label>
