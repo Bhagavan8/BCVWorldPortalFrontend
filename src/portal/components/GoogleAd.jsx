@@ -11,18 +11,9 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     const loadAd = () => {
         if (adLoaded) return;
         
-        // Ensure the element is visible (has width) before pushing
-        // Note: offsetHeight check removed as empty ins tags start with 0 height
-        if (!adRef.current || adRef.current.offsetWidth === 0) {
-            // Check again in a moment if it might be a layout timing issue
-            setTimeout(() => {
-                 if (adRef.current && adRef.current.offsetWidth > 0) {
-                     loadAd();
-                 }
-            }, 500);
-            return;
-        }
-
+        // Removed offsetWidth check to prevent forced reflow
+        // IntersectionObserver already ensures visibility
+        
         const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
         const scriptExists = Array.from(document.getElementsByTagName('script')).some(s => s.src.includes('client=ca-pub-6284022198338659'));
         
@@ -53,11 +44,16 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     const observerCallback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Add small delay to ensure it's not just scrolling past quickly
+          // Add delay to ensure it's not just scrolling past quickly and to reduce initial load impact
+          // Fix #6 - Load ads after page load (3s delay)
+          const delay = 3000;
+          
           if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => loadAd());
+            requestIdleCallback(() => {
+                setTimeout(() => loadAd(), delay);
+            });
           } else {
-            setTimeout(loadAd, 200);
+            setTimeout(loadAd, delay);
           }
           observer.disconnect();
         }

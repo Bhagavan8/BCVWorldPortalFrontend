@@ -1,31 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { 
     BiUserCheck, BiUpArrow, BiDownArrow, BiBriefcase, BiGroup, BiTrendingUp, 
     BiNews, BiShow, BiCalendar, BiCalendarMinus, BiCalendarWeek, BiFile, 
     BiCommentDots, BiBulb, BiRocket, BiSolidCheckCircle, BiSolidBolt, BiQuestionMark, 
-    BiBarChart, BiHelpCircle
+    BiBarChart, BiHelpCircle, BiUserPlus
 } from 'react-icons/bi';
 import AuthService from '../services/AuthService';
 import adminApi from '../../api/admin';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Lazy load chart component to reduce initial bundle size
+const DashboardChart = lazy(() => import('../components/DashboardChart'));
 
 const Dashboard = () => {
     const [stats, setStats] = useState({
@@ -165,52 +149,6 @@ const Dashboard = () => {
             </div>
         );
     }
-
-    const chartData = {
-        labels: stats.months || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [
-            {
-                label: 'Private Jobs',
-                data: stats.privateJobsData || [],
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Govt Jobs',
-                data: stats.govtJobsData || [],
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Bank Jobs',
-                data: stats.bankJobsData || [],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }
-        ],
-    };
-
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: false,
-                text: 'Jobs Overview',
-            },
-        },
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    };
 
     const calculateGrowth = (current, previous) => {
         if (!previous || previous === 0) return { value: 0, isPositive: true, isZero: true };
@@ -470,7 +408,9 @@ const Dashboard = () => {
                         </div>
                         <div className="card-body">
                             <div className="chart-container" style={{ height: '300px' }}>
-                                <Bar options={chartOptions} data={chartData} />
+                                <Suspense fallback={<div className="d-flex justify-content-center align-items-center h-100"><div className="spinner-border text-primary" role="status"><span className="visually-hidden">Loading...</span></div></div>}>
+                                    <DashboardChart stats={stats} />
+                                </Suspense>
                             </div>
                             <div className="jobs-stats d-flex justify-content-around mt-3">
                                 <div className="stat-item text-center">
@@ -495,14 +435,14 @@ const Dashboard = () => {
                 <div className="col-12" id="quickActionsSection">
                     <div className="card quick-actions-card">
                         <div className="card-header">
-                            <h5><i className="bi bi-lightning-charge me-2"></i>Quick Actions</h5>
+                            <h5><BiSolidBolt className="bi me-2" />Quick Actions</h5>
                         </div>
                         <div className="card-body">
                             <div className="row g-3">
                                 <div className="col-md-3 col-6">
                                     <a href="/jobs-upload" className="quick-action d-block text-center p-3 border rounded text-decoration-none text-dark hover-shadow">
                                         <div className="action-icon bg-primary-light text-primary mb-2 mx-auto d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(13, 110, 253, 0.1)'}}>
-                                            <i className="bi bi-briefcase fs-4"></i>
+                                            <BiBriefcase className="fs-4" />
                                         </div>
                                         <span>Post New Job</span>
                                     </a>
@@ -510,7 +450,7 @@ const Dashboard = () => {
                                 <div className="col-md-3 col-6">
                                     <a href="/upload-news" className="quick-action d-block text-center p-3 border rounded text-decoration-none text-dark hover-shadow">
                                         <div className="action-icon bg-success-light text-success mb-2 mx-auto d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(25, 135, 84, 0.1)'}}>
-                                            <i className="bi bi-newspaper fs-4"></i>
+                                            <BiNews className="fs-4" />
                                         </div>
                                         <span>Add News</span>
                                     </a>
@@ -518,7 +458,7 @@ const Dashboard = () => {
                                 <div className="col-md-3 col-6">
                                     <a href="/profile-upload" className="quick-action d-block text-center p-3 border rounded text-decoration-none text-dark hover-shadow">
                                         <div className="action-icon bg-warning-light text-warning mb-2 mx-auto d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(255, 193, 7, 0.1)'}}>
-                                            <i className="bi bi-person-plus fs-4"></i>
+                                            <BiUserPlus className="fs-4" />
                                         </div>
                                         <span>Add Profile</span>
                                     </a>
@@ -526,7 +466,7 @@ const Dashboard = () => {
                                 <div className="col-md-3 col-6">
                                     <a href="/affiliate-marketing" className="quick-action d-block text-center p-3 border rounded text-decoration-none text-dark hover-shadow">
                                         <div className="action-icon bg-info-light text-info mb-2 mx-auto d-flex align-items-center justify-content-center" style={{width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(13, 202, 240, 0.1)'}}>
-                                            <i className="bi bi-graph-up-arrow fs-4"></i>
+                                            <BiTrendingUp className="fs-4" />
                                         </div>
                                         <span>View Reports</span>
                                     </a>

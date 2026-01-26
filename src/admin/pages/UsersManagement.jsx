@@ -158,7 +158,7 @@ const UsersManagement = () => {
             if (typeof page === 'string') {
                 return (
                     <li key={`ellipsis-${idx}`} className="page-item disabled">
-                        <span className="page-link border-0 bg-transparent">...</span>
+                        <span className="page-link border-0 bg-transparent text-muted">...</span>
                     </li>
                 );
             }
@@ -166,7 +166,7 @@ const UsersManagement = () => {
             return (
                 <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
                     <button 
-                        className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === page ? 'bg-primary text-white shadow-sm' : ''}`}
+                        className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === page ? 'bg-primary text-white shadow-sm' : 'bg-transparent text-secondary'}`}
                         style={{width: '32px', height: '32px'}}
                         onClick={() => handlePageChange(page)}
                     >

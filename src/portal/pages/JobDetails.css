@@ -655,12 +655,14 @@
   display: flex;
   align-items: flex-start;
   gap: 20px;
+  min-height: 80px; /* Reserve space for logo to prevent CLS */
 }
 
 .company-logo img {
   width: 80px;
   height: 80px;
   object-fit: contain;
+  aspect-ratio: 1 / 1; /* Ensure aspect ratio is reserved */
 }
 
 .company-details {
@@ -693,6 +695,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 90px; /* Optimized to prevent CLS */
 }
 
 .meta-grid {

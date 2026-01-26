@@ -1121,8 +1121,8 @@ export default function JobDetails() {
                         height="80"
                         sizes="(max-width: 640px) 60px, 80px"
                         style={{ objectFit: 'contain' }}
-                        decoding="sync"
-                        loading="eager"
+                        decoding="async"
+                        loading="lazy"
                       />
                     </div>
                 <div className="company-details">
@@ -1532,11 +1532,11 @@ export default function JobDetails() {
                          <img 
                            src={job.companyLogoUrl || company?.logoUrl} 
                            alt={job.companyName || company?.name} 
-                           width="60"
-                           height="60"
+                           width="80"
+                           height="80"
                            loading="lazy"
                            decoding="async"
-                           sizes="(max-width: 640px) 60px, 60px"
+                           sizes="(max-width: 640px) 60px, 80px"
                          />
                       </div>
                     <div className="company-info-text">
