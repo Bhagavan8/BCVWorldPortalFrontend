@@ -889,64 +889,100 @@ export default function JobDetails() {
       <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
 
       <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
-        <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
-          <BiX className="bi" />
-        </button>
-
-        <div className="sidebar-section">
-          <h4>Navigation</h4>
-          <Link to="/" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><BiHome className="bi" /> Home</span>
-            <BiChevronRight className="bi" />
-          </Link>
-          <Link to="/jobs" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><BiBriefcase className="bi" /> Browse Jobs</span>
-            <BiChevronRight className="bi" />
-          </Link>
-          <Link to="/suggestion" className="info-item" onClick={() => setSidebarOpen(false)}>
-            <span><BiBulb className="bi" /> Suggestions</span>
-            <BiChevronRight className="bi" />
-          </Link>
+        <div className="sidebar-header-row">
+          <span className="sidebar-brand">BCVWorld</span>
+          <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
+            <BiX />
+          </button>
         </div>
 
-        <div className="sidebar-section">
-          <h4>Account</h4>
-          {user ? (
-            <>
-              <div className="info-item">
-                <span><BiUserCircle className="bi" /> {user.name}</span>
-              </div>
-              <Link to="/profile" className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><BiSolidUserBadge className="bi" /> My Profile</span>
-                <BiChevronRight className="bi" />
+        <div className="sidebar-scroll-content">
+          <div className="sidebar-section">
+            <h4 className="sidebar-label">Navigation</h4>
+            <div className="sidebar-menu">
+              <Link to="/" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                <div className="sidebar-item-left">
+                  <BiHome className="sidebar-icon" />
+                  <span>Home</span>
+                </div>
+                <BiChevronRight className="sidebar-arrow" />
               </Link>
-              <button
-                className="info-item"
-                style={{ width: '100%', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}
-                onClick={() => {
-                  localStorage.removeItem('user');
-                  setUser(null);
-                  setIsLiked(false);
-                  setSidebarOpen(false);
-                  toast.success('Logged out successfully');
-                }}
-              >
-                <span><BiLogOut className="bi" /> Logout</span>
-                <BiChevronRight className="bi" />
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><BiLogIn className="bi" /> Login</span>
-                <BiChevronRight className="bi" />
+              <Link to="/jobs" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                <div className="sidebar-item-left">
+                  <BiBriefcase className="sidebar-icon" />
+                  <span>Browse Jobs</span>
+                </div>
+                <BiChevronRight className="sidebar-arrow" />
               </Link>
-              <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="info-item" onClick={() => setSidebarOpen(false)}>
-                <span><BiUserPlus className="bi" /> Register</span>
-                <BiChevronRight className="bi" />
+              <Link to="/suggestion" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                <div className="sidebar-item-left">
+                  <BiBulb className="sidebar-icon" />
+                  <span>Suggestions</span>
+                </div>
+                <BiChevronRight className="sidebar-arrow" />
               </Link>
-            </>
-          )}
+            </div>
+          </div>
+
+          <div className="sidebar-section">
+            <h4 className="sidebar-label">Account</h4>
+            <div className="sidebar-menu">
+              {user ? (
+                <>
+                  <div className="sidebar-user-card">
+                    <div className="sidebar-user-avatar">
+                      {user.name ? user.name.charAt(0).toUpperCase() : <BiUserCircle />}
+                    </div>
+                    <div className="sidebar-user-info">
+                      <div className="sidebar-user-name">{user.name}</div>
+                      <div className="sidebar-user-status">Logged In</div>
+                    </div>
+                  </div>
+                  
+                  <Link to="/profile" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                    <div className="sidebar-item-left">
+                      <BiSolidUserBadge className="sidebar-icon" />
+                      <span>My Profile</span>
+                    </div>
+                    <BiChevronRight className="sidebar-arrow" />
+                  </Link>
+                  <button
+                    className="sidebar-item logout-btn"
+                    onClick={() => {
+                      localStorage.removeItem('user');
+                      setUser(null);
+                      setIsLiked(false);
+                      setSidebarOpen(false);
+                      toast.success('Logged out successfully');
+                    }}
+                  >
+                    <div className="sidebar-item-left">
+                      <BiLogOut className="sidebar-icon" />
+                      <span>Logout</span>
+                    </div>
+                    <BiChevronRight className="sidebar-arrow" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                    <div className="sidebar-item-left">
+                      <BiLogIn className="sidebar-icon" />
+                      <span>Login</span>
+                    </div>
+                    <BiChevronRight className="sidebar-arrow" />
+                  </Link>
+                  <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="sidebar-item" onClick={() => setSidebarOpen(false)}>
+                    <div className="sidebar-item-left">
+                      <BiUserPlus className="sidebar-icon" />
+                      <span>Register</span>
+                    </div>
+                    <BiChevronRight className="sidebar-arrow" />
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </>

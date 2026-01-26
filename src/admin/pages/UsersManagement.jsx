@@ -122,16 +122,72 @@ const UsersManagement = () => {
         return `${day}-${month}-${year}`;
     };
 
+    const renderPaginationItems = () => {
+        const pages = [];
+        const maxVisiblePages = 7;
+
+        if (totalPages <= maxVisiblePages) {
+            for (let i = 0; i < totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            if (currentPage < 4) {
+                for (let i = 0; i < 5; i++) {
+                    pages.push(i);
+                }
+                pages.push('ellipsis');
+                pages.push(totalPages - 1);
+            } else if (currentPage > totalPages - 5) {
+                pages.push(0);
+                pages.push('ellipsis');
+                for (let i = totalPages - 5; i < totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                pages.push(0);
+                pages.push('ellipsis-start');
+                pages.push(currentPage - 1);
+                pages.push(currentPage);
+                pages.push(currentPage + 1);
+                pages.push('ellipsis-end');
+                pages.push(totalPages - 1);
+            }
+        }
+
+        return pages.map((page, idx) => {
+            if (typeof page === 'string') {
+                return (
+                    <li key={`ellipsis-${idx}`} className="page-item disabled">
+                        <span className="page-link border-0 bg-transparent">...</span>
+                    </li>
+                );
+            }
+
+            return (
+                <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                    <button 
+                        className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === page ? 'bg-primary text-white shadow-sm' : ''}`}
+                        style={{width: '32px', height: '32px'}}
+                        onClick={() => handlePageChange(page)}
+                    >
+                        {page + 1}
+                    </button>
+                </li>
+            );
+        });
+    };
+
     return (
         <div className="content-wrapper p-4">
       <div className="card shadow-sm border-0 rounded-4 h-auto" style={{ height: 'auto' }}>
         <div className="card-header bg-white py-4 px-4 border-bottom border-light">
                     <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                         <div className="d-flex align-items-center gap-3">
-                            <h5 className="mb-0 fw-bold text-primary">
-                                <FaUsers className="bi me-2" />All Users
-                            </h5>
-                            <span className="badge bg-primary rounded-pill px-3 py-2">{totalUsers} Users</span>
+                            <div className="d-flex align-items-center gap-2">
+                                <FaUsers className="fs-5 text-primary" />
+                                <h5 className="mb-0 fw-bold text-primary text-nowrap">All Users</h5>
+                            </div>
+                            <span className="badge bg-primary rounded-pill px-3 py-2 shadow-sm">{totalUsers} Users</span>
                         </div>
                         
                         <div className="d-flex flex-column flex-md-row gap-3 align-items-md-center flex-grow-1 justify-content-end">
@@ -261,36 +317,26 @@ const UsersManagement = () => {
                     {totalPages > 1 && (
                         <div className="d-flex justify-content-center py-4 border-top border-light">
                             <nav aria-label="Page navigation">
-                                <ul className="pagination mb-0 gap-2">
+                                <ul className="pagination mb-0 gap-2 align-items-center">
                                     <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
                                         <button 
-                                            className="page-link rounded-circle border-0 d-flex align-items-center justify-content-center"
-                                            style={{width: '32px', height: '32px'}}
+                                            className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === 0 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                            style={{height: '35px', width: 'auto'}}
                                             onClick={() => handlePageChange(currentPage - 1)}
                                             disabled={currentPage === 0}
                                         >
-                                            <BiChevronLeft className="bi" />
+                                            Prev
                                         </button>
                                     </li>
-                                    {[...Array(totalPages)].map((_, idx) => (
-                                        <li key={idx} className={`page-item ${currentPage === idx ? 'active' : ''}`}>
-                                            <button 
-                                                className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === idx ? 'bg-primary text-white shadow-sm' : ''}`}
-                                                style={{width: '32px', height: '32px'}}
-                                                onClick={() => handlePageChange(idx)}
-                                            >
-                                                {idx + 1}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {renderPaginationItems()}
                                     <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
                                         <button 
-                                            className="page-link rounded-circle border-0 d-flex align-items-center justify-content-center"
-                                            style={{width: '32px', height: '32px'}}
+                                            className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === totalPages - 1 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                            style={{height: '35px', width: 'auto'}}
                                             onClick={() => handlePageChange(currentPage + 1)}
                                             disabled={currentPage === totalPages - 1}
                                         >
-                                            <BiChevronRight className="bi" />
+                                            Next
                                         </button>
                                     </li>
                                 </ul>

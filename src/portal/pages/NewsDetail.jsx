@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NewsService from '../services/NewsService';
 import '../assets/css/News.css';
-import { FaCalendarAlt, FaUser, FaTag, FaArrowLeft } from 'react-icons/fa';
-import { BiFacebook, BiTwitter, BiLinkedin } from 'react-icons/bi';
+import { FaCalendarAlt, FaUser, FaTag, FaArrowLeft, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import SEO from '../components/SEO';
 
 const NewsDetail = () => {

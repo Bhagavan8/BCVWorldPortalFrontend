@@ -123,21 +123,22 @@
 .mobile-sidebar {
   position: fixed;
   top: 0;
-  left: -280px;
-  width: 280px;
+  left: -300px;
+  width: 300px;
   height: 100vh;
   background: #fff;
-  z-index: 1100; /* Increased z-index */
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+  z-index: 1100;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
-  padding: 70px 20px 20px;
-  box-shadow: 4px 0 24px rgba(0,0,0,0.15); /* Better shadow */
-  overflow-y: auto;
+  padding: 0;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-sidebar.open {
-  transform: translateX(280px); /* Use transform for performance */
-  left: -280px; /* Keep base position */
+  transform: translateX(300px);
+  left: -300px;
 }
 
 .sidebar-overlay {
@@ -147,8 +148,8 @@
   right: 0;
   bottom: 0;
   background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px); /* nice glass effect */
-  z-index: 1050; /* Above header and bottom bar */
+  backdrop-filter: blur(2px);
+  z-index: 1050;
   display: none;
 }
 
@@ -156,56 +157,164 @@
   display: block;
 }
 
+.sidebar-header-row {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fff;
+}
+
+.sidebar-brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0066cc;
+  letter-spacing: -0.5px;
+}
+
 .sidebar-close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
+  background: #f8fafc;
   border: none;
-  font-size: 24px;
-  color: #666;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #64748b;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sidebar-close-btn:hover {
+  background: #e2e8f0;
+  color: #ef4444;
+}
+
+.sidebar-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 .sidebar-section {
   margin-bottom: 30px;
 }
 
-.sidebar-section h4 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #f0f0f0;
-  color: #333;
+.sidebar-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 12px;
+  padding-left: 8px;
 }
 
-.sidebar-info {
-  padding: 15px;
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.info-item {
+.sidebar-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eaeaea;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: #334155;
+  text-decoration: none;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-size: 15px;
 }
 
-.info-item:last-child {
-  border-bottom: none;
-}
-
-.info-item i {
+.sidebar-item:hover, .sidebar-item:active {
+  background: #f8fafc;
   color: #0066cc;
-  width: 20px;
 }
 
-.info-item span {
-  color: #666;
+.sidebar-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
 }
 
-.info-item strong {
-  color: #333;
+.sidebar-icon {
+  font-size: 20px;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.sidebar-item:hover .sidebar-icon {
+  color: #0066cc;
+}
+
+.sidebar-arrow {
+  font-size: 18px;
+  color: #cbd5e1;
+}
+
+.sidebar-item:hover .sidebar-arrow {
+  color: #94a3b8;
+}
+
+/* User Card in Sidebar */
+.sidebar-user-card {
+  background: #eff6ff;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #dbeafe;
+}
+
+.sidebar-user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #bfdbfe;
+  color: #1e40af;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.sidebar-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-user-name {
+  font-weight: 600;
+  color: #1e3a8a;
+  font-size: 15px;
+}
+
+.sidebar-user-status {
+  font-size: 12px;
+  color: #60a5fa;
+  font-weight: 500;
+}
+
+/* Logout specific */
+.logout-btn:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.logout-btn:hover .sidebar-icon {
+  color: #ef4444;
 }
 
 .similar-jobs-list {
