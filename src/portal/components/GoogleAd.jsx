@@ -44,13 +44,11 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     const observerCallback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Add delay to ensure it's not just scrolling past quickly and to reduce initial load impact
-          // Fix #6 - Load ads after page load (3s delay)
-          const delay = 3000;
-          
+          const delay = 500;
+
           if ('requestIdleCallback' in window) {
             requestIdleCallback(() => {
-                setTimeout(() => loadAd(), delay);
+              setTimeout(() => loadAd(), delay);
             });
           } else {
             setTimeout(loadAd, delay);
@@ -62,7 +60,7 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
 
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(observerCallback, {
-        rootMargin: '200px', // Load when ad is 200px away from viewport
+        rootMargin: '600px',
         threshold: 0.1
       });
       if (adRef.current) {

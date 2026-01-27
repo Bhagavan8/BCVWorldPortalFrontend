@@ -1070,7 +1070,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <BiX className="bi" />
               </button>
-              <GoogleAd slot="3196528375" minHeight="600px" />
+              <GoogleAd slot="8773320892" minHeight="600px" />
             </div>
           </div>
         )}
@@ -1082,7 +1082,7 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <BiX className="bi" />
               </button>
-              <GoogleAd slot="6272433641" minHeight="600px" />
+              <GoogleAd slot="7460239222" minHeight="600px" />
             </div>
           </div>
         )}
@@ -1320,7 +1320,7 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <GoogleAd slot="1855526545" />
+          <GoogleAd slot="2859289867" />
 
           {/* Content Sections */}
           <div className="content-sections">
@@ -1362,7 +1362,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <GoogleAd slot="9542444871" />
+            <GoogleAd slot="9233126529" />
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -1518,7 +1518,7 @@ export default function JobDetails() {
               </div>
             </section>
 
-            <GoogleAd slot="4257478543" minHeight="280px" />
+            <GoogleAd slot="9894830873" minHeight="280px" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1555,7 +1555,7 @@ export default function JobDetails() {
               </section>
             )}
 
-             <GoogleAd slot="7571899411" />
+             <GoogleAd slot="6883129508" />
 
             <section className="community-section">
               <h3 className="community-title">Join Our Community</h3>
