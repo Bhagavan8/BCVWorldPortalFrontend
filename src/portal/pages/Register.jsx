@@ -147,7 +147,7 @@ export default function Register() {
 
     setFormData(prev => ({
       ...prev,
-      [key]: key === 'name' ? toTitleCase(val) : val
+      [key]: val
     }));
   };
 

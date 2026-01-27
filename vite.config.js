@@ -24,7 +24,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://bcvworldwebsitebackend-production.up.railway.app',
+        target: 'http://localhost:8081',
         changeOrigin: true,
         secure: false,
       },
