@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px' }) {
+function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px' }) {
   const adRef = useRef(null);
   const [adLoaded, setAdLoaded] = useState(false);
 
@@ -44,14 +44,12 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     const observerCallback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const delay = 500;
-
           if ('requestIdleCallback' in window) {
             requestIdleCallback(() => {
-              setTimeout(() => loadAd(), delay);
+              setTimeout(() => loadAd(), loadDelay);
             });
           } else {
-            setTimeout(loadAd, delay);
+            setTimeout(loadAd, loadDelay);
           }
           observer.disconnect();
         }
@@ -60,7 +58,7 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
 
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(observerCallback, {
-        rootMargin: '600px',
+        rootMargin: rootMargin,
         threshold: 0.1
       });
       if (adRef.current) {
@@ -71,7 +69,7 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
       // Fallback for older browsers
       setTimeout(loadAd, 2500);
     }
-  }, [adLoaded]);
+  }, [adLoaded, loadDelay, rootMargin]);
 
   return (
     <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc' }}>

@@ -1518,7 +1518,7 @@ export default function JobDetails() {
               </div>
             </section>
 
-            <GoogleAd slot="9894830873" minHeight="280px" />
+            <GoogleAd slot="9894830873" minHeight="280px" loadDelay={0} rootMargin="1200px" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1555,7 +1555,7 @@ export default function JobDetails() {
               </section>
             )}
 
-             <GoogleAd slot="6883129508" />
+             <GoogleAd slot="6883129508" loadDelay={0} rootMargin="1200px" />
 
             <section className="community-section">
               <h3 className="community-title">Join Our Community</h3>
