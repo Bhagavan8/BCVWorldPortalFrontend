@@ -5,6 +5,7 @@ import { BsPatchCheckFill } from 'react-icons/bs';
 
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
+import GoogleAd from '../components/GoogleAd';
 import { API_BASE_URL } from '../../utils/config';
 
 // Helper for robust fetching with retry and timeout
@@ -674,8 +675,8 @@ export default function Jobs() {
                    const applyBy = job.lastDateToApply ? new Date(job.lastDateToApply).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
                    
                    const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                   const slug = `${clean(job.jobTitle)}-${clean(compName)}-${clean(primaryLoc)}`;
-                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
+                   const slug = `${clean(job.jobTitle)}-${clean(compName)}`;
+                   const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`;
 
                    return (
                   <div key={job.id} className="w-full bg-white border-b border-[#e0e0e0] py-6 hover:bg-[#fcfcfc] transition-colors duration-200 last:border-b-0">
@@ -803,8 +804,8 @@ export default function Jobs() {
           </div>
 
           {/* RIGHT SIDEBAR: Most Viewed Jobs */}
-          <div className="hidden lg:block lg:col-span-3">
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hidden lg:block">
               <div className="px-4 py-3 border-b-2 border-blue-600 flex justify-between items-center">
                  <h6 className="font-bold text-sm text-gray-800 m-0">Most Viewed Jobs</h6>
                  <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{mostViewedJobs.length}</span>
@@ -817,7 +818,7 @@ export default function Jobs() {
                       .replace(/[^a-z0-9]+/g, '-')
                       .replace(/(^-|-$)/g, '');
                   const slug = `${clean(job.jobTitle)}-${clean(job.companyName)}`;
-                  const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}`;
+                  const jobUrl = `/job?type=private&job_id=${job.id}&slug=${slug}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`;
 
                   return (
                     <div key={job.id} className="p-3 hover:bg-gray-50 transition">
@@ -836,6 +837,16 @@ export default function Jobs() {
                 })}
                 {mostViewedJobs.length === 0 && <div className="p-4 text-xs text-gray-400 text-center">No viewed jobs</div>}
               </div>
+            </div>
+            
+            {/* Ad Slot */}
+            <div className="mt-4">
+              <GoogleAd 
+                slot="1416848704" 
+                format="auto" 
+                fullWidthResponsive="true"
+                immediate={true}
+              />
             </div>
           </div>
 

@@ -861,7 +861,7 @@ export default function JobDetails() {
     window.open(shareUrl, '_blank');
   }, [job, company]);
 
-  const applyTargetValue = job?.applicationLink || job?.applicationEmail || job?.applicationLinkOrEmail;
+  const applyTargetValue = job?.jobUrl || job?.applicationLink || job?.jobEmail || job?.applicationEmail || job?.applicationLinkOrEmail;
   const applyHref = getApplyHref(applyTargetValue);
   const isApplyMailto = /^mailto:/i.test(applyHref);
   const applyDisplayValue = isApplyMailto ? applyHref.replace(/^mailto:/i, '') : applyTargetValue;
@@ -872,6 +872,8 @@ export default function JobDetails() {
       toast.error('Application link not available');
     }
   }, [applyHref]);
+
+  const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const mobileNav = (
     <>
@@ -1112,7 +1114,7 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <GoogleAd slot="2290112520" />
+          <GoogleAd slot="2290112520" immediate={true} fullWidthResponsive="true" />
 
           {/* Job Header (kept above the fold for best LCP) */}
           <div className="job-header-section">
@@ -1324,7 +1326,7 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <GoogleAd slot="2859289867" />
+          <GoogleAd slot="2859289867" immediate={true} fullWidthResponsive="true" />
 
           {/* Content Sections */}
           <div className="content-sections">
@@ -1366,7 +1368,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <GoogleAd slot="9233126529" />
+            <GoogleAd slot="9233126529" immediate={true} fullWidthResponsive="true" />
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -1522,7 +1524,7 @@ export default function JobDetails() {
               </div>
             </section>
 
-            <GoogleAd slot="9894830873" minHeight="280px" />
+            <GoogleAd slot="9894830873" minHeight="280px" immediate={true} fullWidthResponsive="true" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1559,7 +1561,7 @@ export default function JobDetails() {
               </section>
             )}
 
-             <GoogleAd slot="6883129508" />
+             <GoogleAd slot="6883129508" immediate={true} fullWidthResponsive="true" />
 
             <section className="community-section">
               <h3 className="community-title">Join Our Community</h3>
@@ -1653,13 +1655,15 @@ export default function JobDetails() {
                       </div>
                     ))
                   ) : (
-                    relatedJobs.map(rJob => (
-                    <Link
-                      to={`/job?job_id=${rJob.id}`}
-                      key={rJob.id}
-                      className="company-job-item"
-                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    >
+                    relatedJobs.map(rJob => {
+                      const slug = `${clean(rJob.jobTitle)}-${clean(job.companyName)}`;
+                      return (
+                      <Link
+                        to={`/job?type=private&job_id=${rJob.id}&slug=${slug}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
+                        key={rJob.id}
+                        className="company-job-item"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                      >
                       <div className="company-job-logo-wrapper">
                         <img 
                           src={job.companyLogoUrl || company?.logoUrl} 
@@ -1682,7 +1686,8 @@ export default function JobDetails() {
                         <BiChevronRight className="bi" />
                       </div>
                     </Link>
-                  )))}
+                  );
+                }))}
                 </div>
               </section>
             )}
@@ -1715,7 +1720,7 @@ export default function JobDetails() {
               <div className="job-navigation-wrapper">
                 {prevJob && (
                   <Link
-                    to={`/job?type=private&job_id=${prevJob.id}&slug=${(prevJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(prevJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
+                    to={`/job?type=private&job_id=${prevJob.id}&slug=${clean(prevJob.jobTitle)}-${clean(prevJob.companyName)}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                     className="nav-job-item previous-job"
                   >
                     <BiChevronLeft className="bi text-3xl text-gray-500" />
@@ -1735,7 +1740,7 @@ export default function JobDetails() {
                 )}
                 {nextJob && (
                   <Link
-                    to={`/job?type=private&job_id=${nextJob.id}&slug=${(nextJob.jobTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${(nextJob.companyName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
+                    to={`/job?type=private&job_id=${nextJob.id}&slug=${clean(nextJob.jobTitle)}-${clean(nextJob.companyName)}&ref=${Math.random().toString(36).substring(7)}&token=${Math.random().toString(36).substring(7)}&src=bcvworld.com`}
                     className="nav-job-item next-job"
                   >
                     <div className="nav-job-details">

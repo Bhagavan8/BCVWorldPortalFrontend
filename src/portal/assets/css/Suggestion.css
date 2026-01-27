@@ -238,6 +238,39 @@
   line-height: 1.6;
 }
 
+/* Sticky Ads Layout */
+.suggestion-layout-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+}
+
+.suggestion-ad-sidebar {
+  width: 160px;
+  flex-shrink: 0;
+  display: none;
+  padding-top: 50px;
+}
+
+.sticky-ad-wrapper {
+  position: sticky;
+  top: 140px;
+}
+
+.suggestion-layout-flex .suggestion-container {
+  margin: 0;
+  flex-grow: 1;
+  max-width: 1200px;
+}
+
+@media (min-width: 1400px) {
+  .suggestion-ad-sidebar {
+    display: block;
+  }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 992px) {
   .suggestion-content {
@@ -246,7 +279,7 @@
   }
   
   .info-sidebar {
-    order: -1; /* Show WhatsApp first on mobile if desired, or keep default */
+    order: -1; 
   }
 }
 

@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import api from '../../api/general';
 import { BiSend, BiLogoWhatsapp, BiHelpCircle, BiSearchAlt } from 'react-icons/bi';
 import SEO from '../components/SEO';
+import GoogleAd from '../components/GoogleAd';
 import { API_BASE_URL } from '../../utils/config';
 import '../assets/css/Suggestion.css';
 
@@ -115,7 +116,16 @@ const Suggestion = () => {
   return (
     <div className="suggestion-page">
       <SEO title="Suggestions" description="Help us improve BCVWORLD. Share your feedback, request job roles, or ask for career guidance." />
-      <div className="suggestion-container">
+      
+      <div className="suggestion-layout-flex">
+        {/* Left Side Sticky Ad */}
+        <div className="suggestion-ad-sidebar left-sidebar">
+          <div className="sticky-ad-wrapper">
+             <GoogleAd slot="4953603184" format="auto" fullWidthResponsive="true" />
+          </div>
+        </div>
+
+        <div className="suggestion-container">
         
         <div className="suggestion-header">
           <h1 className="suggestion-title">Shape the Future of BCVWorld</h1>
@@ -123,6 +133,9 @@ const Suggestion = () => {
             Your voice matters! Use this form to request specific job roles, suggest new features, 
             or ask for personalized career guidance. We review every suggestion to make our platform better for you.
           </p>
+          <div className="mt-4">
+             <GoogleAd slot="4428550078" format="autorelaxed" fullWidthResponsive="true" />
+          </div>
         </div>
 
         <div className="suggestion-content">
@@ -286,6 +299,18 @@ const Suggestion = () => {
 
           </div>
 
+        </div>
+
+        <div className="mt-8 mb-4">
+             <GoogleAd slot="9732847643" format="autorelaxed" fullWidthResponsive="true" />
+        </div>
+      </div>
+
+        {/* Right Side Sticky Ad */}
+        <div className="suggestion-ad-sidebar right-sidebar">
+          <div className="sticky-ad-wrapper">
+             <GoogleAd slot="1993958429" format="auto" fullWidthResponsive="true" />
+          </div>
         </div>
       </div>
     </div>
