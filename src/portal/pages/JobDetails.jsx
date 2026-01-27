@@ -1112,6 +1112,8 @@ export default function JobDetails() {
             </div>
           </div>
 
+          <GoogleAd slot="2290112520" />
+
           {/* Job Header (kept above the fold for best LCP) */}
           <div className="job-header-section">
             <div className="job-header-inner">
@@ -1520,7 +1522,7 @@ export default function JobDetails() {
               </div>
             </section>
 
-            <GoogleAd slot="9894830873" minHeight="280px" loadDelay={0} rootMargin="1200px" />
+            <GoogleAd slot="9894830873" minHeight="280px" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1557,7 +1559,7 @@ export default function JobDetails() {
               </section>
             )}
 
-             <GoogleAd slot="6883129508" loadDelay={0} rootMargin="1200px" />
+             <GoogleAd slot="6883129508" />
 
             <section className="community-section">
               <h3 className="community-title">Join Our Community</h3>

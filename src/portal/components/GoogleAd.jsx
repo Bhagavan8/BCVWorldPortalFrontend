@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px' }) {
+function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px', immediate = true }) {
   const adRef = useRef(null);
   const [adLoaded, setAdLoaded] = useState(false);
 
@@ -10,9 +10,6 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     // Function to inject script and push ad
     const loadAd = () => {
         if (adLoaded) return;
-        
-        // Removed offsetWidth check to prevent forced reflow
-        // IntersectionObserver already ensures visibility
         
         const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
         const scriptExists = Array.from(document.getElementsByTagName('script')).some(s => s.src.includes('client=ca-pub-6284022198338659'));
@@ -39,6 +36,12 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
             });
         }
     };
+
+    if (immediate) {
+        // Load immediately, bypassing IntersectionObserver and requestIdleCallback
+        loadAd();
+        return;
+    }
 
     // Use IntersectionObserver to load ads only when near viewport
     const observerCallback = (entries, observer) => {
@@ -69,7 +72,7 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
       // Fallback for older browsers
       setTimeout(loadAd, 2500);
     }
-  }, [adLoaded, loadDelay, rootMargin]);
+  }, [adLoaded, loadDelay, rootMargin, immediate]);
 
   return (
     <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc' }}>

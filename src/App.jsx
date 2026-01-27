@@ -296,11 +296,36 @@ function PrivacyPage() {
   );
 }
 
+function AdSenseLoader() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Don't load on mentorship pages
+    if (location.pathname.startsWith('/mentorship')) {
+      return;
+    }
+
+    const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6284022198338659';
+    const scriptExists = Array.from(document.getElementsByTagName('script')).some(s => s.src.includes('client=ca-pub-6284022198338659'));
+
+    if (!scriptExists) {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = src;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    }
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <IdleTimer />
+      <AdSenseLoader />
       <div className="min-h-screen bg-white">
        <Toaster 
          position="top-right" 
