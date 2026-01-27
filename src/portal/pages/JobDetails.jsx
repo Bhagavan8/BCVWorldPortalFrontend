@@ -10,7 +10,7 @@ import {
   BiHeart, BiSolidHeart, BiHash, BiMoney, BiBookmark, BiSolidBookmark, BiFile, 
   BiWrench, BiCheckCircle, BiInfoCircle, BiShareAlt, BiLogoWhatsapp, BiLogoLinkedin, 
   BiLogoFacebook, BiLogoTwitter, BiLogoTelegram, BiLink, BiBuilding, BiCommentDots, 
-  BiChat, BiLinkExternal, BiEnvelope, BiChevronLeft 
+  BiChat, BiLinkExternal, BiEnvelope, BiChevronLeft, BiTime, BiPhone
 } from 'react-icons/bi';
 import SEO from '../components/SEO';
 import { API_BASE_URL } from '../../utils/config';
@@ -524,37 +524,81 @@ export default function JobDetails() {
 
   const walkinDetails = useMemo(() => {
     if (!job?.walkin_details || typeof job.walkin_details !== 'string') return null;
-    const text = String(job.walkin_details || '');
-    const plain = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    const timeRangeMatch = plain.match(/(\d{1,2}[.:]\d{2}\s*(AM|PM))\s*-\s*(\d{1,2}[.:]\d{2}\s*(AM|PM))/i);
-    const startTime = timeRangeMatch ? timeRangeMatch[1] : null;
-    const endTime = timeRangeMatch ? timeRangeMatch[3] : null;
-    const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : null;
-    const dateMatch = plain.match(/\b(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+\d{4})?)\b/);
-    const date = dateMatch ? dateMatch[1] : null;
-    let venue = null;
-    const contactIdx = plain.toLowerCase().indexOf('contact');
-    if (timeRangeMatch) {
-      const afterTime = plain.slice(plain.indexOf(timeRangeMatch[0]) + timeRangeMatch[0].length).trim();
-      const contactAfterIdx = afterTime.toLowerCase().indexOf('contact');
-      venue = afterTime ? (contactAfterIdx > -1 ? afterTime.slice(0, contactAfterIdx).trim() : afterTime) : null;
-    }
-    const emailMatch = plain.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/);
-    const phoneMatch = plain.match(/(\+?\d[\d\s-]{9,}\d)/);
-    let contactName = null;
-    if (contactIdx > -1) {
-      const cText = plain.slice(contactIdx + 'contact'.length).trim();
-      const nameMatch = cText.match(new RegExp('[-:' + '\u2013' + ']\\s*([A-Za-z ]+)')) || cText.match(/^\s*([A-Za-z ]+)/);
-      contactName = nameMatch ? nameMatch[1].trim() : null;
-    }
-    const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
-    const contactParts = [contactName, phoneMatch ? phoneMatch[1] : null, emailMatch ? emailMatch[0] : null].filter(Boolean);
-    
-    const mapQuery = (venue && venue.trim().length > 0)
-      ? venue
-      : (locationsArr.length > 0 ? locationsArr.join(', ') : '');
+    let text = String(job.walkin_details || '');
+    // Clean HTML and extra spaces
+    text = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    // Remove "Time and Venue" prefix if present
+    text = text.replace(/^Time and Venue\s*/i, '');
 
-    return { date, timeRange, venue, locationsArr, contactParts, mapQuery };
+    // 1. Extract Time Range (Anchor)
+    // Matches: 9.30 AM - 5.30 PM, 9:30 AM - 5:30 PM
+    const timeRegex = /(\d{1,2}[.:]\d{2}\s*(?:AM|PM))\s*-\s*(\d{1,2}[.:]\d{2}\s*(?:AM|PM))/i;
+    const timeMatch = text.match(timeRegex);
+
+    let date = null;
+    let timeRange = null;
+    let venue = null;
+    let contactInfo = null;
+
+    if (timeMatch) {
+      timeRange = timeMatch[0];
+      
+      // Date is everything before the time range
+      const dateRaw = text.substring(0, timeMatch.index).trim();
+      date = dateRaw.replace(/[,-\s]+$/, ''); // Remove trailing separators
+
+      // Everything after time range is Venue + Contact
+      let rest = text.substring(timeMatch.index + timeMatch[0].length).trim();
+      rest = rest.replace(/^[,-\s]+/, ''); // Remove leading separators
+
+      const contactIdx = rest.toLowerCase().indexOf('contact');
+      if (contactIdx !== -1) {
+        venue = rest.substring(0, contactIdx).trim();
+        venue = venue.replace(/[,-\s]+$/, '');
+        contactInfo = rest.substring(contactIdx).trim();
+      } else {
+        venue = rest;
+      }
+    } else {
+       // Fallback logic if strict time pattern fails
+       const contactIdx = text.toLowerCase().indexOf('contact');
+       if (contactIdx > -1) {
+          venue = text.slice(0, contactIdx).trim();
+          contactInfo = text.slice(contactIdx).trim();
+       } else {
+          venue = text;
+       }
+    }
+
+    // Process Contact Info
+    let contactName = null;
+    let contactPhone = null;
+    let contactEmail = null;
+
+    if (contactInfo) {
+      // Remove "Contact -" prefix
+      let cText = contactInfo.replace(/^Contact\s*[-:]\s*/i, '');
+      
+      const emailMatch = cText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/);
+      if (emailMatch) contactEmail = emailMatch[0];
+
+      const phoneMatch = cText.match(/(\+?\d[\d\s-]{9,}\d)/);
+      if (phoneMatch) {
+        contactPhone = phoneMatch[0];
+        // Remove phone from name
+        cText = cText.replace(phoneMatch[0], '').replace(/[()]/g, '').trim();
+      }
+      contactName = cText.replace(contactEmail || '', '').trim().replace(/[-:]$/, '');
+    }
+
+    // Map Query Logic
+    const locationsArr = (venue || '').split(',').map(s => s.trim()).filter(Boolean);
+    const mapQuery = venue ? venue.replace(/\(View on map\)/i, '').trim() : '';
+    const cleanVenue = venue ? venue.replace(/\(View on map\)/i, '').trim() : null;
+
+    const contactParts = [contactName, contactPhone, contactEmail].filter(Boolean);
+
+    return { date, timeRange, venue: cleanVenue, locationsArr, contactParts, mapQuery };
   }, [job?.walkin_details]);
 
   const handlePostComment = useCallback(async () => {
@@ -1400,26 +1444,36 @@ export default function JobDetails() {
                 {typeof job.walkin_details === 'string' ? (
                   <div className="section-content">
                     {walkinDetails ? (
-                      <div>
-                        <div style={{ textAlign: 'center', fontWeight: 700 }}>Time and Venue</div>
-                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                          {(walkinDetails.date ? `${formatDateDDMMMYYYY(walkinDetails.date)} , ` : '')}{walkinDetails.timeRange || 'Missing'}
-                        </div>
-                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                          {walkinDetails.locationsArr.length > 0 ? walkinDetails.locationsArr.join(', ') : (walkinDetails.venue || 'Missing')}
-                          {walkinDetails.mapQuery ? (
-                            <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(walkinDetails.mapQuery)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: '#0d6efd', marginLeft: 8 }}
-                            >
-                              (View on map)
-                            </a>
-                          ) : null}
-                        </div>
-                        <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                          Contact - {walkinDetails.contactParts.length > 0 ? walkinDetails.contactParts.join(', ') : 'Missing'}
+                      <div style={{ textAlign: 'center', color: '#333' }}>
+                        <div style={{ fontWeight: 700, marginBottom: '8px' }}>Time and Venue</div>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          
+                          {/* Date and Time */}
+                          <div style={{ fontWeight: 700 }}>
+                            {(walkinDetails.date ? `${walkinDetails.date} , ` : '')}{walkinDetails.timeRange || 'Missing'}
+                          </div>
+
+                          {/* Venue */}
+                          <div style={{ fontWeight: 700 }}>
+                            {walkinDetails.venue || (walkinDetails.locationsArr.length > 0 ? walkinDetails.locationsArr.join(', ') : 'Missing')}
+                            {walkinDetails.mapQuery && (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(walkinDetails.mapQuery)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: '#0d6efd', marginLeft: 8, whiteSpace: 'nowrap', textDecoration: 'none' }}
+                              >
+                                (View on map)
+                              </a>
+                            )}
+                          </div>
+
+                          {/* Contact */}
+                          <div style={{ fontWeight: 700 }}>
+                            Contact - {walkinDetails.contactParts.length > 0 ? walkinDetails.contactParts.join(' ') : 'Missing'}
+                          </div>
+
                         </div>
                       </div>
                     ) : (
