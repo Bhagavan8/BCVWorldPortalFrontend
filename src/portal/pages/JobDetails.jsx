@@ -1001,6 +1001,7 @@ export default function JobDetails() {
   if (error) {
     return (
       <>
+        <SEO title="Connection Error" noindex={true} />
         {mobileNav}
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
           <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
@@ -1029,6 +1030,7 @@ export default function JobDetails() {
   if (!job) {
     return (
       <>
+        <SEO title="Job Not Found" noindex={true} />
         {mobileNav}
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
            <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">

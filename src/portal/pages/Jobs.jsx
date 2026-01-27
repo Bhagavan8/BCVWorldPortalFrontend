@@ -64,7 +64,7 @@ export default function Jobs() {
   const [location, setLocation] = useState('all');
   const [companyFilter, setCompanyFilter] = useState('All');
   const [experience, setExperience] = useState({ fresher: false, experienced: false });
-  const [dateFilter, setDateFilter] = useState(getTodayString());
+  const [dateFilter, setDateFilter] = useState('');
   
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -762,9 +762,40 @@ export default function Jobs() {
                   <div className="text-gray-300 text-6xl mb-4 mx-auto w-fit"><BiSearch /></div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">No jobs found</h3>
                   <p className="text-gray-500 mb-6">We couldn't find any jobs matching your criteria.</p>
-                  <button onClick={clearFilters} className="px-6 py-2 bg-blue-50 text-blue-600 font-medium rounded hover:bg-blue-100 transition">
+                  <button onClick={clearFilters} className="px-6 py-2 bg-blue-50 text-blue-600 font-medium rounded hover:bg-blue-100 transition mb-8">
                     Clear all filters
                   </button>
+                  
+                  {/* Enhanced Empty State to prevent Soft 404 */}
+                  <div className="border-t border-gray-100 pt-8 w-full max-w-2xl mx-auto">
+                    <p className="text-sm font-semibold text-gray-700 mb-4">Explore Opportunities</p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                      <button 
+                        onClick={() => handleCategoryClick('IT')}
+                        className="px-4 py-2 bg-gray-50 hover:bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:text-blue-600 hover:border-blue-200 transition shadow-sm"
+                      >
+                        IT Jobs
+                      </button>
+                      <button 
+                        onClick={() => handleExperienceChange({ fresher: true, experienced: false })}
+                        className="px-4 py-2 bg-gray-50 hover:bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:text-blue-600 hover:border-blue-200 transition shadow-sm"
+                      >
+                        Jobs for Freshers
+                      </button>
+                      <button 
+                        onClick={() => handleExperienceChange({ fresher: false, experienced: true })}
+                        className="px-4 py-2 bg-gray-50 hover:bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:text-blue-600 hover:border-blue-200 transition shadow-sm"
+                      >
+                        Experienced Jobs
+                      </button>
+                      <Link 
+                        to="/"
+                        className="px-4 py-2 bg-gray-50 hover:bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:text-blue-600 hover:border-blue-200 transition shadow-sm"
+                      >
+                        Back to Home
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

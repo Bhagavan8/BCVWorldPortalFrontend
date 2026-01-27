@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const SEO = ({ title, description, keywords, image, url }) => {
+const SEO = ({ title, description, keywords, image, url, noindex }) => {
   useEffect(() => {
     const defaultTitle = 'BCVWORLD - The Future Starts Here';
     const finalTitle = title ? `${title} | BCVWORLD` : defaultTitle;
@@ -25,6 +25,14 @@ const SEO = ({ title, description, keywords, image, url }) => {
 
     setMeta('description', finalDesc);
     setMeta('keywords', finalKeywords);
+    
+    // Handle robots meta tag for noindex
+    if (noindex) {
+        setMeta('robots', 'noindex, nofollow');
+    } else {
+        // Remove noindex if present (or set to index, follow)
+        setMeta('robots', 'index, follow');
+    }
 
     // 2. Open Graph / Facebook / LinkedIn
     setMeta('og:type', 'website', 'property');
