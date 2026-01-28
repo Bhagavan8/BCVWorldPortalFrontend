@@ -74,6 +74,7 @@ export default function Jobs() {
   // Derived lists for filters
   const [uniqueCompanies, setUniqueCompanies] = useState([]);
   const [uniqueLocations, setUniqueLocations] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
 
   // ... (keep existing state)
 
@@ -182,6 +183,9 @@ export default function Jobs() {
             postedDate: j.postedDate || getTodayString(),
             views: j.views || j.viewCount || 0
           }});
+
+        // Sort by postedDate descending (latest first)
+        data.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
 
         setJobs(data);
         const baseJobs = data;
@@ -311,6 +315,7 @@ export default function Jobs() {
     }
 
     setFilteredJobs(result);
+    setVisibleCount(5);
   }, [jobs, selectedCategory, companyFilter, searchTerm, location, experience, dateFilter, companyMap]);
 
   if (loading) {
@@ -666,7 +671,8 @@ export default function Jobs() {
                   <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></div>
                 </div>
               ) : filteredJobs.length > 0 ? (
-                filteredJobs.map((job) => {
+                <>
+                {filteredJobs.slice(0, visibleCount).map((job) => {
                    const compName = job.useExistingCompany && job.companyId ? (companyMap[job.companyId]?.name || job.companyName || '') : (job.companyName || '');
                    const logo = job.useExistingCompany && job.companyId ? (companyMap[job.companyId]?.logoUrl || job.companyLogoUrl || '') : (job.companyLogoUrl || '');
                    const primaryLoc = Array.isArray(job.locations) && job.locations.length ? job.locations[0] : '';
@@ -757,7 +763,18 @@ export default function Jobs() {
                       </div>
                     </div>
                   </div>
-                )})
+                )})}
+                {filteredJobs.length > visibleCount && (
+                  <div className="flex justify-center pt-6 pb-2">
+                    <button
+                      onClick={() => setVisibleCount(prev => prev + 5)}
+                      className="px-6 py-2.5 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg text-sm"
+                    >
+                      Load More Jobs
+                    </button>
+                  </div>
+                )}
+                </>
               ) : (
                 <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
                   <div className="text-gray-300 text-6xl mb-4 mx-auto w-fit"><BiSearch /></div>

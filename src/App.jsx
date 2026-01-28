@@ -22,6 +22,7 @@ const NewsDetail = lazy(() => import('./portal/pages/NewsDetail'));
 const AboutUs = lazy(() => import('./portal/pages/AboutUs'));
 const Mentorship = lazy(() => import('./portal/pages/Mentorship'));
 const Suggestion = lazy(() => import('./portal/pages/Suggestion'));
+const WorkFromHome = lazy(() => import('./portal/pages/WorkFromHome'));
 const FinanceCalculators = lazy(() => import('./portal/pages/FinanceCalculators'));
 const Login = lazy(() => import('./portal/pages/Login'));
 const Register = lazy(() => import('./portal/pages/Register'));
@@ -400,6 +401,7 @@ function App() {
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/mentorship" element={<Mentorship />} />
                 <Route path="/suggestion" element={<Suggestion />} />
+                <Route path="/work-from-home" element={<WorkFromHome />} />
                 <Route path="/calculators" element={<FinanceCalculators />} />
                 <Route path="/contact" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
