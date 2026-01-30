@@ -8,35 +8,129 @@ import {
 } from 'react-icons/bi';
 import { FaGoogle, FaLinkedin, FaWordpress, FaYoutube } from 'react-icons/fa';
 import SEO from '../components/SEO';
+import GoogleAd from '../components/GoogleAd';
 import './WorkFromHome.css';
 
 const WorkFromHome = () => {
+  // Schema.org Structured Data for Rich Results
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": "Ultimate Work From Home Guide 2026: Daily Payouts & Genuine Jobs",
+        "image": "https://bcvworld.com/assets/wfh-guide-cover.jpg",
+        "author": {
+          "@type": "Organization",
+          "name": "BCVWORLD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "BCVWORLD",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://bcvworld.com/logo192.png"
+          }
+        },
+        "datePublished": "2026-01-29",
+        "dateModified": "2026-01-29",
+        "description": "Discover 100% verified Work From Home jobs for 2026. Instant approval for data entry, typing, and chat support roles. Start earning ₹15,000/week without fees."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How can I earn money online without investment?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can start with zero investment by using platforms like Upwork, Fiverr, and Internshala. Focus on skills like Data Entry, Content Writing, and Transcription which require no startup fees."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which work from home jobs pay daily?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Many freelance micro-task sites and survey platforms offer daily payouts via PayPal. Data entry projects on Freelancer.com often release milestone payments immediately upon completion."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is experience required for online data entry jobs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No, most data entry jobs are beginner-friendly. Basic typing speed and attention to detail are the only requirements."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need a laptop to work from home?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "While a laptop is recommended for most jobs, there are tasks like surveys, social media management, and testing apps that can be done on a smartphone."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I avoid fake job scams?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Never pay for registration fees. Legitimate companies pay you, they don't ask for money. If someone asks for an ID card fee or security deposit, block them."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I do these jobs part-time?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, most freelance and remote jobs are flexible. You can choose your own working hours, making it perfect for students, housewives, and employees looking for side income."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How much can I earn monthly?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Beginners usually earn between ₹5,000 to ₹15,000 per month. With experience, professionals can earn ₹50,000 to ₹1,00,000+ per month."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="wfh-container">
       <SEO 
-        title="Ultimate Work From Home Guide 2026 - Jobs for All" 
-        description="The complete guide to finding part-time jobs, starting a blog, and earning online. Top websites to find work for students, women, and freshers in US, UK, and India."
-        keywords="work from home websites, best freelance sites, how to start blogging, online jobs for students, part time jobs for women, wfh india, wfh usa, upwork, fiverr, freelancer"
+        title="Best Work From Home Jobs 2026 | Daily Payouts | No Fees" 
+        description="Legit Work From Home Jobs 2026. Instant Hiring for Data Entry, Typing, Chat Support. Earn ₹500-₹2000/hr. No Investment Required. Perfect for Students & Housewives."
+        keywords="work from home jobs 2026, daily payment jobs, online data entry jobs no investment, typing jobs from home, chat support jobs remote, google jobs for freshers, amazon work from home, legit online jobs, earn money online fast, part time jobs for students, freelance writing, passive income ideas 2026, ai training jobs"
+        url="https://bcvworld.com/work-from-home"
       />
+      
+      {/* Inject Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </script>
 
       {/* Hero Section */}
-      <section className="wfh-hero relative">
-        <div className="max-w-4xl mx-auto px-4">
+      <section className="wfh-hero relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="inline-block bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 animate-fade-in-up">
-            <span className="mr-2">🚀</span> The Ultimate 2026 Guide
+            <span className="mr-2">�</span> Trending in 2026: Remote & AI Jobs
           </div>
-          <h1 className="animate-fade-in-up delay-100">Your Roadmap to Financial Freedom: Work From Home & Part-Time Jobs</h1>
-          <p className="animate-fade-in-up delay-200">
-            Whether you are a student, a homemaker returning to work, or a professional looking for a side hustle, 
-            opportunities are waiting for you. We've curated the best platforms and step-by-step guides to get you started.
+          <h1 className="animate-fade-in-up delay-100">
+            Stop Searching. Start Earning.<br/>
+            <span className="text-blue-600">100% Verified</span> Work From Home Jobs
+          </h1>
+          <p className="animate-fade-in-up delay-200 mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+            Join thousands of students, homemakers, and professionals earning <strong>₹20,000 - ₹1,00,000/month</strong>. 
+            No hidden fees. No experience needed. Instant access to global opportunities.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up delay-300">
-            <Link to="/jobs" className="wfh-btn-primary">
-              Browse 500+ Active Jobs
-            </Link>
-          </div>
           
-          <div className="wfh-countries animate-fade-in-up delay-300">
+          <div className="wfh-countries animate-fade-in-up delay-300 mt-8">
             <div className="wfh-country-badge"><BiWorld /> Global</div>
             <div className="wfh-country-badge">🇺🇸 USA</div>
             <div className="wfh-country-badge">🇬🇧 UK</div>
@@ -45,19 +139,27 @@ const WorkFromHome = () => {
         </div>
       </section>
 
+      {/* Ad Break 1 */}
+      <div className="max-w-4xl mx-auto my-8 px-4">
+        <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
+        <GoogleAd slot="6187491900" format="auto" responsive="true" />
+      </div>
+
       {/* Scam Alert - Crucial for WFH */}
-      <div className="max-w-4xl mx-auto px-4 -mt-6 relative z-10 mb-12">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-start shadow-sm">
-          <div className="bg-red-100 p-2 rounded-full text-red-600 shrink-0 hidden sm:block">
-            <BiShieldQuarter className="text-2xl" />
+      <div className="max-w-4xl mx-auto px-4 mt-8 relative z-10 mb-12">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex flex-col sm:flex-row gap-4 items-start shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-red-100 p-3 rounded-full text-red-600 shrink-0 hidden sm:block">
+            <BiShieldQuarter className="text-3xl" />
           </div>
           <div>
             <h3 className="font-bold text-red-800 text-lg flex items-center gap-2">
               <span className="sm:hidden"><BiShieldQuarter /></span> 
-              ⚠️ Safety Warning
+              🛡️ 100% Safety Guarantee Zone
             </h3>
-            <p className="text-red-700 text-sm mt-1">
-              <strong>Never pay money to get a job.</strong> Genuine platforms like Upwork, Fiverr, or LinkedIn will <em>never</em> ask for registration fees, ID card charges, or "security deposits". If someone asks for money, it is a scam.
+            <p className="text-red-700 mt-2">
+              <strong>We protect you from scams.</strong> Real jobs <em>never</em> ask for money. 
+              <br/>
+              <span className="text-sm opacity-90">If a "recruiter" asks for registration fees, ID card charges, or security deposits, block them immediately. Genuine platforms pay YOU, not the other way around.</span>
             </p>
           </div>
         </div>
@@ -65,29 +167,31 @@ const WorkFromHome = () => {
 
       {/* Top Platforms Section - "Where can we find jobs?" */}
       <section className="wfh-section bg-white">
-        <h2 className="wfh-section-title">🏆 Top Websites to Find Genuine Work</h2>
+        <h2 className="wfh-section-title">💎 Trusted "Goldmine" Platforms</h2>
         <p className="text-center text-slate-600 max-w-2xl mx-auto mb-12">
-          Don't fall for scams. These are the most trusted platforms used by millions of freelancers and remote workers globally.
+          Stop wasting time on fake sites. We have verified these 6 platforms where millions of people are earning <strong>real Money (₹) daily</strong>.
         </p>
         <div className="wfh-grid">
           
           {/* Upwork */}
-          <div className="wfh-card border-t-4 border-t-green-500 relative group hover:bg-green-50/10">
+          <div className="wfh-card border-t-4 border-t-green-500 relative group hover:bg-green-50/10 transition-all hover:-translate-y-1">
+            <div className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">High Paying</div>
             <h3 className="flex items-center gap-2"><span className="text-green-600 text-2xl">●</span> Upwork</h3>
             <p className="mb-3 text-slate-800"><strong>Best For:</strong> Professionals, Developers, Designers, Writers.</p>
-            <p className="text-sm text-slate-600 mb-4">Create a profile, bid on projects, and get paid hourly or fixed price. High earning potential.</p>
+            <p className="text-sm text-slate-600 mb-4">The world's largest marketplace. Create a profile, bid on projects, and earn in Dollars (paid in ₹ directly to Bank).</p>
             <a href="https://www.upwork.com" target="_blank" rel="noopener noreferrer" className="text-green-600 font-bold text-sm hover:underline flex items-center gap-1">
-              Visit Upwork <BiLinkExternal />
+              Start Earning on Upwork <BiLinkExternal />
             </a>
           </div>
 
           {/* Fiverr */}
-          <div className="wfh-card border-t-4 border-t-green-500 relative group hover:bg-green-50/10">
+          <div className="wfh-card border-t-4 border-t-green-500 relative group hover:bg-green-50/10 transition-all hover:-translate-y-1">
+            <div className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">Easiest to Start</div>
             <h3 className="flex items-center gap-2"><span className="text-green-600 text-2xl">●</span> Fiverr</h3>
             <p className="mb-3 text-slate-800"><strong>Best For:</strong> Creative services, Logo Design, Voiceovers, Digital Marketing.</p>
-            <p className="text-sm text-slate-600 mb-4">Post "Gigs" starting at $5. Clients come to you based on your portfolio.</p>
+            <p className="text-sm text-slate-600 mb-4">No bidding required. Post a "Gig" (service) and let clients come to you. Starts at $5 (approx ₹400).</p>
             <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer" className="text-green-600 font-bold text-sm hover:underline flex items-center gap-1">
-              Visit Fiverr <BiLinkExternal />
+              Create Your Gig <BiLinkExternal />
             </a>
           </div>
 
@@ -133,53 +237,85 @@ const WorkFromHome = () => {
         </div>
       </section>
 
+      {/* Ad Break 2 */}
+      <div className="max-w-4xl mx-auto my-8 px-4">
+        <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
+        <GoogleAd slot="2248246891" format="auto" responsive="true" />
+      </div>
+
       {/* Step-by-Step Guide - "How to start?" */}
       <section className="wfh-section bg-slate-50">
-        <h2 className="wfh-section-title">🚀 How to Start: A Step-by-Step Process</h2>
+        <h2 className="wfh-section-title">🚀 How to Start Your First Online Job</h2>
         <div className="max-w-4xl mx-auto space-y-8">
+          
+          {/* Step 1 */}
           <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-200">1</div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Identify Your Skill</h3>
-              <p className="text-slate-600">
-                What are you good at? Typing? Teaching? Designing? If you don't have a skill, <strong>learn one</strong>. 
-                Platforms like <a href="https://www.coursera.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Coursera</a>, 
-                <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline"> Udemy</a>, and 
-                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline"> YouTube</a> offer free courses on Data Entry, SEO, and Coding.
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Choose an Easy Skill to Start</h3>
+              <p className="text-slate-600 mb-3">
+                You don't need to be an expert. Start with what you know.
               </p>
+              <div className="bg-blue-50 p-4 rounded-lg text-sm border border-blue-100">
+                <span className="font-bold text-blue-700 block mb-1">Easiest Skills for Beginners:</span>
+                <ul className="list-disc list-inside text-slate-700 space-y-1">
+                  <li><strong>Data Entry:</strong> Typing into Excel sheets.</li>
+                  <li><strong>Transcription:</strong> Listening to audio and typing it out.</li>
+                  <li><strong>Virtual Assistant:</strong> Replying to emails and scheduling meetings.</li>
+                  <li><strong>Canva Design:</strong> Making simple social media posts.</li>
+                </ul>
+              </div>
             </div>
           </div>
           
+          {/* Step 2 */}
           <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-200">2</div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Build a Digital Presence</h3>
-              <p className="text-slate-600">
-                Create a professional profile on LinkedIn and Upwork. Use a clear photo. List your skills. 
-                If you are a writer or designer, create a simple portfolio on Google Drive or Behance to show samples.
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Create Your "Online Resume"</h3>
+              <p className="text-slate-600 mb-3">
+                Sign up on <strong>Upwork.com</strong> or <strong>Fiverr.com</strong>. Your profile is your shop.
               </p>
+              <div className="bg-slate-50 p-4 rounded-lg text-sm border border-slate-200">
+                <span className="font-bold text-slate-700 block mb-1">📝 What to write in your profile:</span>
+                "Hi, I am [Your Name]. I am a hard-working [Skill Name] who can help you with [Task]. I am available to start immediately."
+              </div>
             </div>
           </div>
 
+          {/* Ad Break 3 */}
+          <div className="max-w-4xl mx-auto my-8 px-4">
+             <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
+             <GoogleAd slot="7309001888" format="auto" responsive="true" />
+          </div>
+
+          {/* Step 3 */}
           <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-200">3</div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Apply Consistently</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Apply to 10 Jobs Daily</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>The Golden Rule:</strong> You might not get a reply immediately. This is normal.
+              </p>
               <p className="text-slate-600">
-                Don't get discouraged if you don't get hired immediately. Apply to 5-10 jobs daily. 
-                Customize your cover letter for each application—don't copy-paste!
+                If you apply to 10 jobs every day, you will likely get 1 interview within a week. Be persistent!
               </p>
             </div>
           </div>
 
+          {/* Step 4 */}
           <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             <div className="flex-shrink-0 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-green-200">4</div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Get Paid Securely</h3>
-              <p className="text-slate-600">
-                Never pay money to get a job. Legitimate clients pay <strong>you</strong>. 
-                Use PayPal or direct bank transfer. Always communicate through the official platform to stay safe.
+              <h3 className="text-xl font-bold text-slate-900 mb-2">How You Get Paid</h3>
+              <p className="text-slate-600 mb-3">
+                Clients pay the website (Upwork/Fiverr), and the website pays you.
               </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">PayPal</span>
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">Bank Transfer</span>
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">Payoneer</span>
+              </div>
             </div>
           </div>
         </div>
@@ -218,64 +354,162 @@ const WorkFromHome = () => {
         </div>
       </section>
 
+      {/* Ad Break 4 */}
+      <div className="max-w-4xl mx-auto my-8 px-4">
+        <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
+        <GoogleAd slot="5455690708" format="auto" responsive="true" />
+      </div>
+
       {/* Blogging & YouTube Detail Section */}
-      <section className="wfh-section bg-orange-50 rounded-3xl my-8 mx-4">
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          <h2 className="wfh-section-title text-center mb-8">💡 The Passive Income Blueprint</h2>
-          <div className="grid md:grid-cols-2 gap-12">
+      <section className="wfh-section bg-orange-50 rounded-3xl my-8 mx-4 overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <h2 className="wfh-section-title text-center mb-4">💡 The Passive Income Blueprint</h2>
+          <p className="text-center text-slate-600 max-w-2xl mx-auto mb-12">
+            Passive income means you do the work once and get paid repeatedly. Here is exactly how to start, step-by-step, even if you have zero experience.
+          </p>
+
+          <div className="grid lg:grid-cols-2 gap-12">
             
-            {/* Blogging */}
-            <div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <FaWordpress className="text-blue-600" /> Start a Blog
-              </h3>
-              <p className="text-slate-700 mb-4">
-                Blogging is a long-term game but pays the best. You own the platform.
-              </p>
-              <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
-                <div className="flex gap-3">
-                  <span className="font-bold text-orange-500 shrink-0">Step 1:</span>
-                  <span>Pick a Niche (e.g., Healthy Recipes, Tech Reviews, Study Notes).</span>
+            {/* Blogging Guide */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+              <div className="bg-blue-600 p-6 text-white">
+                <h3 className="text-2xl font-bold flex items-center gap-3">
+                  <FaWordpress className="text-3xl" /> Start a Blog
+                </h3>
+                <p className="opacity-90 mt-2">Best for: Writers, thinkers, and those who prefer staying behind the scenes.</p>
+              </div>
+              
+              <div className="p-8 space-y-8">
+                {/* Step 1 */}
+                <div className="relative pl-8 border-l-2 border-blue-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-blue-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 1: Pick a Specific Topic (Niche)</h4>
+                  <p className="text-slate-600 mb-3">Don't start a generic blog like "My Life". Pick something people search for.</p>
+                  <div className="bg-blue-50 p-4 rounded-lg text-sm border border-blue-100">
+                    <span className="font-bold text-blue-700 block mb-1">✅ Good Examples:</span>
+                    <ul className="list-disc list-inside text-slate-700 space-y-1">
+                      <li>"Vegan Recipes for Beginners" (Specific)</li>
+                  <li>"Best Laptops for Students under ₹40,000" (Specific)</li>
+                  <li>"Yoga for Back Pain" (Specific)</li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-orange-500 shrink-0">Step 2:</span>
-                  <span>Buy Domain & Hosting (<strong>Hostinger</strong> or <strong>Bluehost</strong> are popular).</span>
+
+                {/* Step 2 */}
+                <div className="relative pl-8 border-l-2 border-blue-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-blue-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 2: Get a Domain & Hosting</h4>
+                  <p className="text-slate-600 mb-2">
+                    <strong className="text-blue-700">Domain:</strong> Your website name (e.g., www.myblog.com).
+                    <br/>
+                    <strong className="text-blue-700">Hosting:</strong> Where your website lives on the internet.
+                  </p>
+                  <div className="bg-blue-50 p-4 rounded-lg text-sm border border-blue-100">
+                    👉 <strong>Recommendation:</strong> Use <a href="https://www.hostinger.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Hostinger</a> or <a href="https://www.bluehost.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Bluehost</a>. They cost about ₹250/month and give you a free domain.
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-orange-500 shrink-0">Step 3:</span>
-                  <span>Write 20-30 helpful articles (SEO is key! Use tools like Google Trends).</span>
+
+                {/* Step 3 */}
+                <div className="relative pl-8 border-l-2 border-blue-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-blue-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 3: Write Helpful Content</h4>
+                  <p className="text-slate-600 mb-3">Write 20-30 articles before you expect money. Each article should solve a problem.</p>
+                  <div className="bg-slate-50 p-4 rounded-lg text-sm border border-slate-200">
+                    <span className="font-bold text-slate-700 block mb-1">📝 Article Structure:</span>
+                    1. <strong>Catchy Title:</strong> "How to fix X"<br/>
+                    2. <strong>Intro:</strong> "Do you have this problem? Here is the solution."<br/>
+                    3. <strong>Body:</strong> Step-by-step solution.<br/>
+                    4. <strong>Conclusion:</strong> Summary.
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-orange-500 shrink-0">Step 4:</span>
-                  <span>Apply for <strong>Google AdSense</strong> to show ads and earn money.</span>
+
+                {/* Step 4 */}
+                <div className="relative pl-8 border-l-2 border-transparent">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-green-500"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 4: Make Money</h4>
+                  <ul className="space-y-2 text-slate-600">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">₹</span> 
+                      <span><strong>Google AdSense:</strong> Google shows ads on your site. You get paid when people view/click.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">₹</span> 
+                      <span><strong>Affiliate Marketing:</strong> Recommend products (e.g., Amazon). If someone buys, you get a commission.</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
 
-            {/* YouTube */}
-            <div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <FaYoutube className="text-red-600" /> Start a YouTube Channel
-              </h3>
-              <p className="text-slate-700 mb-4">
-                Video is the future. You don't even need to show your face (Faceless channels).
-              </p>
-              <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
-                <div className="flex gap-3">
-                  <span className="font-bold text-red-500 shrink-0">Step 1:</span>
-                  <span>Create a Channel (It's free with a Google account).</span>
+            {/* YouTube Guide */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+              <div className="bg-red-600 p-6 text-white">
+                <h3 className="text-2xl font-bold flex items-center gap-3">
+                  <FaYoutube className="text-3xl" /> Start a YouTube Channel
+                </h3>
+                <p className="opacity-90 mt-2">Best for: Speakers, educators, gamers, and video creators.</p>
+              </div>
+              
+              <div className="p-8 space-y-8">
+                {/* Step 1 */}
+                <div className="relative pl-8 border-l-2 border-red-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 1: Choose Your Channel Type</h4>
+                  <p className="text-slate-600 mb-3">You don't need to show your face if you are shy.</p>
+                  <div className="bg-red-50 p-4 rounded-lg text-sm border border-red-100">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="font-bold text-red-700 block mb-1">🎥 Personal Channel</span>
+                        <p className="text-xs text-slate-600">Vlogging, Teaching, Fitness, Comedy.</p>
+                      </div>
+                      <div>
+                        <span className="font-bold text-red-700 block mb-1">🎭 Faceless Channel</span>
+                        <p className="text-xs text-slate-600">Gaming, Top 10 Lists, Meditation Music, Coding Tutorials.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-red-500 shrink-0">Step 2:</span>
-                  <span>Upload consistent videos (Shorts are great for growth).</span>
+
+                {/* Step 2 */}
+                <div className="relative pl-8 border-l-2 border-red-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 2: Create & Upload</h4>
+                  <p className="text-slate-600 mb-3">
+                    Use your smartphone camera. You don't need expensive gear.
+                  </p>
+                  <div className="bg-slate-50 p-4 rounded-lg text-sm border border-slate-200">
+                    <span className="font-bold text-slate-700 block mb-1">🛠️ Free Tools:</span>
+                    <ul className="list-disc list-inside text-slate-700 space-y-1">
+                      <li><strong>Editing:</strong> CapCut, InShot, or DaVinci Resolve.</li>
+                      <li><strong>Thumbnails:</strong> Canva (Free version is enough).</li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-red-500 shrink-0">Step 3:</span>
-                  <span>Reach 1,000 subscribers & 4,000 watch hours.</span>
+
+                {/* Step 3 */}
+                <div className="relative pl-8 border-l-2 border-red-100">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-600"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 3: Consistency is King</h4>
+                  <p className="text-slate-600 mb-3">
+                    The algorithm loves consistency. Upload <strong>1 long video</strong> per week and <strong>3 Shorts</strong> per week.
+                  </p>
+                  <p className="text-sm text-slate-500 italic">
+                    "Don't give up before your 30th video. Most channels grow after 6 months."
+                  </p>
                 </div>
-                <div className="flex gap-3">
-                  <span className="font-bold text-red-500 shrink-0">Step 4:</span>
-                  <span>Monetize with Ads, Sponsorships, and Affiliate Links.</span>
+
+                {/* Step 4 */}
+                <div className="relative pl-8 border-l-2 border-transparent">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-green-500"></div>
+                  <h4 className="font-bold text-lg text-slate-900 mb-2">Step 4: Unlock Earnings</h4>
+                  <p className="text-slate-600 mb-2">To join the YouTube Partner Program, you need:</p>
+                  <div className="flex gap-2 mb-3">
+                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">1,000 Subscribers</span>
+                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">4,000 Watch Hours</span>
+                  </div>
+                  <p className="text-slate-600 text-sm">
+                    Once qualified, YouTube places ads on your videos and shares the revenue with you (55% to you).
+                  </p>
                 </div>
               </div>
             </div>
@@ -284,81 +518,49 @@ const WorkFromHome = () => {
         </div>
       </section>
 
-      {/* Featured Jobs Section */}
-      <section className="wfh-section">
-        <h2 className="wfh-section-title">Latest Remote Opportunities</h2>
-        <div className="wfh-grid">
-          {/* Mock Job 1 */}
-          <div className="wfh-card border-l-4 border-l-green-500">
-            <div className="flex justify-between items-start mb-4">
-              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-bold">New</span>
-              <span className="text-slate-400 text-sm">2h ago</span>
-            </div>
-            <h3>Remote Data Entry Clerk</h3>
-            <p className="mb-4">Global Tech Solutions • <span className="text-blue-600">US/Worldwide</span></p>
-            <div className="flex gap-2 mb-4 text-sm text-slate-500">
-              <span className="flex items-center gap-1"><BiBriefcase /> Full-time</span>
-              <span className="flex items-center gap-1"><BiMoney /> $15-$20/hr</span>
-            </div>
-            <Link to="/jobs" className="text-blue-600 font-semibold hover:underline flex items-center gap-1">View Details <BiRightArrowAlt /></Link>
-          </div>
+      
 
-          {/* Mock Job 2 */}
-          <div className="wfh-card border-l-4 border-l-purple-500">
-            <div className="flex justify-between items-start mb-4">
-              <span className="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded font-bold">Hot</span>
-              <span className="text-slate-400 text-sm">5h ago</span>
-            </div>
-            <h3>Customer Success Agent</h3>
-            <p className="mb-4">Amazon Support • <span className="text-blue-600">UK/Remote</span></p>
-            <div className="flex gap-2 mb-4 text-sm text-slate-500">
-              <span className="flex items-center gap-1"><BiBriefcase /> Shift</span>
-              <span className="flex items-center gap-1"><BiMoney /> £12-£18/hr</span>
-            </div>
-            <Link to="/jobs" className="text-blue-600 font-semibold hover:underline flex items-center gap-1">View Details <BiRightArrowAlt /></Link>
+      {/* FAQ Section with Schema Support */}
+      <section className="wfh-section bg-slate-50">
+        <h2 className="wfh-section-title">❓ Frequently Asked Questions</h2>
+        <div className="max-w-3xl mx-auto space-y-4">
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">Is it really possible to earn without investment?</h3>
+            <p className="text-slate-600">Yes! Platforms like Upwork, Fiverr, and LinkedIn are 100% free to join. You only pay a small service fee <em>after</em> you earn money.</p>
           </div>
-
-          {/* Mock Job 3 */}
-          <div className="wfh-card border-l-4 border-l-orange-500">
-            <div className="flex justify-between items-start mb-4">
-              <span className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded font-bold">Urgent</span>
-              <span className="text-slate-400 text-sm">1d ago</span>
-            </div>
-            <h3>Freelance React Developer</h3>
-            <p className="mb-4">Startup Hub • <span className="text-blue-600">India/Remote</span></p>
-            <div className="flex gap-2 mb-4 text-sm text-slate-500">
-              <span className="flex items-center gap-1"><BiBriefcase /> Contract</span>
-              <span className="flex items-center gap-1"><BiMoney /> ₹50k-₹1L/mo</span>
-            </div>
-            <Link to="/jobs" className="text-blue-600 font-semibold hover:underline flex items-center gap-1">View Details <BiRightArrowAlt /></Link>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">How do I get paid in India?</h3>
+            <p className="text-slate-600">Most international clients pay via PayPal or Payoneer, which automatically transfers money to your local bank account in Rupees.</p>
           </div>
-        </div>
-        
-        <div className="text-center mt-12">
-          <Link to="/jobs" className="wfh-btn-primary">
-            View All 500+ Remote Jobs
-          </Link>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">I am a student, can I do this?</h3>
+            <p className="text-slate-600">Absolutely. Many jobs like Data Entry, Transcription, and Content Writing are perfect for part-time work alongside studies.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">Do I need a laptop to work from home?</h3>
+            <p className="text-slate-600">While a laptop is recommended for most jobs, there are tasks like surveys, social media management, and testing apps that can be done on a smartphone.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">How can I avoid fake job scams?</h3>
+            <p className="text-slate-600">Never pay for registration fees. Legitimate companies pay you, they don't ask for money. If someone asks for an ID card fee or security deposit, block them.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">Can I do these jobs part-time?</h3>
+            <p className="text-slate-600">Yes, most freelance and remote jobs are flexible. You can choose your own working hours, making it perfect for students, housewives, and employees looking for side income.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="font-bold text-lg mb-2">How much can I earn monthly?</h3>
+            <p className="text-slate-600">Beginners usually earn between ₹5,000 to ₹15,000 per month. With experience and skill development, professionals can earn ₹50,000 to ₹1,00,000+ per month.</p>
+          </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="wfh-section bg-white border-t border-slate-100">
-        <h2 className="wfh-section-title">Frequently Asked Questions</h2>
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="wfh-faq-item">
-            <div className="wfh-faq-question">How can I identify a fake job?</div>
-            <div className="wfh-faq-answer">Real jobs <strong>never</strong> ask you to pay for registration, ID cards, or training. If they ask for money, it's a scam.</div>
-          </div>
-          <div className="wfh-faq-item">
-            <div className="wfh-faq-question">Do I need a laptop?</div>
-            <div className="wfh-faq-answer">For most data entry and writing jobs, a laptop is preferred. However, some surveys and social media management can be done via smartphone.</div>
-          </div>
-          <div className="wfh-faq-item">
-            <div className="wfh-faq-question">Is experience required?</div>
-            <div className="wfh-faq-answer">Not always! Many client look for freshers for data entry, transcription, and basic virtual assistant tasks.</div>
-          </div>
-        </div>
-      </section>
+      {/* Ad Break 5 - Multiplex */}
+      <div className="max-w-4xl mx-auto my-8 px-4">
+        <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
+        <GoogleAd slot="7890282351" format="autorelaxed" responsive="true" />
+      </div>
+
     </div>
   );
 };

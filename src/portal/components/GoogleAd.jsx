@@ -75,7 +75,7 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
   }, [adLoaded, loadDelay, rootMargin, immediate]);
 
   return (
-    <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc' }}>
+    <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <ins
         ref={adRef}
         className={`adsbygoogle${className ? ` ${className}` : ''}`}

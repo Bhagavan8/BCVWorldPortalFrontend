@@ -66,8 +66,22 @@
 /* Grid for Articles/Cards */
 .wfh-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+}
+
+@media (max-width: 640px) {
+  .wfh-hero h1 {
+    font-size: 1.75rem;
+  }
+  
+  .wfh-section {
+    padding: 3rem 1rem;
+  }
+  
+  .wfh-card {
+    padding: 1.5rem;
+  }
 }
 
 .wfh-card {
