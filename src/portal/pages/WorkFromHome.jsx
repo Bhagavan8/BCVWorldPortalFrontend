@@ -114,12 +114,22 @@ const WorkFromHome = () => {
         {JSON.stringify(structuredData)}
       </script>
 
+      {/* Sticky Left Ad (Laptops & Desktops - lg+) */}
+      <div className="hidden lg:block fixed left-4 top-1/2 -translate-y-1/2 z-40 w-[160px] h-[600px]">
+        <GoogleAd slot="9988997937" style={{ display: 'block', width: '160px', height: '600px' }} format="vertical" />
+      </div>
+
+      {/* Sticky Right Ad (Laptops & Desktops - lg+) */}
+      <div className="hidden lg:block fixed right-4 top-1/2 -translate-y-1/2 z-40 w-[160px] h-[600px]">
+        <GoogleAd slot="4056152580" style={{ display: 'block', width: '160px', height: '600px' }} format="vertical" />
+      </div>
+
       {/* Hero Section */}
       <section className="wfh-hero relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="inline-block bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 animate-fade-in-up">
-            <span className="mr-2">�</span> Trending in 2026: Remote & AI Jobs
+            <span className="mr-2">🔥</span> Trending in 2026: Remote & AI Jobs
           </div>
           <h1 className="animate-fade-in-up delay-100">
             Stop Searching. Start Earning.<br/>
@@ -140,13 +150,13 @@ const WorkFromHome = () => {
       </section>
 
       {/* Ad Break 1 */}
-      <div className="max-w-4xl mx-auto my-8 px-4">
+      <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto my-8 px-4">
         <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
         <GoogleAd slot="6187491900" format="auto" responsive="true" />
       </div>
 
       {/* Scam Alert - Crucial for WFH */}
-      <div className="max-w-4xl mx-auto px-4 mt-8 relative z-10 mb-12">
+      <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto px-4 mt-8 relative z-10 mb-12">
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex flex-col sm:flex-row gap-4 items-start shadow-sm hover:shadow-md transition-shadow">
           <div className="bg-red-100 p-3 rounded-full text-red-600 shrink-0 hidden sm:block">
             <BiShieldQuarter className="text-3xl" />
@@ -189,7 +199,7 @@ const WorkFromHome = () => {
             <div className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">Easiest to Start</div>
             <h3 className="flex items-center gap-2"><span className="text-green-600 text-2xl">●</span> Fiverr</h3>
             <p className="mb-3 text-slate-800"><strong>Best For:</strong> Creative services, Logo Design, Voiceovers, Digital Marketing.</p>
-            <p className="text-sm text-slate-600 mb-4">No bidding required. Post a "Gig" (service) and let clients come to you. Starts at $5 (approx ₹400).</p>
+            <p className="text-sm text-slate-600 mb-4">No bidding required. Post a "Gig" (service) and let clients come to you. Starts at approx ₹400 ($5).</p>
             <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer" className="text-green-600 font-bold text-sm hover:underline flex items-center gap-1">
               Create Your Gig <BiLinkExternal />
             </a>
@@ -238,7 +248,7 @@ const WorkFromHome = () => {
       </section>
 
       {/* Ad Break 2 */}
-      <div className="max-w-4xl mx-auto my-8 px-4">
+      <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto my-8 px-4">
         <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
         <GoogleAd slot="2248246891" format="auto" responsive="true" />
       </div>
@@ -246,7 +256,7 @@ const WorkFromHome = () => {
       {/* Step-by-Step Guide - "How to start?" */}
       <section className="wfh-section bg-slate-50">
         <h2 className="wfh-section-title">🚀 How to Start Your First Online Job</h2>
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto space-y-8">
           
           {/* Step 1 */}
           <div className="flex gap-6 items-start bg-white p-6 rounded-xl shadow-sm border border-slate-100">
@@ -284,7 +294,7 @@ const WorkFromHome = () => {
           </div>
 
           {/* Ad Break 3 */}
-          <div className="max-w-4xl mx-auto my-8 px-4">
+          <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto my-8 px-4">
              <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
              <GoogleAd slot="7309001888" format="auto" responsive="true" />
           </div>
@@ -355,14 +365,14 @@ const WorkFromHome = () => {
       </section>
 
       {/* Ad Break 4 */}
-      <div className="max-w-4xl mx-auto my-8 px-4">
+      <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto my-8 px-4">
         <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
         <GoogleAd slot="5455690708" format="auto" responsive="true" />
       </div>
 
       {/* Blogging & YouTube Detail Section */}
       <section className="wfh-section bg-orange-50 rounded-3xl my-8 mx-4 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto px-4 py-8">
           <h2 className="wfh-section-title text-center mb-4">💡 The Passive Income Blueprint</h2>
           <p className="text-center text-slate-600 max-w-2xl mx-auto mb-12">
             Passive income means you do the work once and get paid repeatedly. Here is exactly how to start, step-by-step, even if you have zero experience.
@@ -389,8 +399,8 @@ const WorkFromHome = () => {
                     <span className="font-bold text-blue-700 block mb-1">✅ Good Examples:</span>
                     <ul className="list-disc list-inside text-slate-700 space-y-1">
                       <li>"Vegan Recipes for Beginners" (Specific)</li>
-                  <li>"Best Laptops for Students under ₹40,000" (Specific)</li>
-                  <li>"Yoga for Back Pain" (Specific)</li>
+                      <li>"Best Laptops for Students under ₹40,000" (Specific)</li>
+                      <li>"Yoga for Back Pain" (Specific)</li>
                     </ul>
                   </div>
                 </div>
@@ -519,11 +529,10 @@ const WorkFromHome = () => {
       </section>
 
       
-
       {/* FAQ Section with Schema Support */}
       <section className="wfh-section bg-slate-50">
         <h2 className="wfh-section-title">❓ Frequently Asked Questions</h2>
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-3xl lg:max-w-2xl xl:max-w-3xl mx-auto space-y-4">
           <div className="bg-white p-6 rounded-xl shadow-sm">
             <h3 className="font-bold text-lg mb-2">Is it really possible to earn without investment?</h3>
             <p className="text-slate-600">Yes! Platforms like Upwork, Fiverr, and LinkedIn are 100% free to join. You only pay a small service fee <em>after</em> you earn money.</p>
@@ -550,13 +559,13 @@ const WorkFromHome = () => {
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm">
             <h3 className="font-bold text-lg mb-2">How much can I earn monthly?</h3>
-            <p className="text-slate-600">Beginners usually earn between ₹5,000 to ₹15,000 per month. With experience and skill development, professionals can earn ₹50,000 to ₹1,00,000+ per month.</p>
+            <p className="text-slate-600">Beginners usually earn between ₹5,000 to ₹15,000 per month. With experience, professionals can earn ₹50,000 to ₹1,00,000+ per month.</p>
           </div>
         </div>
       </section>
 
       {/* Ad Break 5 - Multiplex */}
-      <div className="max-w-4xl mx-auto my-8 px-4">
+      <div className="max-w-4xl lg:max-w-2xl xl:max-w-4xl mx-auto my-8 px-4">
         <p className="text-xs text-center text-slate-400 mb-2">SPONSORED</p>
         <GoogleAd slot="7890282351" format="autorelaxed" responsive="true" />
       </div>

@@ -664,6 +664,11 @@ export default function Jobs() {
                </Link>
             </div>
 
+            {/* Ad moved from JobDetails */}
+            <div className="mb-6">
+              <GoogleAd slot="9233126529" immediate={true} fullWidthResponsive="true" />
+            </div>
+
             {/* Job List */}
             <div className="space-y-0 min-h-[200px]">
               {loading ? (

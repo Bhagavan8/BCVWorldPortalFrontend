@@ -914,8 +914,30 @@ export default function JobDetails() {
     if (applyHref === '#') {
       e.preventDefault();
       toast.error('Application link not available');
+      return;
     }
-  }, [applyHref]);
+
+    // Track "Apply Now" click
+    try {
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const payload = user && user.id ? { userId: user.id } : {};
+
+      // Fire-and-forget tracking call
+      fetch(`${API_BASE}/api/jobs/${id}/apply-click`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('Failed to track apply click:', err));
+
+    } catch (error) {
+      console.error('Error tracking apply click:', error);
+    }
+  }, [applyHref, user, id, API_BASE]);
 
   const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
@@ -1412,7 +1434,7 @@ export default function JobDetails() {
               </section>
             )}
 
-            <GoogleAd slot="9233126529" immediate={true} fullWidthResponsive="true" />
+
             {/* Qualifications (stacked below skills) */}
             {job.qualifications && (
               <section className="content-section">
@@ -1690,6 +1712,15 @@ export default function JobDetails() {
                 )}
               </div>
             </section>
+
+            <div className="mt-8">
+              <GoogleAd 
+                slot="3839756082" 
+                format="autorelaxed" 
+                fullWidthResponsive="true"
+                immediate={true}
+              />
+            </div>
 
             {(loadingRelated || relatedJobs.length > 0) && (
               <section className="content-section company-jobs-section">
