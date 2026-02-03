@@ -1140,7 +1140,8 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">
                 <BiX className="bi" />
               </button>
-              <GoogleAd slot="8773320892" minHeight="600px" />
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd slot="8773320892" minHeight="600px" immediate={true} />
             </div>
           </div>
         )}
@@ -1152,7 +1153,8 @@ export default function JobDetails() {
               <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">
                 <BiX className="bi" />
               </button>
-              <GoogleAd slot="7460239222" minHeight="600px" />
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd slot="7460239222" minHeight="600px" immediate={true} />
             </div>
           </div>
         )}
@@ -1180,7 +1182,16 @@ export default function JobDetails() {
             </div>
           </div>
 
-          <GoogleAd slot="2290112520" immediate={true} fullWidthResponsive="true" />
+          <div className="flex flex-col xl:flex-row gap-6 mb-6">
+            <div className="flex-1 min-w-0 w-full">
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd slot="2290112520" immediate={true} fullWidthResponsive="true" format="horizontal" />
+              <div className="mt-4">
+                <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                <GoogleAd slot="6561890837" immediate={true} fullWidthResponsive="true" format="auto" />
+              </div>
+            </div>
+          </div>
 
           {/* Job Header (kept above the fold for best LCP) */}
           <div className="job-header-section">
@@ -1392,10 +1403,13 @@ export default function JobDetails() {
             </div>
           </div>
 
+          <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
           <GoogleAd slot="2859289867" immediate={true} fullWidthResponsive="true" />
 
           {/* Content Sections */}
           <div className="content-sections">
+            <div className="flex flex-col xl:flex-row gap-6">
+              <div className="flex-1 min-w-0">
 
             {/* Job Description */}
             <section className="content-section">
@@ -1600,6 +1614,7 @@ export default function JobDetails() {
               </div>
             </section>
 
+            <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
             <GoogleAd slot="9894830873" minHeight="280px" immediate={true} fullWidthResponsive="true" />
 
             {/* About Company Section - Unique Design */}
@@ -1637,6 +1652,7 @@ export default function JobDetails() {
               </section>
             )}
 
+             <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
              <GoogleAd slot="6883129508" immediate={true} fullWidthResponsive="true" />
 
             <section className="community-section">
@@ -1714,6 +1730,7 @@ export default function JobDetails() {
             </section>
 
             <div className="mt-8">
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
               <GoogleAd 
                 slot="3839756082" 
                 format="autorelaxed" 
@@ -1848,7 +1865,10 @@ export default function JobDetails() {
               </div>
             </div>
 
-           
+            </div>
+            
+            
+          </div>
 
           </div>
 

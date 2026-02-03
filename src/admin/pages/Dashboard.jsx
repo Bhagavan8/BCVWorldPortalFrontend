@@ -61,7 +61,7 @@ const Dashboard = () => {
                         todayJobsViews: d.todayJobsViews ?? d.todayJobs ?? d.todayJobViews ?? 0,
                         yesterdayJobsViews: d.yesterdayJobsViews ?? d.yesterdayJobs ?? d.yesterdayJobViews ?? 0,
                         weeklyJobsViews: d.weeklyJobsViews ?? d.weeklyJobs ?? d.weeklyJobViews ?? 0,
-                        totalApplies: d.totalApplies ?? 0,
+                        totalApplies: d.totalApplies ?? d.totaljobapply ?? 0,
                         totalComments: d.totalComments ?? 0,
                         totalSuggestions: d.totalSuggestions ?? 0,
                         monthlyJobViews: d.monthlyJobViews ?? 0,

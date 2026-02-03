@@ -199,7 +199,7 @@ const WorkFromHome = () => {
             <div className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">Easiest to Start</div>
             <h3 className="flex items-center gap-2"><span className="text-green-600 text-2xl">●</span> Fiverr</h3>
             <p className="mb-3 text-slate-800"><strong>Best For:</strong> Creative services, Logo Design, Voiceovers, Digital Marketing.</p>
-            <p className="text-sm text-slate-600 mb-4">No bidding required. Post a "Gig" (service) and let clients come to you. Starts at approx ₹400 ($5).</p>
+            <p className="text-sm text-slate-600 mb-4">No bidding required. Post a "Gig" (service) and let clients come to you. Starts at approx ₹400.</p>
             <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer" className="text-green-600 font-bold text-sm hover:underline flex items-center gap-1">
               Create Your Gig <BiLinkExternal />
             </a>

@@ -861,10 +861,20 @@ export default function Jobs() {
               </div>
             </div>
             
-            {/* Ad Slot */}
+            {/* Ad Slots */}
             <div className="mt-4">
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
               <GoogleAd 
                 slot="1416848704" 
+                format="auto" 
+                fullWidthResponsive="true"
+                immediate={true}
+              />
+            </div>
+            <div className="mt-4">
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd 
+                slot="9587509423" 
                 format="auto" 
                 fullWidthResponsive="true"
                 immediate={true}
