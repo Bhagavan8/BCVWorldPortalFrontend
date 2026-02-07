@@ -29,6 +29,8 @@ const Register = lazy(() => import('./portal/pages/Register'));
 const Profile = lazy(() => import('./portal/pages/Profile'));
 const Terms = lazy(() => import('./portal/pages/Terms'));
 const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
+const JavaLearning = lazy(() => import('./portal/pages/JavaLearning'));
+const ImportantQuestions = lazy(() => import('./portal/pages/ImportantQuestions'));
 
 // Admin Pages
 const JobManagement = lazy(() => import('./admin/pages/JobManagement'));
@@ -399,6 +401,8 @@ function App() {
                 <Route path="/news" element={<NewsList />} />
                 <Route path="/news/:id" element={<NewsDetail />} />
                 <Route path="/about" element={<AboutUs />} />
+                <Route path="/java-learning" element={<JavaLearning />} />
+                <Route path="/important-questions-solutions" element={<ImportantQuestions />} />
                 <Route path="/mentorship" element={<Mentorship />} />
                 <Route path="/suggestion" element={<Suggestion />} />
                 <Route path="/work-from-home" element={<WorkFromHome />} />

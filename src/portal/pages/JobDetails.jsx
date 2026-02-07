@@ -121,6 +121,17 @@ const TECH_STACK = [
     if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(s)) return `https://${s}`;
     return s;
   };
+ 
+  const formatEmploymentType = (val) => {
+    const s = String(val || '').toLowerCase();
+    if (!s) return '—';
+    if (s === 'fulltime' || s === 'full-time') return 'Full-time';
+    if (s === 'parttime' || s === 'part-time') return 'Part-time';
+    if (s === 'intern' || s === 'internship') return 'Internship';
+    if (s === 'contract') return 'Contract';
+    if (s === 'temporary' || s === 'temp') return 'Temporary';
+    return val || '—';
+  };
 
 export default function JobDetails() {
   const [searchParams] = useSearchParams();
@@ -1352,13 +1363,24 @@ export default function JobDetails() {
                       <span className="meta-value">{formatDateDDMMMYYYY(job.postedDate)}</span>
                     </div>
                   </div>
-                  <div className="meta-item">
-                    <BiShow className="bi" />
-                    <div>
-                      <span className="meta-label">Views</span>
-                      <span className="meta-value">{job.viewCount !== undefined && job.viewCount !== null ? job.viewCount : 0}</span>
+                  {!(user?.role === 'ADMIN' || user?.role === 'admin') && (
+                    <div className="meta-item">
+                      <BiBriefcase className="bi" />
+                      <div>
+                        <span className="meta-label">Employment</span>
+                        <span className="meta-value">{formatEmploymentType(job.employmentType)}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {(user?.role === 'ADMIN' || user?.role === 'admin') && (
+                    <div className="meta-item">
+                      <BiShow className="bi" />
+                      <div>
+                        <span className="meta-label">Views</span>
+                        <span className="meta-value">{job.viewCount !== undefined && job.viewCount !== null ? job.viewCount : 0}</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="meta-item" onClick={handleLike} style={{ cursor: 'pointer' }}>
                     {isLiked ? <BiSolidHeart className="bi" /> : <BiHeart className="bi" />}
                     <div>

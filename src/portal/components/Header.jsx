@@ -7,11 +7,13 @@ export default function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLearningOpen, setIsLearningOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
   const authRef = useRef(null);
   const profileRef = useRef(null);
+  const learningRef = useRef(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -36,6 +38,9 @@ export default function Header() {
       }
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
+      }
+      if (learningRef.current && !learningRef.current.contains(event.target)) {
+        setIsLearningOpen(false);
       }
     }
 
@@ -84,10 +89,26 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden xl:flex space-x-8">
+            <nav className="hidden xl:flex space-x-8 items-center">
               <Link to="/#hero" className="text-gray-700 hover:text-blue-600 font-medium">Home</Link>
               <Link to="/about" className="text-gray-700 hover:text-blue-600 font-medium">About</Link>
               <Link to="/jobs" className="text-gray-700 hover:text-blue-600 font-medium">Jobs</Link>
+              
+              <div className="relative" ref={learningRef}>
+                <button 
+                  onClick={() => setIsLearningOpen(!isLearningOpen)}
+                  className="flex items-center text-gray-700 hover:text-blue-600 font-medium focus:outline-none"
+                >
+                  Learning <BiChevronDown className={`ml-1 transition-transform duration-200 ${isLearningOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isLearningOpen && (
+                  <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 z-50">
+                    <Link to="/java-learning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Java Learning</Link>
+                    <Link to="/important-questions-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Important Questions</Link>
+                  </div>
+                )}
+              </div>
+
               <Link to="/work-from-home" className="text-gray-700 hover:text-blue-600 font-medium">Work From Home</Link>
               <Link to="/mentorship" className="text-gray-700 hover:text-blue-600 font-medium">Mentorship</Link>
               <Link to="/suggestion" className="text-gray-700 hover:text-blue-600 font-medium">Suggestion</Link>
@@ -193,6 +214,15 @@ export default function Header() {
               <Link to="/#hero" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Home</Link>
               <Link to="/about" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">About</Link>
               <Link to="/jobs" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Jobs</Link>
+              
+              <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
+                  <span className="block mb-2 font-medium">Learning</span>
+                  <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                      <Link to="/java-learning" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Java Learning</Link>
+                      <Link to="/important-questions-solutions" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Important Questions</Link>
+                  </div>
+              </div>
+
               <Link to="/work-from-home" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Work From Home</Link>
               <Link to="/mentorship" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Mentorship</Link>
               <Link to="/suggestion" onClick={() => setIsMobileNavOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">Suggestion</Link>
