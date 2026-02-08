@@ -3,7 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
 import { 
-  BiCopy, BiListUl, BiShare, BiX, BiHome, BiChevronRight, BiBriefcase, BiBulb, 
+  BiCopy, BiX, BiHome, BiChevronRight, BiBriefcase, BiBulb, 
   BiUserCircle, BiSolidUserBadge, BiLogOut, BiLogIn, BiUserPlus, 
   BiWifiOff, BiRefresh, BiError, BiSolidUser, 
   BiSolidBadgeCheck, BiMapPin, BiPlusCircle, BiSolidGraduation, BiCalendar, BiShow, 
@@ -140,7 +140,6 @@ export default function JobDetails() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
   const API_BASE = API_BASE_URL;
   const [company, setCompany] = useState(null);
@@ -952,126 +951,10 @@ export default function JobDetails() {
 
   const clean = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-  const mobileNav = (
-    <>
-      <div className="mobile-header font-sans">
-        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Open mobile menu" aria-expanded={sidebarOpen}>
-          <BiListUl className="bi" />
-        </button>
-        <div className="mobile-logo">
-          <Link to="/">BCVWorld</Link>
-        </div>
-        <button className="mobile-share-btn" onClick={() => handleShare('copy')} aria-label="Copy job link">
-          <BiShare className="bi" />
-        </button>
-      </div>
-
-      <div className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`} style={{ display: sidebarOpen ? 'block' : 'none' }} onClick={() => setSidebarOpen(false)}></div>
-
-      <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} font-sans`}>
-        <div className="sidebar-header-row">
-          <span className="sidebar-brand">BCVWorld</span>
-          <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
-            <BiX />
-          </button>
-        </div>
-
-        <div className="sidebar-scroll-content">
-          <div className="sidebar-section">
-            <h4 className="sidebar-label">Navigation</h4>
-            <div className="sidebar-menu">
-              <Link to="/" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                <div className="sidebar-item-left">
-                  <BiHome className="sidebar-icon" />
-                  <span>Home</span>
-                </div>
-                <BiChevronRight className="sidebar-arrow" />
-              </Link>
-              <Link to="/jobs" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                <div className="sidebar-item-left">
-                  <BiBriefcase className="sidebar-icon" />
-                  <span>Browse Jobs</span>
-                </div>
-                <BiChevronRight className="sidebar-arrow" />
-              </Link>
-              <Link to="/suggestion" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                <div className="sidebar-item-left">
-                  <BiBulb className="sidebar-icon" />
-                  <span>Suggestions</span>
-                </div>
-                <BiChevronRight className="sidebar-arrow" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="sidebar-section">
-            <h4 className="sidebar-label">Account</h4>
-            <div className="sidebar-menu">
-              {user ? (
-                <>
-                  <div className="sidebar-user-card">
-                    <div className="sidebar-user-avatar">
-                      {user.name ? user.name.charAt(0).toUpperCase() : <BiUserCircle />}
-                    </div>
-                    <div className="sidebar-user-info">
-                      <div className="sidebar-user-name">{user.name}</div>
-                      <div className="sidebar-user-status">Logged In</div>
-                    </div>
-                  </div>
-                  
-                  <Link to="/profile" className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                    <div className="sidebar-item-left">
-                      <BiSolidUserBadge className="sidebar-icon" />
-                      <span>My Profile</span>
-                    </div>
-                    <BiChevronRight className="sidebar-arrow" />
-                  </Link>
-                  <button
-                    className="sidebar-item logout-btn"
-                    onClick={() => {
-                      localStorage.removeItem('user');
-                      setUser(null);
-                      setIsLiked(false);
-                      setSidebarOpen(false);
-                      toast.success('Logged out successfully');
-                    }}
-                  >
-                    <div className="sidebar-item-left">
-                      <BiLogOut className="sidebar-icon" />
-                      <span>Logout</span>
-                    </div>
-                    <BiChevronRight className="sidebar-arrow" />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to={`/login?returnTo=${encodeURIComponent(window.location.href)}`} className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                    <div className="sidebar-item-left">
-                      <BiLogIn className="sidebar-icon" />
-                      <span>Login</span>
-                    </div>
-                    <BiChevronRight className="sidebar-arrow" />
-                  </Link>
-                  <Link to={`/register?returnTo=${encodeURIComponent(window.location.href)}`} className="sidebar-item" onClick={() => setSidebarOpen(false)}>
-                    <div className="sidebar-item-left">
-                      <BiUserPlus className="sidebar-icon" />
-                      <span>Register</span>
-                    </div>
-                    <BiChevronRight className="sidebar-arrow" />
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
 
   if (loading) {
     return (
       <>
-        {mobileNav}
         <JobDetailsSkeleton />
       </>
     );
@@ -1081,7 +964,6 @@ export default function JobDetails() {
     return (
       <>
         <SEO title="Connection Error" noindex={true} />
-        {mobileNav}
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
           <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
              <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1110,7 +992,6 @@ export default function JobDetails() {
     return (
       <>
         <SEO title="Job Not Found" noindex={true} />
-        {mobileNav}
         <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-gray-50 pt-20">
            <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-100">
             <div className="bg-yellow-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1139,7 +1020,6 @@ export default function JobDetails() {
       {/* Reading Progress Bar */}
       <div id="readingProgress" className="reading-progress-bar"></div>
 
-      {mobileNav}
 
       {/* Main Container - Full Width */}
       <div className="job-details-page page-wrapper font-sans">
@@ -1196,11 +1076,7 @@ export default function JobDetails() {
           <div className="flex flex-col xl:flex-row gap-6 mb-6">
             <div className="flex-1 min-w-0 w-full">
               <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
-              <GoogleAd slot="2290112520" immediate={true} fullWidthResponsive="true" format="horizontal" />
-              <div className="mt-4">
-                <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
-                <GoogleAd slot="6561890837" immediate={true} fullWidthResponsive="true" format="auto" />
-              </div>
+              <GoogleAd slot="2290112520" immediate={true} fullWidthResponsive="true" format="auto" />
             </div>
           </div>
 
@@ -1441,6 +1317,13 @@ export default function JobDetails() {
               </div>
               <div className="section-content" dangerouslySetInnerHTML={{ __html: renderEnhancedContent(job.description) }} />
             </section>
+            
+            {isMobile && (
+              <div className="mt-4">
+                <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                <GoogleAd slot="9894830873" minHeight="280px" immediate={true} fullWidthResponsive="true" />
+              </div>
+            )}
 
 
 
@@ -1637,7 +1520,7 @@ export default function JobDetails() {
             </section>
 
             <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
-            <GoogleAd slot="9894830873" minHeight="280px" immediate={true} fullWidthResponsive="true" />
+            <GoogleAd slot="2109749740" minHeight="280px" immediate={true} fullWidthResponsive="true" />
 
             {/* About Company Section - Unique Design */}
             {(job.companyName || company?.name) && (job.companyLogoUrl || company?.logoUrl) && (job.aboutCompany || company?.about) && (
@@ -1689,6 +1572,12 @@ export default function JobDetails() {
               </div>
             </section>
 
+            {isMobile && (
+              <div className="mt-4">
+                <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                <GoogleAd slot="1475324929" minHeight="280px" immediate={true} fullWidthResponsive="true" />
+              </div>
+            )}
             <section className="comments-section">
               <h3 className="comments-title"><BiCommentDots className="bi" /> Comments ({comments.length})</h3>
 
@@ -1894,7 +1783,7 @@ export default function JobDetails() {
 
           </div>
 
-          {/* Footer removed as requested */}
+          
         </div>
       </div>
 

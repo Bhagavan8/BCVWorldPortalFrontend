@@ -4,6 +4,7 @@ import JobService from '../services/JobService';
 import AuthService from '../services/AuthService';
 import { BiInfoCircle, BiBuilding, BiEnvelope } from 'react-icons/bi';
 import { FaArrowRight, FaArrowLeft, FaCog, FaCheckCircle, FaSearch } from 'react-icons/fa';
+import { API_BASE_URL } from '../../utils/config';
 
 const JobUploadForm = () => {
     const { id } = useParams();
@@ -307,7 +308,27 @@ const JobUploadForm = () => {
                 showToast('success', 'Job updated successfully');
                 setTimeout(() => navigate('/admin/job-management'), 1500);
             } else {
-                await JobService.createJob(payload);
+                const res = await JobService.createJob(payload);
+                try {
+                    const created = res?.data || {};
+                    const jobId = created.id || created.jobId || created._id || null;
+                    const title = `New Job: ${payload.jobTitle}`;
+                    const company = payload.companyName ? ` at ${payload.companyName}` : '';
+                    const locations = Array.isArray(payload.locations) && payload.locations.length > 0 ? ` • ${payload.locations.join(', ')}` : '';
+                    const url = jobId ? `/job?id=${jobId}` : `/jobs`;
+                    const notifyRes = await fetch(`${API_BASE_URL}/api/notifications/test`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: null, title, body: `Apply${company}${locations}`, url })
+                    });
+                    let delivered = 0;
+                    try { const json = await notifyRes.json(); delivered = json?.delivered ?? 0; } catch {}
+                    if (!notifyRes.ok) {
+                        showToast('warning', 'Push broadcast failed');
+                    } else if (delivered === 0) {
+                        showToast('warning', 'No subscribers received the notification');
+                    }
+                } catch (_) {}
                 showToast('success', 'Job posted successfully');
                 setFormData({
                     jobTitle: '',

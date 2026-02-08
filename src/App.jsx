@@ -19,6 +19,7 @@ const Jobs = lazy(() => import('./portal/pages/Jobs'));
 const JobDetails = lazy(() => import('./portal/pages/JobDetails'));
 const NewsList = lazy(() => import('./portal/pages/NewsList'));
 const NewsDetail = lazy(() => import('./portal/pages/NewsDetail'));
+const NewsCognizantFreshers2026 = lazy(() => import('./portal/pages/NewsCognizantFreshers2026'));
 const AboutUs = lazy(() => import('./portal/pages/AboutUs'));
 const Mentorship = lazy(() => import('./portal/pages/Mentorship'));
 const Suggestion = lazy(() => import('./portal/pages/Suggestion'));
@@ -400,6 +401,7 @@ function App() {
                 <Route path="/job" element={<JobDetails />} />
                 <Route path="/news" element={<NewsList />} />
                 <Route path="/news/:id" element={<NewsDetail />} />
+                <Route path="/news/cognizant-25k-freshers-2026" element={<NewsCognizantFreshers2026 />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/java-learning" element={<JavaLearning />} />
                 <Route path="/important-questions-solutions" element={<ImportantQuestions />} />
