@@ -13,8 +13,8 @@ self.addEventListener('push', (event) => {
   }
   const title = data.title || 'BCVWorld';
   const body = data.body || '';
-  const icon = data.icon || '/assets/images/icon-192x192.webp';
-  const badge = data.badge || '/assets/images/favicon-96x96.webp';
+  const icon = data.icon || '/logo192.png';
+  const badge = data.badge || '/favicon.png';
   const tag = data.tag || 'bcvworld';
   const url = data.url || '/';
   const actions = data.actions || [{ action: 'open', title: 'Open' }];

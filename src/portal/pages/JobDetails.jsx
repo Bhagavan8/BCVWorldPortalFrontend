@@ -83,7 +83,7 @@ const TECH_STACK = [
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       return JSON.parse(jsonPayload);
-    } catch (e) {
+    } catch {
       return null;
     }
   };
@@ -621,7 +621,7 @@ export default function JobDetails() {
     let userObj;
     try {
       userObj = JSON.parse(userStr);
-    } catch (e) {
+    } catch {
       toast.error('Invalid user session');
       return;
     }
@@ -790,7 +790,7 @@ export default function JobDetails() {
       // Other browsers (Chrome, Safari, Firefox 23+, Mobile) - show instructions
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       if (/Mobi|Android/i.test(navigator.userAgent)) {
-        toast((t) => (
+        toast(() => (
           <span>
             To bookmark this job, tap the <b>Share</b> icon or <b>Menu</b> button and select <b>Add to Home Screen</b> or <b>Add to Bookmarks</b>.
           </span>

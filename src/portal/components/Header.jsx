@@ -15,6 +15,7 @@ export default function Header() {
   const [user, setUser] = useState(null);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [isPushModalOpen, setIsPushModalOpen] = useState(false);
+  const [pushActionLoading, setPushActionLoading] = useState(false);
 
   const authRef = useRef(null);
   const profileRef = useRef(null);
@@ -285,16 +286,23 @@ export default function Header() {
     </header>
     <PushPermissionModal
       open={isPushModalOpen}
-      onClose={() => setIsPushModalOpen(false)}
+      loading={pushActionLoading}
+      onClose={() => { if (!pushActionLoading) setIsPushModalOpen(false); }}
       onAllow={async () => {
-        const res = await PushService.enableNotifications();
-        if (res.ok) {
-          toast.success('Notifications enabled');
-          setPushEnabled(true);
-          setIsPushModalOpen(false);
-          await PushService.testSend();
-        } else {
-          toast.error(res.error || 'Failed to enable notifications');
+        if (pushActionLoading) return;
+        setPushActionLoading(true);
+        try {
+          const res = await PushService.enableNotifications();
+          if (res.ok) {
+            toast.success('Notifications enabled');
+            setPushEnabled(true);
+            setIsPushModalOpen(false);
+            void PushService.testSend();
+          } else {
+            toast.error(res.error || 'Failed to enable notifications');
+          }
+        } finally {
+          setPushActionLoading(false);
         }
       }}
     />
@@ -302,7 +310,7 @@ export default function Header() {
   );
 }
 
-function PushPermissionModal({ open, onClose, onAllow }) {
+function PushPermissionModal({ open, onClose, onAllow, loading }) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
@@ -315,15 +323,17 @@ function PushPermissionModal({ open, onClose, onAllow }) {
         <div className="flex items-center justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+            className={`px-4 py-2 rounded-lg border border-gray-300 text-gray-700 transition ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+            disabled={!!loading}
           >
             No thanks
           </button>
           <button
             onClick={onAllow}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+            className={`px-4 py-2 rounded-lg text-white transition ${loading ? 'bg-blue-400 opacity-90 cursor-wait' : 'bg-blue-600 hover:bg-blue-700'}`}
+            disabled={!!loading}
           >
-            Allow
+            {loading ? 'Enabling…' : 'Allow'}
           </button>
         </div>
       </div>

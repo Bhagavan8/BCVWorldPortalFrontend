@@ -316,19 +316,22 @@ const JobUploadForm = () => {
                     const company = payload.companyName ? ` at ${payload.companyName}` : '';
                     const locations = Array.isArray(payload.locations) && payload.locations.length > 0 ? ` • ${payload.locations.join(', ')}` : '';
                     const url = jobId ? `/job?id=${jobId}` : `/jobs`;
+                    // Try backend broadcast endpoint
                     const notifyRes = await fetch(`${API_BASE_URL}/api/notifications/test`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ userId: null, title, body: `Apply${company}${locations}`, url })
                     });
-                    let delivered = 0;
-                    try { const json = await notifyRes.json(); delivered = json?.delivered ?? 0; } catch {}
                     if (!notifyRes.ok) {
-                        showToast('warning', 'Push broadcast failed');
-                    } else if (delivered === 0) {
-                        showToast('warning', 'No subscribers received the notification');
+                        // Fallback to Firebase Cloud Function direct broadcast
+                        const cfUrl = 'https://asia-south1-bcvworld-cc40e.cloudfunctions.net/notifyJobCreated';
+                        await fetch(cfUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ job: { ...payload, id: jobId }, type: payload.jobType || 'private', id: jobId })
+                        });
                     }
-                } catch (_) {}
+                } catch {}
                 showToast('success', 'Job posted successfully');
                 setFormData({
                     jobTitle: '',
