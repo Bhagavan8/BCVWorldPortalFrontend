@@ -317,19 +317,18 @@ const JobUploadForm = () => {
                     const locations = Array.isArray(payload.locations) && payload.locations.length > 0 ? ` • ${payload.locations.join(', ')}` : '';
                     const url = jobId ? `/job?id=${jobId}` : `/jobs`;
                     // Try backend broadcast endpoint
-                    const notifyRes = await fetch(`${API_BASE_URL}/api/notifications/test`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: null, title, body: `Apply${company}${locations}`, url })
-                    });
-                    if (!notifyRes.ok) {
-                        // Fallback to Firebase Cloud Function direct broadcast
-                        const cfUrl = 'https://asia-south1-bcvworld-cc40e.cloudfunctions.net/notifyJobCreated';
-                        await fetch(cfUrl, {
+                    {
+                        const token = AuthService.getToken();
+                        const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+                        if (token) headers['Authorization'] = `Bearer ${token}`;
+                        const notifyRes = await fetch(`${API_BASE_URL}/api/notifications/broadcast-job`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ job: { ...payload, id: jobId }, type: payload.jobType || 'private', id: jobId })
+                            headers,
+                            body: JSON.stringify({ job: { ...payload, id: jobId } })
                         });
+                        if (!notifyRes.ok) {
+                            console.warn('Broadcast push failed', notifyRes.status);
+                        }
                     }
                 } catch {}
                 showToast('success', 'Job posted successfully');
