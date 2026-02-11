@@ -321,14 +321,12 @@ const JobUploadForm = () => {
                         const token = AuthService.getToken();
                         const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
                         if (token) headers['Authorization'] = `Bearer ${token}`;
-                        const notifyRes = await fetch(`${API_BASE_URL}/api/notifications/broadcast-job`, {
+                        // Fire-and-forget to avoid blocking job creation UX
+                        fetch(`${API_BASE_URL}/api/notifications/broadcast-job`, {
                             method: 'POST',
                             headers,
                             body: JSON.stringify({ job: { ...payload, id: jobId } })
-                        });
-                        if (!notifyRes.ok) {
-                            console.warn('Broadcast push failed', notifyRes.status);
-                        }
+                        }).catch(() => {});
                     }
                 } catch {}
                 showToast('success', 'Job posted successfully');

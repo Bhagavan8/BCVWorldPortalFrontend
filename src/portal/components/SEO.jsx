@@ -37,12 +37,15 @@ const SEO = ({ title, description, keywords, image, url, noindex, type = 'websit
     setMeta('og:description', finalDesc, 'property');
     setMeta('og:image', finalImage, 'property');
     setMeta('og:site_name', 'BCVWORLD', 'property');
+    setMeta('og:locale', (navigator.language || 'en_US').replace('-', '_'), 'property');
+    setMeta('og:image:alt', title || 'BCVWORLD', 'property');
     if (finalType === 'article') {
       if (publishedTime) setMeta('article:published_time', publishedTime, 'property');
       if (section) setMeta('article:section', section, 'property');
       if (Array.isArray(tags)) {
         tags.forEach(t => setMeta('article:tag', t, 'property'));
       }
+      setMeta('article:author', 'BCVWORLD', 'property');
     }
 
     setMeta('twitter:card', 'summary_large_image');
@@ -50,6 +53,8 @@ const SEO = ({ title, description, keywords, image, url, noindex, type = 'websit
     setMeta('twitter:title', finalTitle);
     setMeta('twitter:description', finalDesc);
     setMeta('twitter:image', finalImage);
+    setMeta('twitter:site', '@bcvworld');
+    setMeta('twitter:creator', '@bcvworld');
     
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {

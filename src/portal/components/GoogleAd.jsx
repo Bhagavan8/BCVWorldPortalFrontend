@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px', immediate = true }) {
+function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px', immediate = true, containerMaxWidth = null }) {
   const adRef = useRef(null);
   const [adLoaded, setAdLoaded] = useState(false);
 
@@ -74,17 +74,34 @@ function GoogleAd({ slot, className, format = 'auto', fullWidthResponsive = 'tru
     }
   }, [adLoaded, loadDelay, rootMargin, immediate]);
 
+  const containerStyle = {
+    minHeight,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  };
+
+  const innerStyle = {
+    width: '100%',
+    maxWidth: containerMaxWidth || (layout === 'in-article' ? '700px' : undefined),
+    margin: '0 auto'
+  };
+
   return (
-    <div style={{ minHeight, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <ins
-        ref={adRef}
-        className={`adsbygoogle${className ? ` ${className}` : ''}`}
-        style={{ ...style, display: 'block', width: '100%' }}
-        data-ad-client="ca-pub-6284022198338659"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={fullWidthResponsive}
-      ></ins>
+    <div style={containerStyle}>
+      <div style={innerStyle}>
+        <ins
+          ref={adRef}
+          className={`adsbygoogle${className ? ` ${className}` : ''}`}
+          style={{ ...style, display: 'block', width: '100%', textAlign: layout ? 'center' : (style.textAlign || 'inherit') }}
+          data-ad-client="ca-pub-6284022198338659"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={fullWidthResponsive}
+          {...(layout ? { 'data-ad-layout': layout } : {})}
+        ></ins>
+      </div>
     </div>
   );
 }

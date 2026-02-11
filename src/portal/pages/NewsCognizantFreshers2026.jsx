@@ -1,44 +1,87 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 import '../assets/css/News.css';
 import '../assets/css/NewsDetailRef.css';
+import './JobDetails.css';
+import { BiHome, BiChevronRight, BiUser, BiLogoFacebook, BiLogoInstagram, BiLogoWhatsapp, BiCommentDots, BiChat } from 'react-icons/bi';
 import GoogleAd from '../components/GoogleAd';
-import { 
-  BiHome, 
-  BiChevronRight, 
-  BiLogoFacebook, 
-  BiLogoTwitter, 
-  BiLogoWhatsapp 
-} from 'react-icons/bi';
+import {BiSolidBadgeCheck,BiSolidUser } from 'react-icons/bi';
+import { API_BASE_URL } from '../../utils/config';
 
 const NewsCognizantFreshers2026 = () => {
-  const title = 'Cognizant to Hire 25,000 Freshers in 2026';
-  const description = 'Cognizant plans to hire 24,000–25,000 freshers in 2026, a major opportunity for engineering and CS graduates focusing on digital, cloud, and AI services.';
-  const keywords = 'Cognizant hiring 2026, freshers jobs, IT jobs, campus placements, software developer jobs, programmer analyst trainee, QA engineer, cloud associate, Java, Python, DSA, projects, job portal';
+  const title = 'Cognizant to Hire About 25,000 Freshers in 2026 – Complete Guide to Prepare, Get Shortlisted, and Crack the Interview';
+  const description = 'Cognizant targets ~24,000–25,000 fresher hires in 2026, expanding its bottom-of-the-pyramid workforce strategy.';
+  const keywords = 'Cognizant GenC, GenC Pro, GenC Next, 2026–2027 hiring, freshers, IT jobs';
   const image = '/assets/images/news/story.webp';
   const url = 'https://bcvworld.com/news/cognizant-25k-freshers-2026';
+  const slug = 'cognizant-25k-freshers-2026';
+  const returnToPath = (typeof window !== 'undefined' && window.location?.pathname) ? (window.location.pathname + window.location.search) : `/news/${slug}`;
   const publishedTime = new Date().toISOString();
   const section = 'Featured News';
-  const tags = ['Cognizant', 'Freshers Hiring', 'IT Jobs 2026', 'Campus Placements', 'Digital', 'Cloud', 'AI'];
-  const readingTime = '5 min read';
+  const tags = ['Cognizant', 'Freshers Hiring', 'IT Jobs 2026'];
+  
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: title,
     description,
-    image: [window.location.origin + image],
+    image: [typeof window !== 'undefined' ? window.location.origin + image : image],
     datePublished: publishedTime,
     dateModified: publishedTime,
     author: { '@type': 'Organization', name: 'BCVWORLD' },
     publisher: {
       '@type': 'Organization',
       name: 'BCVWORLD',
-      logo: { '@type': 'ImageObject', url: window.location.origin + '/logo192.png' }
+      logo: { '@type': 'ImageObject', url: (typeof window !== 'undefined' ? window.location.origin : '') + '/logo192.png' }
     },
     mainEntityOfPage: url
   };
 
+  const [showMore, setShowMore] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showLeftAd, setShowLeftAd] = useState(true);
+  const [showRightAd, setShowRightAd] = useState(true);
+  const [hideStickyAds, setHideStickyAds] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState([]);
+  const [postingComment, setPostingComment] = useState(false);
+  const [user, setUser] = useState(null);
+  const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const emphasize = (t) => {
+    const keys = [
+      'Cognizant','25,000','freshers','2026','2026–2027','GenC','GenC Pro','GenC Next',
+      'Java','Python','C#','OOPs','collections','exception handling','multithreading','SQL',
+      'Data Structures and Algorithms','DSA','projects','resume','interview','React','Spring Boot','Node.js','full-stack',
+      'coding','aptitude','technical interview','HR interview', 'Cognizant’s'
+    ];
+    let out = t;
+    keys.forEach(k => {
+      const re = new RegExp(`\\b${escapeRegExp(k)}\\b`, 'gi');
+      out = out.replace(re, (m) => `<strong>${m}</strong>`);
+    });
+    return out;
+  };
+  const websites = [
+    { label: 'leetcode.com', url: 'https://leetcode.com', purpose: 'DSA problems' },
+    { label: 'hackerrank.com', url: 'https://hackerrank.com', purpose: 'Coding + SQL' },
+    { label: 'code360.com', url: 'https://code360.com', purpose: 'Interview practice' },
+    { label: 'geeksforgeeks.org', url: 'https://geeksforgeeks.org', purpose: 'Concepts + theory' },
+    { label: 'indiabix.com', url: 'https://indiabix.com', purpose: 'Quant + Logical' },
+    { label: 'prepinsta.com', url: 'https://prepinsta.com', purpose: 'Company-specific questions' },
+    { label: 'freshersworld.com', url: 'https://freshersworld.com', purpose: 'Placement tests' },
+    { label: 'youtube.com', url: 'https://youtube.com', purpose: 'Free tutorials' },
+    { label: 'freecodecamp.org', url: 'https://freecodecamp.org', purpose: 'Full stack courses' },
+    { label: 'roadmap.sh', url: 'https://roadmap.sh', purpose: 'Learning paths' },
+    { label: 'spring.io/guides', url: 'https://spring.io/guides', purpose: 'Spring Boot official docs' },
+    { label: 'react.dev', url: 'https://react.dev', purpose: 'React docs' },
+    { label: 'linkedin.com', url: 'https://linkedin.com', purpose: 'Networking + jobs' },
+    { label: 'naukri.com', url: 'https://naukri.com', purpose: 'Off-campus hiring' },
+    { label: 'indeed.com', url: 'https://indeed.com', purpose: 'Job search' },
+    { label: 'github.com', url: 'https://github.com', purpose: 'Host projects' }
+  ];
   useEffect(() => {
     const progressEl = document.querySelector('.reading-progress');
     const onScroll = () => {
@@ -48,15 +91,148 @@ const NewsCognizantFreshers2026 = () => {
       const total = article.scrollHeight - window.innerHeight;
       const scrolled = Math.min(Math.max(window.scrollY - top, 0), total);
       const pct = total > 0 ? (scrolled / total) * 100 : 0;
-      progressEl.style.width = `${pct}%`;
+      progressEl.style.setProperty('--scroll', `${pct}%`);
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      const distanceToBottom = docHeight - scrollPosition;
+      setHideStickyAds(distanceToBottom < 400);
     };
     onScroll();
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    const onResize = () => setIsMobile(window.innerWidth < 992);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch {}
+    }
+  }, []);
+
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const endpoints = [
+          `${API_BASE_URL}/api/public/news/${slug}/comments`,
+          `${API_BASE_URL}/api/news/${slug}/comments`,
+          `${API_BASE_URL}/api/comments?type=NEWS&slug=${encodeURIComponent(slug)}`
+        ];
+        let loaded = false;
+        for (const urlTry of endpoints) {
+          const res = await fetch(urlTry, { headers: { Accept: 'application/json' } });
+          if (res.ok) {
+            const data = await res.json();
+            setComments(Array.isArray(data) ? data : (data?.content || []));
+            loaded = true;
+            break;
+          }
+        }
+        if (!loaded) setComments([]);
+      } catch {}
+    };
+    fetchComments();
+  }, []);
+
+  const handlePostComment = async () => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      toast.error('Please login to comment');
+      return;
+    }
+    let userObj;
+    try {
+      userObj = JSON.parse(userStr);
+    } catch {
+      toast.error('Invalid user session');
+      return;
+    }
+    if (!commentText.trim()) {
+      toast.error('Comment cannot be empty');
+      return;
+    }
+    const actualUser = userObj.data || userObj.user || userObj;
+    let userId = actualUser.id || actualUser.userId || actualUser.uid;
+    if (!userId && (actualUser.token || actualUser.access_token)) {
+      const token = actualUser.token || actualUser.access_token;
+      const decoded = parseJwt(token);
+      if (decoded) {
+        userId = decoded.id || decoded.userId || decoded.uid || decoded.sub;
+      }
+    }
+    const userName = actualUser.name || actualUser.username || (actualUser.email ? actualUser.email.split('@')[0] : 'User');
+    const userEmail = actualUser.email || '';
+    if (!userId) {
+      toast.error('Invalid user session. Please logout and login again.');
+      return;
+    }
+    // Match JobDetails behavior: simple JSON headers, no auth/CSRF
+    const headers = { 'Content-Type': 'application/json' };
+    setPostingComment(true);
+    try {
+      const payload = JSON.stringify({
+        userId,
+        user_id: userId,
+        userName,
+        email: userEmail,
+        content: commentText,
+        type: 'NEWS',
+        slug
+      });
+      const postEndpoints = [
+        `${API_BASE_URL}/api/public/news/${slug}/comments`,
+        `${API_BASE_URL}/api/news/${slug}/comments`,
+        `${API_BASE_URL}/api/comments`
+      ];
+      let success = false;
+      let lastError = '';
+      for (const urlTry of postEndpoints) {
+        const response = await fetch(urlTry, { method: 'POST', headers, body: payload });
+        if (response.ok) {
+          const newComment = await response.json();
+          setComments(prev => [newComment, ...prev]);
+          setCommentText('');
+          toast.success('Comment posted successfully!');
+          success = true;
+          break;
+        } else {
+          lastError = `${response.status} ${response.statusText}`;
+          try {
+            const txt = await response.text();
+            if (txt) lastError += `: ${txt}`;
+          } catch {}
+        }
+      }
+      if (!success) toast.error(`Failed to post comment (${lastError || 'unknown error'})`);
+    } catch {
+      toast.error('Something went wrong');
+    } finally {
+      setPostingComment(false);
+    }
+  };
+ 
   return (
-    <div className="news-detail-page bg-white pb-5">
+    <div className="job-details-page">
       <SEO
         title={title}
         description={description}
@@ -70,20 +246,39 @@ const NewsCognizantFreshers2026 = () => {
         structuredData={structuredData}
       />
 
-      <main className="container-fluid py-4 main-content">
-        <div className="row">
-          <div className="col-lg-2">
-            <div className="sticky-sidebar">
-              <div className="ad-space vertical-ad mb-4" id="left-sidebar-ad">
-                <GoogleAd slot="9038226694" minHeight="280px" />
-              </div>
+      <main className={`container-fluid py-4 main-content main-content-area ${(!isMobile && showLeftAd) ? 'has-left-ad' : ''} ${(!isMobile && showRightAd) ? 'has-right-ad' : ''}`}>
+        <div className="news-hero" style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          <div className="news-hero-inner">
+            <h1 className="news-hero-title">{title}</h1>
+            <div className="news-hero-meta">
+              
+                         </div>
+           
+          </div>
+        </div>
+        {!isMobile && showLeftAd && (
+          <div className="ad-column ad-left" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
+            <div className="ad-sidebar">
+              <button className="ad-close-btn" onClick={() => setShowLeftAd(false)} title="Close Ad">×</button>
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd slot="7861382254" minHeight="600px" immediate={true} />
             </div>
           </div>
-
-          <div className="col-lg-7">
+        )}
+        {!isMobile && showRightAd && (
+          <div className="ad-column ad-right" style={{ opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
+            <div className="ad-sidebar">
+              <button className="ad-close-btn" onClick={() => setShowRightAd(false)} title="Close Ad">×</button>
+              <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+              <GoogleAd slot="2609055575" minHeight="600px" immediate={true} />
+            </div>
+          </div>
+        )}
+        <div className="row">
+          <div className="col-12">
             <article id="newsDetail" className="news-article">
               <div className="breadcrumb-wrapper">
-                <div className="container p-0">
+               
                   <nav aria-label="breadcrumb" className="custom-breadcrumb">
                     <ol className="breadcrumb align-items-center">
                       <li className="breadcrumb-item">
@@ -95,221 +290,520 @@ const NewsCognizantFreshers2026 = () => {
                       <li className="breadcrumb-separator">
                         <BiChevronRight />
                       </li>
-                      <li className="breadcrumb-item">
-                        <Link to="/news" className="home-link">
-                          <span>News</span>
-                        </Link>
-                      </li>
-                      <li className="breadcrumb-separator">
-                        <BiChevronRight />
-                      </li>
                       <li className="breadcrumb-item active news-title text-truncate">
                         <span className="truncate-text">{title}</span>
                         <span className="ellipsis">...</span>
                       </li>
                     </ol>
                   </nav>
-                </div>
+            
+          
+            <div className="post-meta-block">
+              <div className="post-meta-author-row">
+                <BiSolidUser style={{ fontSize: '18px' }} />
+                <span className="post-meta-author">By BCVWORLD</span>
+                <BiSolidBadgeCheck style={{ color: '#0066cc', fontSize: '14px' }} />
               </div>
-
-              <div className="ad-section-responsive">
-                <GoogleAd slot="3330604448" minHeight="250px" immediate={true} />
-              </div>
-
-              <div className="article-header mb-4">
-                <div className="category-badge">Featured</div>
-                <h1 className="article-title">{title}</h1>
-                <div className="article-meta">
-                  <span className="author">BCVWORLD Editorial</span>
-                  <span className="date">{new Date(publishedTime).toLocaleDateString()}</span>
-                  <span className="reading-time">{readingTime}</span>
-                </div>
-                <div className="d-flex align-items-center gap-2 mt-2">
-                  <a className="btn btn-sm btn-outline-primary" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Share to Facebook">Facebook</a>
-                  <a className="btn btn-sm btn-outline-info" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noreferrer" aria-label="Share to Twitter">Twitter</a>
-                  <a className="btn btn-sm btn-outline-success" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + url)}`} target="_blank" rel="noreferrer" aria-label="Share to WhatsApp">WhatsApp</a>
-                </div>
-              </div>
-
-              <div className="featured-image-container mb-4">
-                <img
-                  src={image}
-                  alt={title}
-                  className="img-fluid rounded-4 shadow-sm"
-                  style={{ maxHeight: '320px', width: '100%', height: 'auto', objectFit: 'cover' }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/assets/images/news/story.webp';
-                  }}
-                />
-              </div>
-
-              <div className="social-share-sidebar">
-                <a className="social-share-btn facebook" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Share to Facebook"><BiLogoFacebook /></a>
-                <a className="social-share-btn twitter" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noreferrer" aria-label="Share to Twitter"><BiLogoTwitter /></a>
-                <a className="social-share-btn whatsapp" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + url)}`} target="_blank" rel="noreferrer" aria-label="Share to WhatsApp"><BiLogoWhatsapp /></a>
-              </div>
-
-              <div className="article-content" data-ad-slots="3297555670,3963785998,7711459312,2542893115,9887848907,1054551626">
-                <p data-paragraph="0" className="lead text-secondary">
-                  In a strong signal of confidence in the technology services market, Cognizant has announced plans to hire approximately
-                  24,000–25,000 freshers in 2026, marking a 20% increase over its 2025 intake of nearly 20,000 graduates. This expansion
-                  reflects the company’s long-term workforce strategy and growing demand for digital, cloud, and AI-driven services across
-                  global clients. For thousands of engineering and computer science graduates, this could translate into one of the biggest
-                  hiring opportunities in the IT services sector next year.
-                </p>
-
-                <h3 className="h5 mt-4 fw-semibold">Workforce Strategy</h3>
-                <p data-paragraph="1" className="fs-5 lh-lg text-secondary">
-                  Speaking during the quarterly earnings discussion, CEO Ravi Kumar S highlighted Cognizant’s focus on strengthening what is
-                  often called the “bottom of the pyramid” workforce model. In simple terms, the company aims to build a larger base of
-                  entry-level engineers who can be trained internally and deployed across projects. This approach not only helps control costs
-                  but also ensures a steady pipeline of skilled professionals who can adapt quickly to evolving technologies and client
-                  requirements.
-                </p>
-
-                <h3 className="h5 mt-4 fw-semibold">Entry-Level Roles</h3>
-                <p data-paragraph="2" className="fs-5 lh-lg text-secondary">
-                  For freshers, this strategy opens the door to multiple entry-level roles such as programmer analyst trainee, software
-                  developer, quality assurance engineer, and support or cloud associates. These positions typically come with structured
-                  onboarding programs, technical training, and real project exposure. Unlike lateral hiring, where experience is mandatory,
-                  these roles prioritize learning ability, strong fundamentals, and problem-solving skills, making them ideal for recent
-                  graduates.
-                </p>
-
-                <div className="bg-light p-4 rounded-3 border">
-                  <h3 className="h6 mb-3 text-dark">Practical Projects</h3>
-                  <ul className="mb-0">
-                    <li>Task manager with authentication and REST APIs</li>
-                    <li>Job portal with search, filters, and application tracking</li>
-                    <li>E-commerce site with cart, orders, and admin dashboard</li>
-                  </ul>
-                </div>
-
-                <h3 className="h5 mt-4 fw-semibold">Broader Skills</h3>
-                <p className="fs-5 lh-lg text-secondary">
-                  Building real-world projects is equally important. Recruiters prefer candidates who can demonstrate what they have built
-                  rather than what they have memorized. Simple applications such as a task manager, job portal, or e-commerce website can
-                  showcase problem-solving skills and technical confidence. Adding exposure to trending technologies like cloud platforms,
-                  DevOps tools, automation testing, or data analytics can further strengthen employability and help candidates stand out
-                  during resume shortlisting.
-                </p>
-
-                <h3 className="h5 mt-4 fw-semibold">Soft Skills</h3>
-                <p className="fs-5 lh-lg text-secondary">
-                  Apart from technical expertise, soft skills play a crucial role in service-based companies. Since employees interact
-                  directly with clients, communication, teamwork, and adaptability are highly valued. Being able to clearly explain your
-                  project, discuss challenges you solved, and show a willingness to learn can often make a stronger impression than complex
-                  theoretical knowledge.
-                </p>
-
-                <div className="bg-white border rounded-3 p-4 mt-4">
-                  <h3 className="h6 mb-3 text-dark">Key Highlights</h3>
-                  <ul className="mb-0">
-                    <li>Intake target: 24,000–25,000 freshers in 2026</li>
-                    <li>Focus areas: Digital, Cloud, AI-driven services</li>
-                    <li>Entry-level roles: Programmer Analyst, Developer, QA, Cloud/Support</li>
-                    <li>Core skills: One language, DSA, databases, APIs, Git</li>
-                    <li>Standout factor: Real projects and clear communication</li>
-                  </ul>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-100 rounded-3 p-4 mt-4">
-                  <h3 className="h6 mb-3 text-blue-700">How to Prepare</h3>
-                  <ul className="mb-0">
-                    <li>Pick Java or Python and complete a structured roadmap</li>
-                    <li>Practice DSA daily; aim for 100+ problems</li>
-                    <li>Build 2–3 projects and deploy them</li>
-                    <li>Document work clearly in a portfolio and resume</li>
-                  </ul>
-                </div>
-
-                <h3 className="h5 mt-4 fw-semibold">Outlook</h3>
-                <p className="fs-5 lh-lg text-secondary">
-                  Overall, Cognizant’s plan to hire 25,000 freshers represents more than just numbers — it signals renewed momentum in the IT
-                  job market and a significant opportunity for aspiring engineers. For students willing to prepare strategically over the next
-                  few months, this hiring wave could be the perfect gateway into the tech industry. With the right combination of
-                  fundamentals, projects, and confidence, landing a role at Cognizant is not just possible — it’s well within reach.
-                </p>
-              </div>
-
-              <div className="ad-section-responsive">
-                <GoogleAd slot="6662935672" minHeight="250px" immediate={false} />
-              </div>
-
-              <div className="article-source mt-3" id="articleSourceContainer"></div>
-
-              <div className="ad-section-responsive">
-                <GoogleAd slot="6340320288" minHeight="250px" immediate={false} />
-              </div>
-
-              <div className="article-tags mt-4"></div>
-
-              <div className="comments-section mt-4">
-                <h3>Comments (<span id="commentCount">0</span>)</h3>
-                <div id="commentsContainer" className="comments-list mb-4"></div>
-                <div className="comment-form mt-4">
-                  <div id="loginPrompt" className="alert alert-info d-none">
-                    Please <Link to="/login" id="loginLink">login</Link> to post a comment.
-                  </div>
-                  <div id="commentFormContent">
-                    <textarea id="commentText" className="form-control" placeholder="Write your comment..." rows="3"></textarea>
-                    <div className="d-flex justify-content-between align-items-center mt-2">
-                      <small className="text-muted">Maximum 500 characters</small>
-                      <button id="postComment" className="btn btn-primary">Post Comment</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="ad-section-responsive">
-                <GoogleAd slot="5885040623" format="fluid" style={{ textAlign: 'center' }} minHeight="180px" immediate={false} />
-              </div>
-
-              <nav className="article-navigation" aria-label="Article navigation">
-                <div className="nav-links d-flex justify-content-between">
-                  <Link to="/news" className="nav-item prev text-decoration-none" aria-label="Previous">
-                    <div className="nav-content">
-                      <span className="nav-label">Back</span>
-                      <h4 className="nav-title">More News & Insights</h4>
-                      <span className="nav-meta"><span className="nav-category">News</span></span>
-                    </div>
-                  </Link>
-
-                  <Link to="/jobs" className="nav-item next text-decoration-none" aria-label="Next">
-                    <div className="nav-content text-end">
-                      <span className="nav-label">Explore</span>
-                      <h4 className="nav-title">Latest Jobs on BCVWorld</h4>
-                      <span className="nav-meta"><span className="nav-category">Jobs</span></span>
-                    </div>
-                  </Link>
-                </div>
-              </nav>
-
-              <div className="ad-section-responsive mb-4">
-                <GoogleAd slot="8172701732" minHeight="250px" immediate={false} />
-              </div>
-
-              {/* Related Articles section removed as requested */}
-
-              <div className="ad-section-responsive mt-4">
-                <GoogleAd slot="1606582944" minHeight="250px" immediate={false} />
-              </div>
-            </article>
-          </div>
-
-          <div className="col-lg-3">
-            <div className="sticky-sidebar">
-              <div className="ad-section-responsive">
-                <GoogleAd slot="4120516902" minHeight="250px" />
-              </div>
-              <div className="ad-section-responsive">
-                <GoogleAd slot="6722521710" minHeight="250px" />
-              </div>
-              <div className="ad-space sidebar-ad mb-4" id="right-sidebar-ad">
-                <GoogleAd slot="4287736546" minHeight="280px" />
+              <div className="post-meta-date">Published on: {new Date(publishedTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+              <div className="post-meta-share">
+                <a className="share-mini fb" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Share to Facebook">
+                  <BiLogoFacebook />
+                </a>
+                <a className="share-mini ig" href={`https://www.instagram.com/?url=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer" aria-label="Share to Instagram">
+                  <BiLogoInstagram />
+                </a>
+                <a className="share-mini wa" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + url)}`} target="_blank" rel="noreferrer" aria-label="Share to WhatsApp">
+                  <BiLogoWhatsapp />
+                </a>
               </div>
             </div>
+          
+              </div>
+
+        
+              
+
+              <div className="article-content">
+                <h2 className="article-heading">
+                  Cognizant to Hire About <strong>25,000 Freshers</strong> in <strong>2026</strong> – Complete Guide to Prepare, Get Shortlisted, and Crack the Interview
+                </h2>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="8604344637" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('The year 2026 is shaping up to be a golden opportunity for fresh graduates who want to enter the IT industry. Cognizant, one of the world’s leading IT services and consulting companies, is expected to hire nearly 25,000 freshers across India and other global locations. This large-scale hiring plan means thousands of opportunities in software development, testing, support, cloud, and data-related roles. For students and recent graduates, this is not just another hiring drive — it is a career-defining chance to start with a reputed multinational company that offers strong learning, stable growth, and international exposure. However, while the number sounds huge, competition will also be intense. Only candidates with the right preparation, skills, and presentation will stand out.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('To succeed in such mass hiring, the first thing you must understand is that companies like Cognizant do not expect freshers to know everything, but they expect strong fundamentals. Your core programming knowledge must be solid. Choose at least one primary language such as Java, Python, or C#, and learn it deeply instead of learning many languages superficially. If you choose Java, focus clearly on concepts like OOPs, collections, exception handling, multithreading basics, and database connectivity. Interviewers often test how well you understand fundamentals rather than advanced frameworks. If you can explain concepts clearly and write clean code, you are already ahead of many candidates.') }} />
+                </p>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="9585517720" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('Along with programming, Data Structures and Algorithms play a major role in shortlisting. Many candidates get rejected in the coding round because they lack problem-solving skills. You should practice arrays, strings, linked lists, stacks, queues, hash maps, recursion, trees, sorting, and searching techniques regularly. The goal is not memorizing solutions but developing logical thinking. Spend time solving problems daily and learn how to optimize your approach. Even medium-level questions can become easy once you build consistency. Recruiters look for candidates who can think logically under pressure, not just those who know syntax.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('Another area that freshers often underestimate is databases and SQL. In real-world projects, most applications interact with databases, so SQL knowledge becomes essential. You must know how to write queries using SELECT, JOIN, GROUP BY, and subqueries. You should also understand indexes, normalization, and transactions. During interviews, simple SQL questions are frequently asked, and being comfortable with them creates a strong impression. Good database knowledge also helps you design better projects, which improves your resume quality.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('In today’s market, web development skills significantly increase your chances of selection. Companies prefer candidates who can build end-to-end applications rather than only writing basic programs. Learning HTML, CSS, JavaScript, and a frontend framework like React will help you create modern interfaces. Pair this with a backend technology such as Spring Boot or Node.js to build complete full-stack applications. When you show that you can develop both frontend and backend, recruiters see you as more job-ready. Full-stack developers are often given priority because they can contribute to projects quickly.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('Preparation becomes easier when you follow a structured roadmap. Instead of studying randomly, divide your preparation month by month. Spend the first couple of months mastering programming basics and SQL. Then dedicate time to Data Structures and Algorithms practice. After that, move into frontend and backend development and start building real projects. Finally, focus on resume preparation, mock interviews, and applying for jobs. A clear plan avoids burnout and keeps you progressing steadily. Consistency for six months can completely transform your profile.') }} />
+                </p>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="8861804438" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('Projects are one of the most important elements that help you get shortlisted. Recruiters rarely pay attention to simple academic projects like calculators or static websites. They want to see real-world applications that demonstrate problem-solving and technical skills. Building projects such as a job portal, employee management system, e-commerce platform, or bug tracking system shows practical understanding. Your project should include authentication, APIs, database integration, and deployment. Hosting your project online and sharing the GitHub link adds credibility. When interviewers see a live application, they immediately recognize your effort and seriousness.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('While building projects, focus on quality rather than quantity. Two strong projects are better than ten weak ones. Write clean code, follow proper folder structure, and add documentation. Mention challenges you faced and how you solved them. These details become great talking points during interviews. Often, technical interviews revolve around your project discussion. If you can confidently explain architecture, database design, and implementation choices, you will stand out naturally without needing fancy answers.') }} />
+                </p>
+                 <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="4010601300" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+                <p className="fs-5 lh-lg text-dark">
+                  <span dangerouslySetInnerHTML={{ __html: emphasize('Your resume acts as your first impression, so it must be clean, simple, and impactful. Keep it to one page and avoid unnecessary information. Clearly group your skills into languages, frameworks, databases, and tools. Highlight your projects with bullet points and measurable achievements, such as performance improvements or features implemented. Add GitHub and LinkedIn links so recruiters can verify your work. Avoid long paragraphs or complex designs. A well-structured resume that quickly communicates your strengths increases your chances of getting shortlisted significantly.') }} />
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  Understanding the selection process also helps you prepare smartly. Typically, Cognizant’s hiring process includes an aptitude test, a coding round, a technical interview, and an HR round. Aptitude checks logical reasoning and basic mathematics. Coding rounds test problem-solving skills. Technical interviews focus on programming fundamentals and projects. HR interviews evaluate communication skills and cultural fit. If you prepare for each stage systematically, the process becomes much less stressful. Many candidates fail simply because they don’t know what to expect.
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  During interviews, confidence and clarity matter as much as knowledge. Speak slowly, explain your thoughts clearly, and don’t rush answers. If you don’t know something, admit honestly and try to reason it out. Interviewers appreciate honesty more than guessing. Most importantly, know your projects inside out. Be prepared to explain every line of code and design decision. Your project is your strongest weapon, so treat it seriously.
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  Daily habits can make a big difference over time. Spend a few hours each day coding, solving problems, and improving your project. Read about new technologies, contribute to GitHub, and update your LinkedIn profile regularly. Networking with professionals and applying to jobs consistently also increases your exposure. Opportunities often come when preparation meets visibility. The more active you are, the higher your chances of getting noticed.
+                </p>
+                <p className="fs-5 lh-lg text-dark">
+                  In conclusion, the upcoming fresher hiring drive by Cognizant is a huge opportunity, but success will depend on preparation and smart work. Focus on fundamentals, practice coding daily, build strong projects, create a clean resume, and prepare confidently for interviews. With the right strategy and consistency, you can absolutely secure your place among the selected candidates. Treat this journey as an investment in yourself, and stay disciplined. If you start today and stick to your plan, 2026 could very well be the year you launch your professional career with one of the most respected IT companies in the world.
+                </p>
+
+               
+                  <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="1982359870" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+                <div className="content-section">
+                  <h3>1. What to Study – Skill Preparation (Core Technical)</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th>Area</th>
+                          <th>Topics to Cover</th>
+                          <th>Level Needed</th>
+                          <th>Why Important</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Programming (Java/Python/C#)</td>
+                          <td>OOPs, Collections, Exception Handling, Loops, APIs</td>
+                          <td>Strong</td>
+                          <td>Used in coding + interviews</td>
+                        </tr>
+                        <tr>
+                          <td>DSA</td>
+                          <td>Arrays, Strings, Stack, Queue, HashMap, Trees, Sorting</td>
+                          <td>Medium</td>
+                          <td>Coding round elimination</td>
+                        </tr>
+                        <tr>
+                          <td>SQL/DBMS</td>
+                          <td>SELECT, JOIN, GROUP BY, Index, Normalization</td>
+                          <td>Medium</td>
+                          <td>Real project + interviews</td>
+                        </tr>
+                        <tr>
+                          <td>Web Basics</td>
+                          <td>HTML, CSS, JS</td>
+                          <td>Basic</td>
+                          <td>Frontend knowledge</td>
+                        </tr>
+                        <tr>
+                          <td>React/Angular</td>
+                          <td>Components, State, API calls</td>
+                          <td>Medium</td>
+                          <td>Full stack roles</td>
+                        </tr>
+                        <tr>
+                          <td>Backend (Spring Boot/Node)</td>
+                          <td>REST APIs, CRUD, Auth</td>
+                          <td>Medium</td>
+                          <td>Backend roles</td>
+                        </tr>
+                        <tr>
+                          <td>Testing</td>
+                          <td>SDLC, STLC, Selenium basics</td>
+                          <td>Basic</td>
+                          <td>Testing/support roles</td>
+                        </tr>
+                        <tr>
+                          <td>Cloud</td>
+                          <td>AWS EC2, Deploy app, GitHub CI/CD</td>
+                          <td>Basic–Medium</td>
+                          <td>Resume booster</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-2 text-dark">If confused: Java + Spring Boot + React + SQL = safest combo</p>
+                </div>
+
+                <div className="content-section">
+                  <h3>2. Cognizant Exam Pattern (Selection Process)</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th>Round</th>
+                          <th>What They Test</th>
+                          <th>Syllabus</th>
+                          <th>How to Prepare</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Aptitude</td>
+                          <td>Logical + Quant + English</td>
+                          <td>Percentages, Time & Work, Puzzles, Grammar</td>
+                          <td>Practice daily mock tests</td>
+                        </tr>
+                        <tr>
+                          <td>Coding</td>
+                          <td>1–2 programs</td>
+                          <td>Arrays/Strings/Logic</td>
+                          <td>LeetCode easy–medium</td>
+                        </tr>
+                        <tr>
+                          <td>Technical Interview</td>
+                          <td>Core knowledge</td>
+                          <td>OOPs, SQL, Projects, APIs</td>
+                          <td>Revise fundamentals + projects</td>
+                        </tr>
+                        <tr>
+                          <td>HR Interview</td>
+                          <td>Communication</td>
+                          <td>Tell me about yourself, relocation, goals</td>
+                          <td>Practice speaking</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="content-section">
+                  <h3>3. Detailed Aptitude Syllabus</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th>Section</th>
+                          <th>Topics</th>
+                          <th>Preparation Websites</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Quantitative</td>
+                          <td>Percentages, Profit & Loss, Ratio, Time & Work, Speed</td>
+                          <td><a href="https://indiabix.com" target="_blank" rel="noreferrer">IndiaBix</a>, <a href="https://prepinsta.com" target="_blank" rel="noreferrer">PrepInsta</a></td>
+                        </tr>
+                        <tr>
+                          <td>Logical</td>
+                          <td>Puzzles, Seating, Blood relations, Coding-decoding</td>
+                          <td><a href="https://freshersworld.com" target="_blank" rel="noreferrer">Freshersworld</a>, <a href="https://testbook.com" target="_blank" rel="noreferrer">Testbook</a></td>
+                        </tr>
+                        <tr>
+                          <td>Verbal</td>
+                          <td>Synonyms, Grammar, Reading comprehension</td>
+                          <td><a href="https://www.grammarly.com/blog/" target="_blank" rel="noreferrer">Grammarly Blog</a>, <a href="https://indiabix.com" target="_blank" rel="noreferrer">IndiaBix</a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="content-section">
+                  <h3>4. Coding Preparation</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th>Topic</th>
+                          <th>What to Practice</th>
+                          <th>Problems Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Arrays</td><td>Reverse, rotate, two sum</td><td>25</td></tr>
+                        <tr><td>Strings</td><td>Palindrome, anagram, substring</td><td>25</td></tr>
+                        <tr><td>Hashing</td><td>Frequency count, duplicates</td><td>20</td></tr>
+                        <tr><td>Stack/Queue</td><td>Balanced brackets</td><td>15</td></tr>
+                        <tr><td>Linked List</td><td>Reverse, detect loop</td><td>15</td></tr>
+                        <tr><td>Trees</td><td>Traversals</td><td>20</td></tr>
+                        <tr><td>Sorting/Search</td><td>Binary search, merge sort</td><td>20</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-2 text-dark">Total target: 150–200 problems</p>
+                </div>
+
+                <div className="content-section">
+                  <h3>5. Project Ideas (Very Important for Resume)</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th>Project</th>
+                          <th>Tech Stack</th>
+                          <th>Features to Include</th>
+                          <th>Difficulty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Job Portal</td><td>Spring Boot + React + MySQL</td><td>Login, Apply, Admin panel</td><td>⭐⭐⭐</td></tr>
+                        <tr><td>E-commerce</td><td>Full stack</td><td>Cart, Orders, Payment mock</td><td>⭐⭐⭐</td></tr>
+                        <tr><td>Employee Mgmt</td><td>Backend + DB</td><td>CRUD, roles, reports</td><td>⭐⭐</td></tr>
+                        <tr><td>Bug Tracker</td><td>Testing + API</td><td>Tickets, status, logs</td><td>⭐⭐</td></tr>
+                        <tr><td>Chat App</td><td>WebSocket + React</td><td>Real-time messages</td><td>⭐⭐⭐⭐</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-2 text-dark">Minimum: 2 strong projects</p>
+                </div>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="6361432479" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+
+                <div className="content-section">
+                  <h3>6. Resume Preparation Checklist</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr><th>Section</th><th>What to Add</th><th>Tips</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Header</td><td>Name + Phone + Email + GitHub</td><td>Keep simple</td></tr>
+                        <tr><td>Skills</td><td>Grouped properly</td><td>Don’t dump random tech</td></tr>
+                        <tr><td>Projects</td><td>2–3 strong ones</td><td>Add metrics</td></tr>
+                        <tr><td>Education</td><td>Degree + CGPA</td><td>Short</td></tr>
+                        <tr><td>Certifications</td><td>Optional</td><td>Only relevant ones</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <ul className="mt-2 text-dark">
+                    <li>Designed REST APIs handling 5k+ users</li>
+                    <li>Reduced load time by 40%</li>
+                  </ul>
+                  <p className="text-dark">Metrics = recruiter attention 🚀</p>
+                </div>
+               
+
+                <div className="content-section">
+                  <h3>7. Best Websites to Prepare</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead><tr><th>Website</th><th>Purpose</th></tr></thead>
+                      <tbody>
+                        {(showMore ? websites : websites.slice(0, 8)).map((w) => (
+                          <tr key={w.label}>
+                            <td><a href={w.url} target="_blank" rel="noreferrer">{w.label}</a></td>
+                            <td>{w.purpose}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {!showMore && (
+                    <div className="mt-2">
+                      <button className="btn btn-outline-primary" onClick={() => setShowMore(true)}>Click to add more</button>
+                    </div>
+                  )}
+                </div>
+               
+
+                <div className="content-section">
+                  <h3>8. 6-Month Study Plan (Daily Routine)</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead><tr><th>Month</th><th>Focus</th></tr></thead>
+                      <tbody>
+                        <tr><td>1</td><td>Programming basics</td></tr>
+                        <tr><td>2</td><td>SQL + OOPs</td></tr>
+                        <tr><td>3</td><td>DSA practice</td></tr>
+                        <tr><td>4</td><td>Frontend (React)</td></tr>
+                        <tr><td>5</td><td>Backend (Spring Boot) + Projects</td></tr>
+                        <tr><td>6</td><td>Resume + Mock interviews + Apply</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <ul className="mt-2 text-secondary">
+                    <li>2 hrs coding</li>
+                    <li>2 hrs DSA</li>
+                    <li>1 hr project with professional UI/UX, mobile responsive</li>
+                  </ul>
+                </div>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="1352648370" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+
+                <div className="content-section">
+                  <h3>Cognizant GenC Selection Process (2026–2027)</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr><th>Round</th><th>Duration</th><th>Focus</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Communication Assessment</td><td>~60 mins</td><td>Listening, speaking, reading, grammar (AI-based)</td></tr>
+                        <tr><td>Aptitude Test</td><td>~80 mins</td><td>Quantitative Aptitude and Game-Based Aptitude</td></tr>
+                        <tr><td>Technical Assessment</td><td>~120 mins</td><td>2 Coding, 2 SQL, 1 HTML/CSS task, 10 Cloud/Web MCQs</td></tr>
+                        <tr><td>Technical + HR Interview</td><td>Varies</td><td>DSA, DBMS, OS, networking + behavioral</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <ul className="mt-2 text-dark">
+                    <li>No negative marking in assessments</li>
+                    <li>Eligibility often requires 70% in 10th/12th/UG/PG with no active backlogs</li>
+                    <li>Platform: online phases (typically Superset), single attempt per assessment</li>
+                    <li>Applicable across 2026–2027 hiring phases</li>
+                  </ul>
+
+                  <div className="table-container mt-2">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr><th>Role</th><th>Package (Approx.)</th><th>Notes</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>GenC</td><td>₹4.0 LPA</td><td>Entry-level engineer</td></tr>
+                        <tr><td>GenC Pro</td><td>₹5.4 LPA</td><td>Advanced technical proficiency</td></tr>
+                        <tr><td>GenC Next</td><td>₹6.75 LPA</td><td>Higher performance and select roles</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div className="ad-section-responsive">
+                  <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
+                  <GoogleAd slot="1384437960" layout="in-article" format="fluid" fullWidthResponsive="true" immediate={true} />
+                </div>
+
+                <div className="content-section">
+                  <h3>Cognizant GenC Mandatory Section Breakdown</h3>
+                  <div className="table-container">
+                    <table className="responsive-table">
+                      <thead>
+                        <tr><th>Section</th><th>No. of Questions</th><th>Time</th><th>Difficulty</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Communication (Reading, Grammar, Listening, Speaking)</td><td>60</td><td>60 mins</td><td>Medium</td></tr>
+                        <tr><td>Aptitude (Quant + Game-Based)</td><td>80</td><td>80 mins</td><td>High</td></tr>
+                        <tr><td>Technical Assessment</td><td>2 Coding + 2 SQL + 1 HTML/CSS + 10 Cloud MCQs</td><td>120 mins</td><td>High</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="content-section">
+                  <h3>Interview Focus Areas</h3>
+                  <ul className="mt-1 text-dark">
+                    <li>Problem articulation and algorithm capability</li>
+                    <li>Programming concepts (Java/Python), cognitive abilities, right attitude</li>
+                    <li>DBMS, OS, networking fundamentals</li>
+                  </ul>
+                </div>
+
+                <div className="content-section">
+                  <h3>Eligibility (GenC 2026)</h3>
+                  <ul className="mt-1 text-dark">
+                    <li>2026 pass-outs: B.Tech, B.E., M.E., M.Tech</li>
+                    <li>No standing arrears; education gap ≤ 1 year</li>
+                    <li>Aggregate ≥ 60% or CGPA  6</li>
+                  </ul>
+                </div>
+              </div>
+
+              
+
+              
+
+              
+
+              <section className="comments-section">
+                <h3 className="comments-title"><BiCommentDots className="bi" /> Comments ({comments.length})</h3>
+                <div className="comment-input-area">
+                  {user ? (
+                    <>
+                      <textarea
+                        className="comment-textarea"
+                        rows="3"
+                        placeholder="Write your comment..."
+                        maxLength={500}
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                      />
+                      <div className="comments-footer">
+                        <span className="char-count">{commentText.length}/500</span>
+                        <button
+                          className="post-comment-btn"
+                          onClick={handlePostComment}
+                          disabled={postingComment || !commentText.trim()}
+                        >
+                          {postingComment ? 'Posting...' : 'Post Comment'}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="login-prompt">
+                      <p>Please login to join the discussion and post comments.</p>
+                      <Link to={`/login?returnTo=${encodeURIComponent(returnToPath)}`} className="login-btn">
+                        Login to Comment
+                      </Link>
+                    </div>
+                  )}
+                </div>
+                <div className="comments-list">
+                  {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <div key={comment.id || `${comment.userId}-${comment.createdAt}`} className="comment-item">
+                        <div className="comment-avatar">
+                          {comment.userName ? comment.userName.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                        <div className="comment-content">
+                          <div className="comment-header">
+                            <span className="comment-author">{comment.userName || 'User'}</span>
+                            <span className="comment-date">
+                              {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : ''}
+                            </span>
+                          </div>
+                          <div className="comment-text">{comment.content}</div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-comments" style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
+                      <BiChat style={{ fontSize: '2rem', marginBottom: '12px', display: 'block', margin: '0 auto' }} />
+                      <p style={{ margin: 0 }}>No comments yet. Be the first to comment!</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              
+            </article>
+
+            
+
+            
+
+            {/* Related Articles removed */}
           </div>
         </div>
       </main>
