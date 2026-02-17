@@ -231,6 +231,27 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* Reduce spacing around breadcrumb separators for a tighter look */
+.custom-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    padding: 0 0.1rem;
+    color: #9ca3af;
+}
+.custom-breadcrumb {
+    --bs-breadcrumb-item-padding-x: 0.1rem;
+}
+.custom-breadcrumb .breadcrumb-item + .breadcrumb-item {
+    padding-left: 0.1rem;
+}
+.custom-breadcrumb .breadcrumb-item {
+    margin: 0;
+}
+.custom-breadcrumb .breadcrumb-item a {
+    color: #4b5563;
+    text-decoration: none;
+}
+.custom-breadcrumb .breadcrumb-item a:hover {
+    color: #1e40af;
+}
 
 /* Match JobDetails font */
 .news-detail-page .article-title,
@@ -239,9 +260,22 @@
 }
 
 /* Prevent overlap with navbar */
+.news-detail-page {
+    padding-top: 70px;
+}
+.news-detail-page .main-content {
+    padding-top: 0;
+}
 .main-content .sticky-sidebar {
     position: sticky;
-    top: 110px;
+    top: 150px;
+    z-index: 1;
+}
+/* Ensure sidebar ads have enough dimension */
+.sticky-sidebar .adsbygoogle {
+    min-width: 160px;
+    min-height: 600px;
+    display: block !important;
 }
 
 /* Share buttons */
@@ -259,8 +293,40 @@
     border-color: #0ea5e9;
 }
 
+/* Top utility bar (Back to News + breadcrumb) */
+.top-utility-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.03), transparent);
+}
+.top-utility-bar .back-link {
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+}
+.top-utility-bar .back-link:hover {
+    text-decoration: underline;
+}
+.top-utility-bar .breadcrumb {
+    font-size: 0.95rem;
+}
+.ad-label {
+    color: #6b7280;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+    .news-detail-page { padding-top: 120px; }
+    .news-detail-page .main-content { padding-top: 0; }
+    .top-utility-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
     .news-title {
         font-size: 1.1rem;
     }
@@ -297,3 +363,31 @@
         max-height: clamp(200px, 36vh, 320px);
     }
 }
+
+/* Back Navigation (match JobDetails) */
+.back-navigation-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+.back-btn:hover { color: #004080; }
+
+.breadcrumb-nav { font-size: 14px; color: #4b5563; }
+.breadcrumb-nav a { color: #4b5563; text-decoration: none; margin: 0 5px; }
+.breadcrumb-nav a:hover { color: #0066cc; }
+.breadcrumb-nav .current { color: #333; margin-left: 5px; font-weight: 500; }

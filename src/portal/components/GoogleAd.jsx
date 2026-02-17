@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px', immediate = true, containerMaxWidth = null }) {
+function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthResponsive = 'true', style = { display: 'block' }, minHeight = '280px', loadDelay = 500, rootMargin = '600px', immediate = true, containerMaxWidth = null, showPlaceholderOnNoFill = true, adTest = undefined, collapseIfNoFill = false, fallbackSlot = null }) {
   const adRef = useRef(null);
   const [adLoaded, setAdLoaded] = useState(false);
+  const [noFill, setNoFill] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !adRef.current) return;
@@ -37,10 +39,26 @@ function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthRe
         }
     };
 
+    // No-fill detector: if status not present after a grace period, show placeholder
+    const checkTimer = setTimeout(() => {
+      const el = adRef.current;
+      if (el && !el.getAttribute('data-adsbygoogle-status')) {
+        if (fallbackSlot && !triedFallback) {
+          el.setAttribute('data-ad-slot', fallbackSlot);
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (_) {}
+          setTriedFallback(true);
+        } else {
+          setNoFill(true);
+        }
+      }
+    }, 4000);
+
     if (immediate) {
         // Load immediately, bypassing IntersectionObserver and requestIdleCallback
         loadAd();
-        return;
+        return () => clearTimeout(checkTimer);
     }
 
     // Use IntersectionObserver to load ads only when near viewport
@@ -67,26 +85,38 @@ function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthRe
       if (adRef.current) {
         observer.observe(adRef.current);
       }
-      return () => observer.disconnect();
+      return () => {
+        observer.disconnect();
+        clearTimeout(checkTimer);
+      };
     } else {
       // Fallback for older browsers
       setTimeout(loadAd, 2500);
+      return () => clearTimeout(checkTimer);
     }
-  }, [adLoaded, loadDelay, rootMargin, immediate]);
+  }, [adLoaded, loadDelay, rootMargin, immediate, fallbackSlot, triedFallback]);
 
-  const containerStyle = {
-    minHeight,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  };
+  const containerStyle = (() => {
+    if (collapseIfNoFill && noFill) {
+      return { minHeight: 0, width: '100%', display: 'none' };
+    }
+    return {
+      minHeight,
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    };
+  })();
 
   const innerStyle = {
     width: '100%',
     maxWidth: containerMaxWidth || (layout === 'in-article' ? '700px' : undefined),
     margin: '0 auto'
   };
+
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const finalAdTest = adTest !== undefined ? adTest : (isLocal ? 'on' : undefined);
 
   return (
     <div style={containerStyle}>
@@ -100,7 +130,15 @@ function GoogleAd({ slot, className, format = 'auto', layout = null, fullWidthRe
           data-ad-format={format}
           data-full-width-responsive={fullWidthResponsive}
           {...(layout ? { 'data-ad-layout': layout } : {})}
+          {...(finalAdTest ? { 'data-adtest': finalAdTest } : {})}
         ></ins>
+        {showPlaceholderOnNoFill && !collapseIfNoFill && noFill && (
+          <div style={{ position: 'relative', marginTop: '-100%', height: 0 }}>
+            <div style={{ minHeight, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '12px' }}>
+              Advertisement
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

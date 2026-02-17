@@ -47,7 +47,8 @@ const NewsDetail = () => {
                     let text = (p?.text ?? '').toString().trim();
                     const subPoints = normalizeSubPoints(p?.subPoints);
                     if (!text && subPoints.length === 0) return null;
-                    return { id: p?.id, text, subPoints };
+                    const bold = p?.bold === true || p?.isBold === true;
+                    return { id: p?.id, text, subPoints, bold };
                 };
 
                 const normalizeContent = (c) => {
@@ -128,9 +129,11 @@ const NewsDetail = () => {
     );
 
     if (!news) return (
-        <div className="container py-5 text-center">
-            <h3>Article not found</h3>
-            <Link to="/news" className="btn btn-primary mt-3">Back to News</Link>
+        <div className="news-detail-page bg-white">
+            <div className="container py-5 text-center main-content">
+                <h3>Article not found</h3>
+                <Link to="/news" className="btn btn-primary mt-3">Back to News</Link>
+            </div>
         </div>
     );
 
@@ -174,29 +177,22 @@ const NewsDetail = () => {
 
                     <div className="col-lg-8">
                         <article className="news-article">
-                            <div className="breadcrumb-wrapper">
-                                <div className="container p-0">
-                                    <nav aria-label="breadcrumb" className="custom-breadcrumb">
-                                        <ol className="breadcrumb align-items-center">
-                                            <li className="breadcrumb-item">
-                                                <Link to="/" className="home-link">
-                                                    <span>Home</span>
-                                                </Link>
-                                            </li>
-                                            <li className="breadcrumb-separator">
-                                                <span className="bi bi-chevron-right" />
-                                            </li>
-                                            <li className="breadcrumb-item active news-title text-truncate">
-                                                <span className="truncate-text">{news.title}</span>
-                                                <span className="ellipsis">...</span>
-                                            </li>
-                                        </ol>
-                                    </nav>
+                            <div className="back-navigation-bar">
+                                <Link to="/news" className="back-btn">
+                                    <span className="bi bi-chevron-left me-1" /> Back to News
+                                </Link>
+                                <div className="breadcrumb-nav">
+                                    <Link to="/">Home</Link> ›
+                                    <Link to="/news">News</Link> ›
+                                    <span className="current" title={news.title}>
+                                        {(news.title || '').length > 25 ? (news.title || '').slice(0,25) + '...' : (news.title || '')}
+                                    </span>
                                 </div>
                             </div>
 
                             <div className="ad-section-responsive mb-3">
-                                <GoogleAd slot="6166965127" format="autorelaxed" minHeight="320px" immediate={true} fullWidthResponsive="true" />
+                                <div className="ad-label text-center text-muted small mb-1">Advertisement</div>
+                                <GoogleAd slot="6166965127" format="autorelaxed" minHeight="260px" immediate={true} fullWidthResponsive="true" loadDelay={50} rootMargin="1400px" collapseIfNoFill={true} showPlaceholderOnNoFill={false} />
                             </div>
 
                             <div className="article-header mb-3">
@@ -257,11 +253,11 @@ const NewsDetail = () => {
                                         const paragraph = paragraphs[i];
                                         items.push(
                                             <div key={`p-${paragraph.id ?? i}`}>
-                                                {paragraph.text && <p>{paragraph.text}</p>}
+                                                {paragraph.text && <p className={paragraph.bold ? 'fw-semibold text-dark' : undefined}>{paragraph.text}</p>}
                                                 {Array.isArray(paragraph.subPoints) && paragraph.subPoints.length > 0 && (
                                                     <ul className="paragraph-subpoints">
                                                         {paragraph.subPoints.map((sub, sIndex) => (
-                                                            <li key={sub.id ?? sIndex} style={{ fontWeight: (sub.isBold || sub.bold) ? 600 : 400 }}>
+                                                            <li key={sub.id ?? sIndex} className={(sub.isBold || sub.bold) ? 'bold' : undefined}>
                                                                 {sub.text}
                                                             </li>
                                                         ))}
@@ -272,9 +268,10 @@ const NewsDetail = () => {
 
                                         if (adIndex < adSlots.length) {
                                             const { slot, format } = adSlots[adIndex++];
+                                            const fast = i < 2;
                                             items.push(
                                                 <div className="ad-section-responsive mt-4" key={`ad-after-p-${slot}-${i}`}>
-                                                    <GoogleAd slot={slot} format={format} minHeight={format === 'autorelaxed' ? '320px' : '280px'} immediate={true} fullWidthResponsive="true" />
+                                                    <GoogleAd slot={slot} format={format} minHeight={format === 'autorelaxed' ? '320px' : '280px'} immediate={fast} loadDelay={fast ? 50 : 200} rootMargin={fast ? '1200px' : '800px'} fullWidthResponsive="true" />
                                                 </div>
                                             );
                                         }
@@ -290,7 +287,7 @@ const NewsDetail = () => {
                     <div className="col-lg-2 d-none d-lg-block">
                         <div className="sticky-sidebar">
                             <div className="text-center text-muted small mb-2">Advertisement</div>
-                            <GoogleAd slot="6813822643" minHeight="600px" immediate={true} fullWidthResponsive="true" />
+                            <GoogleAd slot="6813822643" fallbackSlot="7460239222" format="auto" minHeight="600px" immediate={true} fullWidthResponsive="true" containerMaxWidth="300px" />
                         </div>
                     </div>
                 </div>
