@@ -10,6 +10,23 @@ const NewsList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const getPreviewText = (item) => {
+        const c = item?.content;
+        if (!c) return '';
+        if (typeof c === 'string') {
+            try {
+                const parsed = JSON.parse(c);
+                if (Array.isArray(parsed)) return parsed[0]?.text || '';
+                if (parsed && parsed.text) return parsed.text || '';
+            } catch {
+                return c.substring(0, 100);
+            }
+        }
+        if (Array.isArray(c)) return c[0]?.text || '';
+        if (c && c.text) return c.text || '';
+        return '';
+    };
+
     useEffect(() => {
         const fetchNews = async () => {
             try {
@@ -41,39 +58,38 @@ const NewsList = () => {
                 <div className="text-center mb-5" data-aos="fade-up">
                     <h6 className="text-primary fw-bold text-uppercase letter-spacing-2">Latest Updates</h6>
                     <h2 className="display-5 fw-bold text-dark">News & Insights</h2>
-                    <p className="text-muted lead mx-auto" style={{ maxWidth: '600px' }}>
-                        Stay informed with the latest news, announcements, and insights from across the globe.
-                    </p>
                 </div>
 
                 <div className="row g-4">
                     {newsList.map((news, index) => (
                         <div key={news.id} className="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay={index * 100}>
                             <div className="card news-card h-100">
-                                <div className="news-card-img-wrapper">
-                                    <span className="news-badge">{news.category}</span>
-                                    <img 
-                                        src={news.imageUrl || '/assets/images/news/story.webp'} 
-                                        alt={news.title} 
-                                        className="news-card-img"
-                                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/images/news/story.webp'; }}
-                                    />
-                                </div>
+                                <Link to={`/news/${news.id}`} className="text-decoration-none text-dark">
+                                    <div className="news-card-img-wrapper">
+                                        <span className="news-badge">{news.category}</span>
+                                        <img 
+                                            src={news.imageUrl || '/assets/images/news/story.webp'} 
+                                            alt={news.title} 
+                                            className="news-card-img"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = '/assets/images/news/story.webp'; }}
+                                        />
+                                    </div>
+                                </Link>
                                 <div className="news-card-body">
                                     <div className="news-date">
                                         <FaCalendarAlt size={12} />
-                                        <span>{new Date(news.date).toLocaleDateString()}</span>
+                                        <span>{new Date(news.date || news.createdAt || news.updatedAt || Date.now()).toLocaleDateString()}</span>
                                     </div>
                                     <h3 className="news-title">
                                         <Link to={`/news/${news.id}`} className="text-decoration-none text-dark stretched-link">
                                             {news.title}
                                         </Link>
                                     </h3>
-                                    <p className="news-excerpt">
-                                        {news.content && news.content[0]?.text 
-                                            ? news.content[0].text.substring(0, 100) + '...' 
-                                            : 'No description available.'}
-                                    </p>
+                                    {getPreviewText(news) && (
+                                        <p className="news-excerpt">
+                                            {(getPreviewText(news) || '').substring(0, 100)}{getPreviewText(news) ? '...' : ''}
+                                        </p>
+                                    )}
                                     <div className="mt-auto pt-3 border-top border-light">
                                         <span className="news-read-more">
                                             Read Article <FaArrowRight size={12} />

@@ -1,6 +1,7 @@
 import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { FaFileAlt, FaAd, FaExclamationTriangle, FaBolt, FaLock, FaUserShield } from 'react-icons/fa';
 
 import './portal/App.css';
 

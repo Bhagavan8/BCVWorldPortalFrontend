@@ -34,15 +34,41 @@ class NewsService {
         return axios.get(`${ADMIN_NEWS_API_URL}/${id}`, { headers: this.getAuthHeader() });
     }
 
-    uploadNewsImage(file) {
+    async uploadNewsImage(file) {
+        if (typeof window !== 'undefined' && typeof FileReader !== 'undefined' && file) {
+            try {
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('FileReader error'));
+                    reader.readAsDataURL(file);
+                });
+                return { data: { url: dataUrl } };
+            } catch (_) { /* no-op, will fallback */ }
+        }
+
         const formData = new FormData();
         formData.append('file', file);
-        const headers = { 
-            'Content-Type': 'multipart/form-data',
-            ...this.getAuthHeader()
-        };
-        // Adjust endpoint as needed, assuming a generic image upload or news specific one
-        return axios.post(`${UPLOAD_API_URL}/image`, formData, { headers });
+        const headers = { ...this.getAuthHeader() };
+
+        const endpoints = [
+            `${API_BASE_URL}/api/admin/upload/image`,
+            `${UPLOAD_API_URL}/image`,
+            `${API_BASE_URL}/api/admin/news/image`,
+            `${API_BASE_URL}/api/admin/news/upload-image`,
+            `${API_BASE_URL}/api/news/upload-image`
+        ];
+        
+        let lastError;
+        for (const url of endpoints) {
+            try {
+                const res = await axios.post(url, formData, { headers });
+                return res;
+            } catch (err) {
+                lastError = err;
+            }
+        }
+        throw lastError || new Error('Image upload failed');
     }
 }
 

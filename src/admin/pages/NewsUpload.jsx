@@ -7,6 +7,8 @@ import { BiDisc } from 'react-icons/bi';
 import '../assets/css/NewsUpload.css';
 
 const NewsUpload = () => {
+    const MAX_IMAGE_SIZE_BYTES = 7 * 1024 * 1024; // 7MB cap for safety
+    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     
@@ -74,21 +76,82 @@ const NewsUpload = () => {
     };
 
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
+        const inputEl = e.target;
+        const file = inputEl.files && inputEl.files[0];
         if (!file) return;
 
+        // Basic validations
+        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+            toast.error('Please select a JPG, PNG, WEBP, or GIF image');
+            inputEl.value = '';
+            return;
+        }
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+            const mb = (MAX_IMAGE_SIZE_BYTES / (1024 * 1024)).toFixed(0);
+            toast.error(`Image too large. Please choose a file under ${mb}MB`);
+            inputEl.value = '';
+            return;
+        }
+
+        const loadingToast = toast.loading('Processing image...');
+        const toBase64 = (f) => new Promise((resolve, reject) => {
+            try {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('FileReader error'));
+                reader.onabort = () => reject(new Error('FileReader aborted'));
+                reader.readAsDataURL(f);
+            } catch (err) {
+                reject(err);
+            }
+        });
+
+        const loadImage = (src) => new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+
+        const compressDataUrl = async (dataUrl) => {
+            try {
+                // Skip GIF compression to avoid breaking animations
+                if (file.type === 'image/gif') return dataUrl;
+
+                const img = await loadImage(dataUrl);
+                const maxWidth = 1280;
+                const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+                const targetW = Math.round(img.width * scale);
+                const targetH = Math.round(img.height * scale);
+
+                const canvas = document.createElement('canvas');
+                canvas.width = targetW;
+                canvas.height = targetH;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, targetW, targetH);
+
+                const outType = file.type === 'image/png' ? 'image/png' : 'image/webp';
+                const quality = file.type === 'image/png' ? 0.92 : 0.82;
+                const compressed = canvas.toDataURL(outType, quality);
+
+                // Keep the smaller result
+                return compressed.length < dataUrl.length ? compressed : dataUrl;
+            } catch {
+                return dataUrl;
+            }
+        };
+
         try {
-            const loadingToast = toast.loading('Uploading image...');
-            const res = await NewsService.uploadNewsImage(file);
-            toast.dismiss(loadingToast);
-            
-            // Assuming response contains the URL in `url` or `secure_url`
-            const uploadedUrl = res.data.url || res.data.secure_url || res.data; 
-            setImageUrl(uploadedUrl);
-            toast.success('Image uploaded successfully');
+            let dataUrl = await toBase64(file);
+            dataUrl = await compressDataUrl(dataUrl);
+            setImageUrl(dataUrl);
+            toast.success('Image attached');
         } catch (error) {
-            console.error('Image upload failed', error);
-            toast.error('Failed to upload image');
+            console.error('Image read failed', error);
+            toast.error('Failed to read image. Please try a different file.');
+            inputEl.value = '';
+        } finally {
+            toast.dismiss(loadingToast);
         }
     };
 
@@ -100,16 +163,69 @@ const NewsUpload = () => {
             return;
         }
 
+        // Validate content: at least one non-empty paragraph or sub-point
+        const hasSomeContent = (paragraphs || []).some(p => {
+            const hasText = (p?.text || '').trim().length > 0;
+            const hasSub = (p?.subPoints || []).some(sp => (sp?.text || '').trim().length > 0);
+            return hasText || hasSub;
+        });
+        if (!hasSomeContent) {
+            toast.error('Please add at least one paragraph or sub-point');
+            return;
+        }
+
         setLoading(true);
         try {
+            const slugFromTitle = (t) => t
+              .toLowerCase()
+              .trim()
+              .replace(/[^a-z0-9\s-]/g, '')
+              .replace(/\s+/g, '-')
+              .replace(/-+/g, '-');
+
+            const normalizePara = (p) => {
+              let text = (p?.text || '').trim();
+              const subPoints = (p?.subPoints || [])
+                .map(sp => {
+                  const b = !!sp?.isBold;
+                  return {
+                    text: (sp?.text || '').trim(),
+                    bold: b,
+                    isBold: b // compatibility for backends expecting `isBold`
+                  };
+                })
+                .filter(sp => sp.text.length > 0);
+
+              if (!text && subPoints.length === 0) return null;
+              if (!text && subPoints.length > 0) text = subPoints[0].text;
+
+              const para = { text };
+              if (subPoints.length > 0) para.subPoints = subPoints;
+              return para;
+            };
+            const normalizedContent = (paragraphs || [])
+              .map(normalizePara)
+              .filter(Boolean)
+              .map(p => {
+                // Final guard: ensure non-null text
+                return { text: (p.text || '').trim(), ...(p.subPoints ? { subPoints: p.subPoints } : {}) };
+              })
+              .filter(p => p.text.length > 0 || (Array.isArray(p.subPoints) && p.subPoints.length > 0));
+
+            if (normalizedContent.length === 0) {
+                toast.error('Please add at least one valid paragraph');
+                setLoading(false);
+                return;
+            }
+
             const payload = {
-                title,
-                url,
-                category,
-                section,
-                status,
-                imageUrl,
-                content: paragraphs // Backend should handle this structure
+                title: (title || '').trim(),
+                url: (url && url.trim()) || `/news/${slugFromTitle(title || 'news')}`,
+                category: (category || '').trim(),
+                section: (section || '').trim(),
+                status: (status || 'pending').trim(),
+                imageUrl: imageUrl || '',
+                content: normalizedContent
             };
 
             await NewsService.createNews(payload);
@@ -126,8 +242,24 @@ const NewsUpload = () => {
             setBulkText('');
             
         } catch (error) {
-            console.error('Upload failed', error);
-            toast.error('Failed to upload news');
+            const status = error?.response?.status;
+            const statusText = error?.response?.statusText;
+            let serverMsg = '';
+            const data = error?.response?.data;
+            if (typeof data === 'string') {
+                serverMsg = data.slice(0, 180);
+            } else if (data && typeof data === 'object') {
+                serverMsg = data.message || data.error || JSON.stringify(data).slice(0, 180);
+            } else if (error?.message) {
+                serverMsg = error.message;
+            }
+            const composed = [
+                'Failed to upload news',
+                status ? `(${status}${statusText ? ' ' + statusText : ''})` : '',
+                serverMsg ? `: ${serverMsg}` : ''
+            ].join(' ').trim();
+            console.error('Upload failed details:', { status, statusText, data });
+            toast.error(composed);
         } finally {
             setLoading(false);
         }
