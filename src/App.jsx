@@ -33,6 +33,7 @@ const Terms = lazy(() => import('./portal/pages/Terms'));
 const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
 const JavaLearning = lazy(() => import('./portal/pages/JavaLearning'));
 const ImportantQuestions = lazy(() => import('./portal/pages/ImportantQuestions'));
+const TcsNqtSyllabus = lazy(() => import('./portal/pages/TcsNqtSyllabus'));
 
 // Admin Pages
 const JobManagement = lazy(() => import('./admin/pages/JobManagement'));
@@ -406,6 +407,7 @@ function App() {
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/java-learning" element={<JavaLearning />} />
                 <Route path="/important-questions-solutions" element={<ImportantQuestions />} />
+                <Route path="/tcs-nqt-syllabus" element={<TcsNqtSyllabus />} />
                 <Route path="/mentorship" element={<Mentorship />} />
                 <Route path="/suggestion" element={<Suggestion />} />
                 <Route path="/work-from-home" element={<WorkFromHome />} />

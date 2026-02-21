@@ -147,6 +147,7 @@ export default function Header() {
                   <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 z-50">
                     <Link to="/news" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsNewsOpen(false)}>All News</Link>
                     <Link to="/news/cognizant-25k-freshers-2026" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsNewsOpen(false)}>Cognizant Hiring 2026</Link>
+                    <Link to="/tcs-nqt-syllabus" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsNewsOpen(false)}>TCS NQT Syllabus</Link>
                   </div>
                 )}
               </div>
@@ -271,6 +272,7 @@ export default function Header() {
                   <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                       <Link to="/news" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">All News</Link>
                       <Link to="/news/cognizant-25k-freshers-2026" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Cognizant Hiring 2026</Link>
+                      <Link to="/tcs-nqt-syllabus" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">TCS NQT Syllabus</Link>
                   </div>
               </div>
 
