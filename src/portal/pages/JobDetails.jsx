@@ -151,6 +151,9 @@ export default function JobDetails() {
   const [nextJob, setNextJob] = useState(null);
   const [postingComment, setPostingComment] = useState(false);
   const [user, setUser] = useState(null);
+  const [matchScore, setMatchScore] = useState(null);
+  const [skillsLoaded, setSkillsLoaded] = useState(false);
+  const [hasUserSkills, setHasUserSkills] = useState(false);
   const [relatedJobs, setRelatedJobs] = useState([]);
   const [loadingRelated, setLoadingRelated] = useState(false);
   const [showLeftAd, setShowLeftAd] = useState(true);
@@ -193,6 +196,86 @@ export default function JobDetails() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const computeScore = async () => {
+      if (!job) return;
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        setSkillsLoaded(true);
+        return;
+      }
+      let parsed = null;
+      try { parsed = JSON.parse(userStr); } catch { parsed = null; }
+      if (!parsed) {
+        setSkillsLoaded(true);
+        return;
+      }
+      let userId =
+        parsed?.id ?? parsed?.userId ?? parsed?.uid ?? parsed?._id ??
+        parsed?.user?.id ?? parsed?.user?.userId ?? parsed?.user?.uid ?? parsed?.user?._id ??
+        parsed?.data?.id ?? parsed?.data?.userId ?? parsed?.data?.uid ?? parsed?.data?._id;
+
+      if (!userId) {
+        const tk = parsed.token || parsed.access_token || parsed?.data?.token || parsed?.user?.token;
+        if (tk) {
+          try {
+            const payload = JSON.parse(atob(tk.split('.')[1]));
+            userId = payload.id || payload.userId || payload.uid || payload.sub;
+          } catch {}
+        }
+      }
+
+      if (!userId) {
+        setSkillsLoaded(true);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/users/${encodeURIComponent(String(userId))}/profile`);
+        if (!res.ok) {
+          setSkillsLoaded(true);
+          return;
+        }
+        const profile = await res.json();
+        const userSkills = Array.isArray(profile?.skills) ? profile.skills : [];
+        setHasUserSkills(userSkills.length > 0);
+
+        const jobSkillsRaw = typeof job?.skills === 'string' ? job.skills : '';
+        const jobSkills = jobSkillsRaw
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean);
+
+        const norm = (s) => s.toLowerCase().replace(/[\s\-_.]+/g, ' ').trim();
+        const mapToGroup = (s) => {
+          const n = s.toLowerCase().replace(/\+/g, ' plus ').replace(/[\s\-_.]+/g, ' ').trim();
+          if (n === 'java' || n === 'python' || n === 'c' || n === 'c plus plus' || n === 'cpp' || n === 'c++') {
+            return '__group_lang_any__';
+          }
+          return n;
+        };
+        const userSet = new Set(userSkills.map(mapToGroup));
+        const req = jobSkills.map(mapToGroup).filter(Boolean);
+        const uniqueReq = Array.from(new Set(req));
+
+        if (uniqueReq.length === 0 || userSet.size === 0) {
+          setMatchScore(null);
+          setSkillsLoaded(true);
+          return;
+        }
+        let matches = 0;
+        uniqueReq.forEach(s => { if (userSet.has(s)) matches += 1; });
+        const score = Math.round((matches / uniqueReq.length) * 100);
+        setMatchScore(score);
+      } catch {
+        // ignore failures silently
+      } finally {
+        setSkillsLoaded(true);
+      }
+    };
+    computeScore();
+  }, [job, API_BASE]);
 
   useEffect(() => {
     hasViewed.current = false;
@@ -1304,6 +1387,8 @@ export default function JobDetails() {
           <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
           <GoogleAd slot="2859289867" immediate={true} fullWidthResponsive="true" />
 
+          
+
           {/* Content Sections */}
           <div className="content-sections">
             <div className="flex flex-col xl:flex-row gap-6">
@@ -1325,7 +1410,58 @@ export default function JobDetails() {
               </div>
             )}
 
-
+            {user && skillsLoaded && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '12px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ position: 'relative', width: 72, height: 72 }}>
+                  <svg width="72" height="72" viewBox="0 0 72 72" aria-label="Skill match score">
+                    <circle cx="36" cy="36" r="30" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                    {typeof matchScore === 'number' && (
+                      <circle
+                        cx="36"
+                        cy="36"
+                        r="30"
+                        fill="none"
+                        stroke={matchScore >= 70 ? '#16a34a' : matchScore >= 40 ? '#f59e0b' : '#ef4444'}
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeDasharray={2 * Math.PI * 30}
+                        strokeDashoffset={(1 - (matchScore / 100)) * (2 * Math.PI * 30)}
+                        transform="rotate(-90 36 36)"
+                      />
+                    )}
+                  </svg>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: '#111827',
+                      textAlign: 'center',
+                      padding: '0 6px',
+                      lineHeight: 1.1
+                    }}
+                  >
+                    {typeof matchScore === 'number'
+                      ? `${matchScore}%`
+                      : hasUserSkills
+                        ? '—'
+                        : 'Add skills'}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: 12, color: '#6b7280', fontWeight: 600 }}>Skill Match</span>
+                  {!hasUserSkills && (
+                    <span style={{ fontSize: 10, color: '#9ca3af' }}>Add skills to view your score</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
             {/* Required Skills (stacked) */}
             {job.skills && (
@@ -1352,6 +1488,7 @@ export default function JobDetails() {
                 </div>
               </section>
             )}
+            
 
 
             {/* Qualifications (stacked below skills) */}
@@ -1773,18 +1910,15 @@ export default function JobDetails() {
                     <BiChevronRight className="bi text-3xl text-gray-500" />
                   </Link>
                 )}
-              </div>
-            </div>
-
             </div>
             
-            
-          </div>
-
-          </div>
 
           
         </div>
+        </div>
+        </div>
+        </div>
+      </div>
       </div>
 
       {/* Mobile Bottom Action Bar (shows at 90% scroll) */}

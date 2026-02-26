@@ -1,4 +1,5 @@
 import React from 'react';
+import { BiCheckShield } from 'react-icons/bi';
 import SEO from '../components/SEO';
 
 const Terms = () => {
@@ -67,7 +68,7 @@ const Terms = () => {
             <aside className="lg:col-span-1">
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 space-y-4 text-sm">
                 <div className="flex items-center gap-2">
-                  <BiShieldCheck className="text-blue-500 text-lg" />
+                  <BiCheckShield className="text-blue-500 text-lg" />
                   <span className="font-semibold text-slate-900">Quick tips</span>
                 </div>
                 <ul className="list-disc pl-4 space-y-2 text-slate-700">

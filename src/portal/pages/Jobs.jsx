@@ -759,7 +759,7 @@ export default function Jobs() {
                           <div className="">
                              <Link 
                                 to={jobUrl} 
-                                className="inline-block w-full md:w-auto text-center px-4 py-1.5 md:py-[6px] text-xs font-semibold text-[#555] bg-[#fcfcfc] border border-[#ddd] rounded-[2px] hover:bg-[#f0f0f0] hover:border-[#ccc] hover:text-[#333] transition-all duration-200"
+                                className="inline-flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-semibold text-[#555] bg-[#fcfcfc] border border-[#ddd] rounded-[4px] hover:bg-[#f5f5f5] hover:border-[#ccc] hover:text-[#333] transition-all duration-200"
                              >
                                 Continue Reading
                              </Link>
