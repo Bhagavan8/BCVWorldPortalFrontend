@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import GoogleAd from '../components/GoogleAd';
-import { BiTime, BiListCheck, BiCodeAlt, BiCheckCircle, BiRupee, BiDownload, BiX } from 'react-icons/bi';
+import { BiTime, BiListCheck, BiCodeAlt, BiCheckCircle, BiRupee, BiDownload, BiX, BiLinkExternal, BiFile, BiFolder } from 'react-icons/bi';
 
 const TcsNqtSyllabus = () => {
   const data = useMemo(() => ({
@@ -41,7 +41,7 @@ const TcsNqtSyllabus = () => {
     },
     overview: {
       title: 'TCS NQT Syllabus & Exam Pattern',
-      subtitle: 'Complete, mobile-first guide to TCS National Qualifier Test: sections, pattern, and topic-wise syllabus with practical tips.',
+      subtitle: 'Complete, mobile‑first guide to TCS National Qualifier Test: sections, pattern, and topic‑wise syllabus with practical tips.',
     },
     pattern: {
       note: 'Integrated test of 190 minutes: two mandatory parts as announced officially.',
@@ -73,7 +73,7 @@ const TcsNqtSyllabus = () => {
           'Reading Comprehension (short and medium passages)',
           'Sentence Completion, Para Jumbles',
           'Error Spotting, Grammar (Tenses, Subject–Verb, Articles, Prepositions)',
-          'Vocabulary: Synonyms/Antonyms, Cloze Tests, One-word Substitution, Idioms',
+          'Vocabulary: Synonyms/Antonyms, Cloze Tests, One‑word Substitution, Idioms',
         ],
       },
       {
@@ -96,11 +96,11 @@ const TcsNqtSyllabus = () => {
         points: [
           'Arrangements & Seating, Puzzles (Linear/Circular/Box)',
           'Syllogisms, Logical Deduction, Statements & Assumptions',
-          'Series, Analogies, Odd-one-out',
+          'Series, Analogies, Odd‑one‑out',
           'Coding–Decoding, Blood Relations, Directions',
-          'Data Sufficiency, Visual/Non-verbal reasoning (pattern-based)',
+          'Data Sufficiency, Visual/Non‑verbal reasoning (pattern‑based)',
           'Meaningful Word Creation; Number Series (Missing/Analogy)',
-          'Rank-based logic, Ages; Symbols & Notations',
+          'Rank‑based logic, Ages; Symbols & Notations',
           'Mathematical Operational Arrangement'
         ],
       },
@@ -108,7 +108,7 @@ const TcsNqtSyllabus = () => {
         id: 'prog',
         title: 'Programming Logic',
         points: [
-          'Data Types, Operators, Control Flow (if-else, loops), Functions',
+          'Data Types, Operators, Control Flow (if‑else, loops), Functions',
           'Arrays, Strings, Basic Pointers/References',
           'OOP Basics (Class, Object, Inheritance, Encapsulation, Polymorphism)',
           'Basic Data Structures: Stacks, Queues, Linked Lists; Searching/Sorting',
@@ -120,7 +120,7 @@ const TcsNqtSyllabus = () => {
       },
       {
         id: 'coding',
-        title: 'Hands-on Coding',
+        title: 'Hands‑on Coding',
         points: [
           'Common themes: string processing, arrays, math, maps/sets, greedy & simulation',
           'I/O handling and edge cases; avoid floating precision pitfalls',
@@ -131,7 +131,7 @@ const TcsNqtSyllabus = () => {
         id: 'advanced',
         title: 'Advanced (for Digital/Elevate)',
         points: [
-          'Deeper Quant/Reasoning with multi-step logic & higher difficulty',
+          'Deeper Quant/Reasoning with multi‑step logic & higher difficulty',
           'Coding on DS/Algo topics: trees/graphs, DP, backtracking (varies by drive)',
         ],
       },
@@ -144,7 +144,7 @@ const TcsNqtSyllabus = () => {
     tips: [
       'Accuracy matters more than attempting everything—avoid random guesses.',
       'Use scratchpad for DI and arithmetic. For coding, start with clear I/O parsing.',
-      'Practice timing: simulate full-length tests to build endurance.',
+      'Practice timing: simulate full‑length tests to build endurance.',
     ],
     faq: [
       {
@@ -161,7 +161,7 @@ const TcsNqtSyllabus = () => {
       },
     ],
     disclaimer:
-      'This page summarizes the TCS NQT pattern and syllabus based on public information and candidate experiences. Always cross-check with the latest notification and your test dashboard.',
+      'This page summarizes the TCS NQT pattern and syllabus based on public information and candidate experiences. Always cross‑check with the latest notification and your test dashboard.',
   }), []);
 
   const sectionsOrder = useMemo(() => ['dates-apply', 'pattern', 'weightage', ...data.syllabus.map(s => s.id), 'salary', 'eligibility', 'pyq', 'sources', 'tips', 'faq'], [data]);
@@ -169,7 +169,14 @@ const TcsNqtSyllabus = () => {
   const [showLeftAd, setShowLeftAd] = useState(true);
   const [showRightAd, setShowRightAd] = useState(true);
   const [hideStickyAds, setHideStickyAds] = useState(false);
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const pyqSets = useMemo(() => ({
     quant: [
@@ -231,6 +238,30 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
     setTimeout(() => { w.focus(); w.print(); }, 300);
   };
 
+  const externalDocs = [
+    { title: 'Numerical Ability Notes (Google Doc)', href: 'https://docs.google.com/document/d/16z8WsvutfQ13_HfcSylpS3xJMY3m40slCr4US8LFgI8/edit?tab=t.0' },
+    { title: 'PYQ Drive Folder', href: 'https://drive.google.com/drive/folders/1gFPwRS4JHpDSiOJd0Syyhh0AErn5XRfq' },
+    { title: 'Topic Mind Map (Google Doc)', href: 'https://docs.google.com/document/d/128x6Ee8kWy-PQ2SWNz4Da_ixQOckR6PC/edit' },
+    { title: 'Mega Prep Folder', href: 'https://drive.google.com/drive/folders/1JqghptQyJBRu1duNCAOVzXClKM5el3nl' },
+  ];
+  const assetUrl = (name) => new URL(`../assets/tcs/${name}`, import.meta.url).href;
+  const tcsFiles = [
+    'Aptitude notes.pdf',
+    'AptitudeFormulas.pdf',
+    'quantitative-aptitude-cheat-sheet.pdf',
+    'TALENT BATTLE LOGICAL REASONING FORMULA BOOK (2) (1).pdf',
+    'TALENT BATTLE QUANT FORMULA BANK (1) (1).pdf',
+    'TCS-NQT-Old-Test-Paper.pdf',
+    'TCS-NQT-12th-September-2021-Slot-1-Question-Paper.pdf',
+    'TCS-NQT-12th-September-2021-Slot-3-Question-Paper.pdf',
+    'TCS-NQT-13th-September-2021-Slot-1-Question-Paper.pdf',
+    'TCS-NQT-13th-September-2021-Slot-2-Question-Paper.pdf',
+    'TCS-NQT-14th-September-2021-Slot-1-Question-Paper.pdf',
+    'Coding Sheet.xlsx',
+    'TCS-20250310T090942Z-001.zip',
+  ];
+  const sectionsOrder2 = ['dates-apply', 'pattern', 'weightage', ...data.syllabus.map(s => s.id), 'salary', 'eligibility', 'resources', 'sources', 'tips', 'faq'];
+  const [orderOverride] = useState(sectionsOrder2);
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -240,12 +271,12 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
       },
       { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 }
     );
-    sectionsOrder.forEach(id => {
+    orderOverride.forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [sectionsOrder]);
+  }, [orderOverride]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -261,10 +292,11 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
 
   return (
     <div className="min-h-screen bg-white">
+      {/* sticky ads - desktop only, hidden on mobile */}
       {!isMobile && (
         <div>
           {showLeftAd && (
-            <div className="fixed left-4 top-1/2 -translate-y-1/2 w-40" style={{ zIndex: 9999, opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
+            <div className="fixed left-4 top-1/2 -translate-y-1/2 w-40 hidden lg:block" style={{ zIndex: 9999, opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
               <div className="relative rounded-xl border border-slate-200 bg-white/90 backdrop-blur p-2 shadow-sm">
                 <button aria-label="Close ad" onClick={() => setShowLeftAd(false)} className="absolute -top-2 -right-2 bg-white border border-slate-200 rounded-full w-6 h-6 flex items-center justify-center text-slate-500 hover:text-slate-700 shadow">
                   <BiX />
@@ -275,7 +307,7 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
             </div>
           )}
           {showRightAd && (
-            <div className="fixed right-4 top-1/2 -translate-y-1/2 w-40" style={{ zIndex: 9999, opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
+            <div className="fixed right-4 top-1/2 -translate-y-1/2 w-40 hidden lg:block" style={{ zIndex: 9999, opacity: hideStickyAds ? 0 : 1, pointerEvents: hideStickyAds ? 'none' : 'auto', transition: 'opacity 0.3s ease' }}>
               <div className="relative rounded-xl border border-slate-200 bg-white/90 backdrop-blur p-2 shadow-sm">
                 <button aria-label="Close ad" onClick={() => setShowRightAd(false)} className="absolute -top-2 -right-2 bg-white border border-slate-200 rounded-full w-6 h-6 flex items-center justify-center text-slate-500 hover:text-slate-700 shadow">
                   <BiX />
@@ -287,20 +319,21 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
           )}
         </div>
       )}
+
       <SEO
         title="TCS NQT Syllabus 2026 | Pattern, Sections, PYQ PDFs, Salary"
         description="Official-style TCS NQT 2026 syllabus with integrated pattern (190 mins), Dates & Apply, section-wise topics, salary bands, and downloadable PYQ PDFs."
         keywords="TCS NQT syllabus 2026, TCS NQT exam pattern 2026, TCS NQT PDF, TCS NQT previous year questions, TCS NQT salary, TCS NQT apply link, TCS NQT dates, foundation advanced pattern, TCS NQT eligibility, TCS NQT registration, TCS NQT coding questions, TCS NQT preparation"
-        image={window.location.origin + '/assets/images/tcs/tcs-nqt-hero.svg'}
-        url={window.location.origin + '/tcs-nqt-syllabus'}
+        image={typeof window !== 'undefined' ? window.location.origin + '/assets/images/tcs/tcs-nqt-hero.svg' : ''}
+        url={typeof window !== 'undefined' ? window.location.origin + '/tcs-nqt-syllabus' : ''}
         type="article"
         structuredData={[
           {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Home", "item": window.location.origin + "/" },
-              { "@type": "ListItem", "position": 2, "name": "TCS NQT Syllabus", "item": window.location.href }
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": typeof window !== 'undefined' ? window.location.origin + "/" : "" },
+              { "@type": "ListItem", "position": 2, "name": "TCS NQT Syllabus", "item": typeof window !== 'undefined' ? window.location.href : "" }
             ]
           },
           {
@@ -311,7 +344,7 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
               "@type": "ListItem",
               "position": i + 1,
               "name": s.title,
-              "url": window.location.origin + "/tcs-nqt-syllabus#" + s.id
+              "url": (typeof window !== 'undefined' ? window.location.origin : '') + "/tcs-nqt-syllabus#" + s.id
             }))
           },
           {
@@ -319,16 +352,16 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
             "@type": "Article",
             "headline": "TCS NQT Syllabus 2026 | Exam Pattern, PYQs, Salary & Registration",
             "description": "Complete, mobile-first guide to TCS National Qualifier Test with section-wise syllabus, exam pattern, PYQ PDFs and salary details.",
-            "image": [window.location.origin + "/assets/images/tcs/tcs-nqt-hero.svg"],
+            "image": [typeof window !== 'undefined' ? window.location.origin + "/assets/images/tcs/tcs-nqt-hero.svg" : ""],
             "datePublished": new Date().toISOString(),
             "dateModified": new Date().toISOString(),
             "author": { "@type": "Organization", "name": "BCVWORLD" },
             "publisher": {
               "@type": "Organization",
               "name": "BCVWORLD",
-              "logo": { "@type": "ImageObject", "url": window.location.origin + "/logo192.png" }
+              "logo": { "@type": "ImageObject", "url": typeof window !== 'undefined' ? window.location.origin + "/logo192.png" : "" }
             },
-            "mainEntityOfPage": window.location.origin + "/tcs-nqt-syllabus"
+            "mainEntityOfPage": typeof window !== 'undefined' ? window.location.origin + "/tcs-nqt-syllabus" : ""
           },
           {
             "@context": "https://schema.org",
@@ -343,22 +376,27 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
         ]}
       />
 
-      <div className="max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-16">
+      {/* main container: full width on mobile, constrained with padding on desktop */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 pt-24 md:pt-28 pb-14 max-w-7xl mx-auto">
+        {/* breadcrumb & updated tag */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-200 pb-4 mb-6">
           <div className="flex items-center gap-2 text-sm">
             <Link to="/" className="text-slate-600 hover:text-blue-700">Home</Link>
             <span className="text-slate-400">›</span>
             <span className="text-slate-900 font-medium">TCS NQT Syllabus</span>
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 w-fit">
             Updated {data.updated}
           </div>
         </div>
 
-        <div className="ad-section-responsive mb-4">
+        {/* top ad - hidden on mobile? we keep it but ensure it doesn't overflow */}
+        <div className="ad-section-responsive mb-4 w-full overflow-hidden">
           <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
           <GoogleAd slot="2494539347" fallbackSlot="7460239222" adTest="on" format="autorelaxed" minHeight="260px" immediate={true} fullWidthResponsive="true" loadDelay={50} rootMargin="1200px" />
         </div>
+
+        {/* header section */}
         <header className="mb-6 space-y-3">
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
             {data.overview.title}
@@ -409,8 +447,27 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
           </div>
         </header>
 
+        {/* mobile quick nav - scrollable pills */}
+        <div className="lg:hidden mb-4 -mx-2 px-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 w-max">
+            <a href="#dates-apply" className="px-3 py-2 rounded-full border text-xs text-slate-700">Dates</a>
+            <a href="#pattern" className="px-3 py-2 rounded-full border text-xs text-slate-700">Pattern</a>
+            <a href="#weightage" className="px-3 py-2 rounded-full border text-xs text-slate-700">Weightage</a>
+            {data.syllabus.map(s => (
+              <a key={`pill-${s.id}`} href={`#${s.id}`} className="px-3 py-2 rounded-full border text-xs text-slate-700 whitespace-nowrap">{s.title}</a>
+            ))}
+            <a href="#salary" className="px-3 py-2 rounded-full border text-xs text-slate-700">Salary</a>
+            <a href="#eligibility" className="px-3 py-2 rounded-full border text-xs text-slate-700">Eligibility</a>
+            <a href="#resources" className="px-3 py-2 rounded-full border text-xs text-slate-700">Resources</a>
+            <a href="#tips" className="px-3 py-2 rounded-full border text-xs text-slate-700">Tips</a>
+            <a href="#faq" className="px-3 py-2 rounded-full border text-xs text-slate-700">FAQs</a>
+          </div>
+        </div>
+
+        {/* main grid: desktop has sidebar, mobile is single column */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <aside className="lg:col-span-3 order-2 lg:order-1">
+          {/* desktop sidebar */}
+          <aside className="hidden lg:block lg:col-span-3 order-2 lg:order-1">
             <div className="sticky top-28 space-y-3">
               <div className="rounded-2xl border border-slate-200 p-4">
                 <h3 className="font-semibold text-slate-900 mb-3">On this page</h3>
@@ -423,7 +480,7 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
                   ))}
                   <a href="#salary" className={`block ${activeId==='salary' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Salary & Compensation</a>
                   <a href="#eligibility" className={`block ${activeId==='eligibility' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Eligibility</a>
-                  <a href="#pyq" className={`block ${activeId==='pyq' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Previous Year Questions</a>
+                  <a href="#resources" className={`block ${activeId==='resources' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Prep Resources</a>
                   <a href="#sources" className={`block ${activeId==='sources' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Sources</a>
                   <a href="#tips" className={`block ${activeId==='tips' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>Tips</a>
                   <a href="#faq" className={`block ${activeId==='faq' ? 'text-blue-700 font-semibold' : 'text-slate-700 hover:text-blue-700'}`}>FAQs</a>
@@ -436,12 +493,16 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
             </div>
           </aside>
 
-          <main className="lg:col-span-9 order-1 lg:order-2 space-y-8">
-            <div className="ad-section-responsive mb-4">
-          <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
-          <GoogleAd slot="3199457791" fallbackSlot="7460239222" adTest="on" format="auto" minHeight="280px" immediate={true} fullWidthResponsive="true" loadDelay={50} rootMargin="1200px" />
+          {/* main content - takes full width on mobile */}
+          <main className="lg:col-span-9 order-1 lg:order-2 space-y-8 w-full max-w-full overflow-hidden">
+            {/* inline ad after header */}
+            <div className="ad-section-responsive mb-4 w-full">
+              <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
+              <GoogleAd slot="3199457791" fallbackSlot="7460239222" adTest="on" format="auto" minHeight="280px" immediate={true} fullWidthResponsive="true" loadDelay={50} rootMargin="1200px" />
             </div>
-            <section id="dates-apply" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+
+            {/* Dates & Apply */}
+            <section id="dates-apply" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-semibold text-slate-900 mb-2">Dates & Apply</h2>
@@ -457,14 +518,16 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
                 <div className="shrink-0">
                   <a
                     href={data.official.applyHref}
-                    className="inline-flex items-center justify-center rounded-xl bg-blue-600 text-white px-5 py-3 font-semibold hover:bg-blue-700 transition"
+                    className="inline-flex items-center justify-center rounded-xl bg-blue-600 text-white px-5 py-3 font-semibold hover:bg-blue-700 transition w-full md:w-auto"
                   >
                     Apply Now
                   </a>
                 </div>
               </div>
             </section>
-            <section id="weightage" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+
+            {/* Weightage */}
+            <section id="weightage" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-2">Section-wise Weightage (Practice Reference)</h2>
               <p className="text-slate-600 text-sm mb-4">For preparation planning, the following split reflects a commonly observed pattern: 92 questions in ~180 minutes across five papers. Your actual slot may vary and TCS can change the structure.</p>
               <div className="overflow-auto rounded-xl border border-slate-200">
@@ -511,7 +574,9 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
                 </table>
               </div>
             </section>
-            <section id="pattern" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+
+            {/* Pattern */}
+            <section id="pattern" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-2">Exam Pattern (Latest)</h2>
               <p className="text-slate-600 text-sm mb-4">{data.pattern.note}</p>
               <div className="space-y-4">
@@ -519,7 +584,7 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
                   <div key={idx} className="rounded-xl border border-slate-200 p-4">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                       <h3 className="font-semibold text-slate-900">{r.name}</h3>
-                      <span className="text-xs px-2 py-1 bg-slate-100 rounded-full text-slate-700">{r.duration}</span>
+                      <span className="text-xs px-2 py-1 bg-slate-100 rounded-full text-slate-700 w-fit">{r.duration}</span>
                     </div>
                     <ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
                       {r.sections.map((s, i) => (
@@ -533,26 +598,29 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
                 ))}
               </div>
             </section>
-            <div className="ad-section-responsive">
+
+            {/* mid ad */}
+            <div className="ad-section-responsive w-full">
               <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
               <GoogleAd slot="1886376123" fallbackSlot="7460239222" adTest="on" format="auto" minHeight="280px" immediate={false} fullWidthResponsive="true" loadDelay={200} rootMargin="800px" />
             </div>
 
+            {/* syllabus sections */}
             {data.syllabus.map((sec, idx) => (
               <React.Fragment key={sec.id}>
-                <section id={sec.id} className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+                <section id={sec.id} className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
                   <h2 className="text-xl font-semibold text-slate-900 mb-3">{sec.title}</h2>
                   <div className="space-y-2 text-slate-700">
                     {sec.points.map((p, i) => (
                       <div key={i} className="flex items-start gap-2">
-                        <span className="mt-1 text-emerald-600"><BiCheckCircle /></span>
+                        <span className="mt-1 text-emerald-600 shrink-0"><BiCheckCircle /></span>
                         <span>{p}</span>
                       </div>
                     ))}
                   </div>
                 </section>
                 {idx === 2 && (
-                  <div className="ad-section-responsive mt-4">
+                  <div className="ad-section-responsive w-full">
                     <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
                     <GoogleAd slot="8938035482" fallbackSlot="7460239222" adTest="on" format="auto" minHeight="280px" immediate={false} fullWidthResponsive="true" loadDelay={200} rootMargin="700px" />
                   </div>
@@ -560,7 +628,8 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
               </React.Fragment>
             ))}
 
-            <section id="salary" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+            {/* salary */}
+            <section id="salary" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Salary & Compensation</h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {data.salary.bands.map((b, i) => (
@@ -620,83 +689,63 @@ ${items.map((it,i)=>`<div class="qa"><div class="q">Q${i+1}. ${it.q}</div><div c
               </div>
               <p className="text-xs text-slate-500 mt-3">{data.salary.note}</p>
             </section>
-            <div className="ad-section-responsive">
-              <div className="text-center text-gray-500 text-sm mb-1">Advertisement</div>
-              <GoogleAd slot="8260212789" fallbackSlot="7460239222" adTest="on" format="auto" minHeight="280px" immediate={false} fullWidthResponsive="true" loadDelay={200} rootMargin="700px" />
-            </div>
 
-            <section id="eligibility" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+            {/* eligibility */}
+            <section id="eligibility" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Eligibility & Policy Highlights</h2>
               <ul className="list-disc pl-5 space-y-2 text-slate-700">
                 {data.eligibility.map((e, i) => <li key={i}>{e}</li>)}
               </ul>
             </section>
 
-            <section id="tips" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+            {/* tips */}
+            <section id="tips" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Preparation Tips</h2>
               <ul className="list-disc pl-5 space-y-2 text-slate-700">
                 {data.tips.map((t, i) => <li key={i}>{t}</li>)}
               </ul>
             </section>
 
-            <section id="pyq" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
-              <h2 className="text-xl font-semibold text-slate-900 mb-3">Previous Year Questions (PYQs) with Solutions</h2>
-              <p className="text-slate-600 text-sm mb-4">Representative problems to mirror the style and difficulty. Use for practice; actual questions vary per slot.</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                <button onClick={() => printPyq('quant')} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50">
-                  <BiDownload /> Download Quant PDF
-                </button>
-                <button onClick={() => printPyq('reasoning')} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50">
-                  <BiDownload /> Download Reasoning PDF
-                </button>
-                <button onClick={() => printPyq('verbal')} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50">
-                  <BiDownload /> Download Verbal PDF
-                </button>
-                <button onClick={() => printPyq('coding')} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50">
-                  <BiDownload /> Download Coding PDF
-                </button>
+            {/* resources */}
+            <section id="resources" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
+              <h2 className="text-xl font-semibold text-slate-900 mb-3">Prep Resources</h2>
+              <p className="text-slate-600 text-sm mb-4">Curated documents, drive folders, and locally hosted PDFs for quick practice.</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
+                {externalDocs.map((d, i) => (
+                  <a key={i} href={d.href} target="_blank" rel="noopener" className="group rounded-xl border border-slate-200 p-4 flex items-start gap-3 hover:border-blue-600 hover:bg-blue-50/40 transition">
+                    <div className="shrink-0 w-9 h-9 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+                      {d.href.includes('drive.google.com') ? <BiFolder /> : <BiLinkExternal />}
+                    </div>
+                    <div>
+                      <div className="font-medium text-slate-900 group-hover:text-blue-800">{d.title}</div>
+                      <div className="text-xs text-slate-500">{new URL(d.href).hostname}</div>
+                    </div>
+                  </a>
+                ))}
               </div>
-              <div className="space-y-4">
-                <details className="rounded-lg border p-4">
-                  <summary className="font-medium text-slate-900 cursor-pointer">Quant: Time & Work</summary>
-                  <div className="mt-3 text-slate-700 text-sm">
-                    <p><strong>Q:</strong> A can do a job in 12 days and B in 18 days. They work together for 4 days, then A leaves. In how many more days will B finish?</p>
-                    <p className="mt-2"><strong>Sol:</strong> A rate = 1/12, B rate = 1/18 ⇒ together = 5/36 per day. In 4 days: 20/36 = 5/9 done. Remaining 4/9. B alone: (4/9) ÷ (1/18) = 8 days.</p>
-                    <p className="mt-1"><strong>Ans:</strong> 8 days</p>
-                  </div>
-                </details>
-                <details className="rounded-lg border p-4">
-                  <summary className="font-medium text-slate-900 cursor-pointer">Reasoning: Seating Arrangement</summary>
-                  <div className="mt-3 text-slate-700 text-sm">
-                    <p><strong>Q:</strong> 6 people sit in a circle facing center. A is between B and C. D is second to the left of B. E is opposite C. Who sits to the immediate right of E?</p>
-                    <p className="mt-2"><strong>Sol:</strong> Draw circle with constraints; consistent arrangement yields E’s right = B.</p>
-                    <p className="mt-1"><strong>Ans:</strong> B</p>
-                  </div>
-                </details>
-                <details className="rounded-lg border p-4">
-                  <summary className="font-medium text-slate-900 cursor-pointer">Verbal: Error Spotting</summary>
-                  <div className="mt-3 text-slate-700 text-sm">
-                    <p><strong>Q:</strong> Identify the error: “Each of the players have submitted their forms.”</p>
-                    <p className="mt-2"><strong>Sol:</strong> Subject is “Each,” singular ⇒ “has submitted his/her forms.”</p>
-                    <p className="mt-1"><strong>Ans:</strong> “have” → “has”, “their” → “his/her” (as per test style, pick closest option).</p>
-                  </div>
-                </details>
-                <details className="rounded-lg border p-4">
-                  <summary className="font-medium text-slate-900 cursor-pointer">Programming: String Processing</summary>
-                  <div className="mt-3 text-slate-700 text-sm">
-                    <p><strong>Q:</strong> Given a string s, print the first non‑repeating character; if none, print -1.</p>
-                    <p className="mt-2"><strong>Sol (Idea):</strong> Count frequencies using a map; iterate again to find first with freq=1.</p>
-                    <pre className="mt-2 p-3 bg-slate-50 rounded overflow-auto"><code>{`// Pseudocode
-freq = {}
-for ch in s: freq[ch] = (freq[ch] || 0) + 1
-for ch in s: if freq[ch] === 1: print(ch); return
-print(-1)`}</code></pre>
-                  </div>
-                </details>
+              <div className="rounded-xl border border-slate-200">
+                <div className="flex items-center justify-between px-4 py-3 border-b">
+                  <div className="font-semibold text-slate-900">Local PDFs & Sheets</div>
+                  <div className="text-xs text-slate-500">Hosted in app for fast access</div>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+                  {tcsFiles.map((name) => (
+                    <a key={name} href={assetUrl(name)} target="_blank" className="rounded-lg border border-slate-200 p-3 flex items-start gap-3 hover:bg-slate-50 transition">
+                      <div className="shrink-0 w-8 h-8 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center">
+                        {name.toLowerCase().endsWith('.zip') ? <BiDownload /> : <BiFile />}
+                      </div>
+                      <div className="text-sm">
+                        <div className="font-medium text-slate-900">{name.replace(/\.[^/.]+$/, '')}</div>
+                        <div className="text-xs text-slate-500">{name.split('.').pop()?.toUpperCase()}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </section>
-            
-            <section id="sources" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+
+            {/* sources */}
+            <section id="sources" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">Sources</h2>
               <p className="text-slate-600 text-sm mb-3">This page consolidates official announcements and widely observed exam trends so you can prepare without leaving the page.</p>
               <ul className="list-disc pl-5 space-y-2 text-slate-700">
@@ -709,7 +758,8 @@ print(-1)`}</code></pre>
               </ul>
             </section>
 
-            <section id="faq" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32">
+            {/* faq */}
+            <section id="faq" className="rounded-2xl border border-slate-200 p-5 scroll-mt-28 md:scroll-mt-32 w-full">
               <h2 className="text-xl font-semibold text-slate-900 mb-3">FAQs</h2>
               <div className="divide-y divide-slate-200">
                 <details className="py-3">
@@ -737,11 +787,13 @@ print(-1)`}</code></pre>
               </div>
             </section>
 
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900 text-sm">
+            {/* disclaimer */}
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900 text-sm w-full">
               {data.disclaimer}
             </div>
 
-            <div className="ad-section-responsive">
+            {/* footer ad */}
+            <div className="ad-section-responsive w-full">
               <div className="text-center text-gray-500 text-sm mb-2">Advertisement</div>
               <GoogleAd slot="2109749740" format="auto" minHeight="280px" immediate={true} fullWidthResponsive="true" />
             </div>

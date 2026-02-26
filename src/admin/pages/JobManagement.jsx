@@ -24,6 +24,7 @@ const JobManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState(null);
+  const [applyCounts, setApplyCounts] = useState({});
 
   // Display 10 items per page
   const ITEMS_PER_PAGE = 10;
@@ -38,6 +39,7 @@ const JobManagement = () => {
     setUser(currentUser);
     
     fetchJobs();
+    fetchApplyCounts();
   }, [currentPage, searchTerm]);
 
   const fetchJobs = async () => {
@@ -70,6 +72,27 @@ const JobManagement = () => {
       setJobs([]); 
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchApplyCounts = async () => {
+    try {
+      const token = AuthService.getToken();
+      const response = await axios.get(`${API_BASE_URL}/api/admin/jobs/apply-counts`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const list = Array.isArray(response.data) ? response.data : [];
+      const map = {};
+      for (const item of list) {
+        if (item && typeof item.jobId !== 'undefined') {
+          map[item.jobId] = typeof item.applyCount === 'number' ? item.applyCount : parseInt(item.applyCount, 10) || 0;
+        }
+      }
+      setApplyCounts(map);
+    } catch (error) {
+      // Do not block rendering if this endpoint is missing; just default to 0
+      console.warn('apply-counts fetch failed', error?.response?.status || '', error?.message || '');
+      setApplyCounts({});
     }
   };
 
@@ -168,6 +191,7 @@ const JobManagement = () => {
                   <th className="py-3 text-primary">Posted Date</th>
                   <th className="py-3 text-primary">Deadline</th>
                   <th className="py-3 text-primary text-center">Views</th>
+                  <th className="py-3 text-primary text-center">Applied</th>
                   <th className="py-3 text-primary text-center">Status</th>
                   <th className="text-end pe-4 py-3 text-primary">Actions</th>
                 </tr>
@@ -213,6 +237,11 @@ const JobManagement = () => {
                       <td className="text-center" data-label="Views">
                         <span className="badge bg-light text-dark border rounded-pill px-3">
                             {job.viewCount || 0}
+                        </span>
+                      </td>
+                      <td className="text-center" data-label="Applied">
+                        <span className="badge bg-light text-dark border rounded-pill px-3">
+                            {applyCounts[job.id] ?? 0}
                         </span>
                       </td>
                       <td className="text-center" data-label="Status">

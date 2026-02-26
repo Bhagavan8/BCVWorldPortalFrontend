@@ -123,58 +123,53 @@ const UsersManagement = () => {
     };
 
     const renderPaginationItems = () => {
-        const pages = [];
-        const maxVisiblePages = 7;
+        const items = [];
+        const windowSize = 5; // numeric buttons around current (desktop)
+        const half = Math.floor(windowSize / 2);
+        const firstPage = 0;
+        const lastPage = Math.max(totalPages - 1, 0);
 
-        if (totalPages <= maxVisiblePages) {
-            for (let i = 0; i < totalPages; i++) {
-                pages.push(i);
-            }
-        } else {
-            if (currentPage < 4) {
-                for (let i = 0; i < 5; i++) {
-                    pages.push(i);
-                }
-                pages.push('ellipsis');
-                pages.push(totalPages - 1);
-            } else if (currentPage > totalPages - 5) {
-                pages.push(0);
-                pages.push('ellipsis');
-                for (let i = totalPages - 5; i < totalPages; i++) {
-                    pages.push(i);
-                }
-            } else {
-                pages.push(0);
-                pages.push('ellipsis-start');
-                pages.push(currentPage - 1);
-                pages.push(currentPage);
-                pages.push(currentPage + 1);
-                pages.push('ellipsis-end');
-                pages.push(totalPages - 1);
-            }
-        }
-
-        return pages.map((page, idx) => {
-            if (typeof page === 'string') {
-                return (
-                    <li key={`ellipsis-${idx}`} className="page-item disabled">
-                        <span className="page-link border-0 bg-transparent text-muted">...</span>
-                    </li>
-                );
-            }
-
-            return (
-                <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                    <button 
-                        className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === page ? 'bg-primary text-white shadow-sm' : 'bg-transparent text-secondary'}`}
-                        style={{width: '32px', height: '32px'}}
-                        onClick={() => handlePageChange(page)}
+        const pushPage = (p) => {
+            items.push(
+                <li key={p} className={`page-item ${currentPage === p ? 'active' : ''}`}>
+                    <button
+                        className={`page-link rounded-circle border-0 d-flex align-items-center justify-content-center ${currentPage === p ? 'bg-primary text-white shadow-sm' : 'bg-transparent text-secondary'}`}
+                        style={{ width: '32px', height: '32px' }}
+                        onClick={() => handlePageChange(p)}
+                        aria-current={currentPage === p ? 'page' : undefined}
                     >
-                        {page + 1}
+                        {p + 1}
                     </button>
                 </li>
             );
-        });
+        };
+
+        const pushEllipsis = (k) => {
+            items.push(
+                <li key={k} className="page-item disabled">
+                    <span className="page-link border-0 bg-transparent text-muted">…</span>
+                </li>
+            );
+        };
+
+        let start = Math.max(currentPage - half, firstPage + 1);
+        let end = Math.min(currentPage + half, lastPage - 1);
+
+        if (currentPage <= half + 1) {
+            start = 1;
+            end = Math.min(windowSize, lastPage - 1);
+        } else if (currentPage >= lastPage - (half + 1)) {
+            end = lastPage - 1;
+            start = Math.max(end - (windowSize - 1), 1);
+        }
+
+        pushPage(firstPage);
+        if (start > firstPage + 1) pushEllipsis('start-ellipsis');
+        for (let p = start; p <= end; p++) pushPage(p);
+        if (end < lastPage - 1) pushEllipsis('end-ellipsis');
+        if (lastPage > firstPage) pushPage(lastPage);
+
+        return items;
     };
 
     return (
@@ -316,30 +311,75 @@ const UsersManagement = () => {
                     {/* Pagination */}
                     {totalPages > 1 && (
                         <div className="d-flex justify-content-center py-4 border-top border-light">
-                            <nav aria-label="Page navigation">
-                                <ul className="pagination mb-0 gap-2 align-items-center">
-                                    <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                                        <button 
-                                            className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === 0 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
-                                            style={{height: '35px', width: 'auto'}}
+                            <nav aria-label="Users table pages" className="w-100 d-flex flex-column align-items-center gap-2">
+                                <div className="d-flex align-items-center gap-2">
+                                    <ul className="pagination mb-0 gap-2 align-items-center d-none d-sm-flex">
+                                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                                            <button
+                                                className={`page-link border-0 d-flex align-items-center justify-content-center px-2 rounded-pill ${currentPage === 0 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                                style={{ height: '35px' }}
+                                                onClick={() => handlePageChange(0)}
+                                                disabled={currentPage === 0}
+                                                aria-label="First"
+                                            >
+                                                «
+                                            </button>
+                                        </li>
+                                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                                            <button
+                                                className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === 0 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                                style={{ height: '35px' }}
+                                                onClick={() => handlePageChange(currentPage - 1)}
+                                                disabled={currentPage === 0}
+                                                aria-label="Previous"
+                                            >
+                                                Prev
+                                            </button>
+                                        </li>
+                                        {renderPaginationItems()}
+                                        <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
+                                            <button
+                                                className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === totalPages - 1 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                                style={{ height: '35px' }}
+                                                onClick={() => handlePageChange(currentPage + 1)}
+                                                disabled={currentPage === totalPages - 1}
+                                                aria-label="Next"
+                                            >
+                                                Next
+                                            </button>
+                                        </li>
+                                        <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
+                                            <button
+                                                className={`page-link border-0 d-flex align-items-center justify-content-center px-2 rounded-pill ${currentPage === totalPages - 1 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
+                                                style={{ height: '35px' }}
+                                                onClick={() => handlePageChange(totalPages - 1)}
+                                                disabled={currentPage === totalPages - 1}
+                                                aria-label="Last"
+                                            >
+                                                »
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div className="d-flex d-sm-none align-items-center text-secondary small">
+                                        <button
+                                            className="btn btn-sm btn-light me-2"
                                             onClick={() => handlePageChange(currentPage - 1)}
                                             disabled={currentPage === 0}
+                                            aria-label="Previous"
                                         >
-                                            Prev
+                                            <BiChevronLeft />
                                         </button>
-                                    </li>
-                                    {renderPaginationItems()}
-                                    <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
-                                        <button 
-                                            className={`page-link border-0 d-flex align-items-center justify-content-center px-3 rounded-pill fw-semibold ${currentPage === totalPages - 1 ? 'bg-light text-muted' : 'bg-transparent text-primary'}`}
-                                            style={{height: '35px', width: 'auto'}}
+                                        <span>Page {currentPage + 1} of {totalPages}</span>
+                                        <button
+                                            className="btn btn-sm btn-light ms-2"
                                             onClick={() => handlePageChange(currentPage + 1)}
                                             disabled={currentPage === totalPages - 1}
+                                            aria-label="Next"
                                         >
-                                            Next
+                                            <BiChevronRight />
                                         </button>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
                             </nav>
                         </div>
                     )}
