@@ -9,13 +9,7 @@ import {
   TrendingUp, 
   Users, 
   CheckCircle, 
-  Linkedin, 
-  Github, 
-  Mail,
-  MapPin,
-  Building,
-  Award,
-  Code
+  Award
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { API_BASE_URL } from '../../utils/config';
@@ -70,50 +64,7 @@ const AboutUs = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const founderInfo = {
-    name: "Bhagavan C V",
-    role: "Founder & Full Stack Developer",
-    email: "bhagavancv@gmail.com",
-    location: "Bangalore, India",
-    linkedin: "https://linkedin.com/in/bhagavan-c-v-b41661150",
-    github: "https://github.com/Bhagavan8",
-    experience: "7+",
-    summary: "Dynamic and detail-focused Full Stack Java Developer with 7 years of experience in designing and delivering scalable, high-performance web and enterprise applications. Proficient in Java, Spring Boot, Microservices, REST APIs, JPA, Hibernate, React.js, and SQL, with a strong focus on building reliable backend systems and seamless frontend integrations. Experienced in deploying applications on Azure Cloud and automating workflows through Jenkins and modern CI/CD pipelines.",
-    skills: [
-      "Java", "Spring Boot", "Microservices", "React.js", "Azure", "Kafka", "Hibernate", "PostgreSQL", "Docker", "Jenkins"
-    ]
-  };
-
-  const experience = [
-    {
-      company: "PwC India",
-      role: "Senior Associate",
-      period: "Sept 2025 - Present", // Adjusted based on logic, resume said 2025 which is likely a future target or error, using 2023 as plausible current or assume resume is correct relative to env date 2026. If env is 2026, Sept 2025 is past. I'll stick to what the resume says: Sept 2025. Wait, if today is Jan 2026, Sept 2025 is 4 months ago. So he started recently.
-      location: "Bangalore, India",
-      desc: "Contributing to the enhancement of the Parcel Pay System (PPS), a microservice-based invoice automation platform built using Java 17, Spring Boot, and Spring Batch."
-    },
-    {
-      company: "Deloitte USI",
-      role: "Consultant",
-      period: "Apr 2022 - Sept 2025",
-      location: "Bangalore, India",
-      desc: "Planned and designed distributed Microservices using Java 17, Spring Boot, REST APIs, and JPA, connected with React.js frontends and deployed on Azure Cloud."
-    },
-    {
-      company: "KPMG India",
-      role: "Associate Consultant",
-      period: "Jul 2021 - Mar 2022",
-      location: "Bangalore, India",
-      desc: "Designed and optimized Microservices for an audit management platform using Java, Spring Boot, MySQL, and React.js."
-    },
-    {
-      company: "eMudhra Limited",
-      role: "Software Developer",
-      period: "Dec 2018 - Jun 2021",
-      location: "Bangalore, India",
-      desc: "Implemented, enhanced, and maintained RESTful APIs and Microservices using Java, Spring Boot, and Hibernate, supporting millions of secure digital transactions."
-    }
-  ];
+  
 
   const platformFeatures = [
     {
@@ -172,7 +123,7 @@ const AboutUs = () => {
     <div className="bg-white min-h-screen font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
       <SEO 
         title="About Us | BCVWorld" 
-        description="Learn about BCVWORLD's mission to empower careers through free job referrals, mentoring, and financial tools. Meet the founder, Bhagavan C V." 
+        description="Learn about BCVWorld's mission to empower careers through free job referrals, mentoring, and financial tools." 
       />
       
       {/* Hero Section */}
@@ -224,126 +175,7 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Founder Section */}
-      <section className="py-16 lg:py-24 bg-slate-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
-            
-            {/* Founder Image/Card */}
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="w-full lg:w-1/3 sticky top-24"
-            >
-              <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 group">
-                <div className="h-40 bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 relative overflow-hidden">
-                   <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-                   <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
-                
-                <div className="px-8 pb-8 relative text-center">
-                  <div className="w-32 h-32 mx-auto -mt-16 relative">
-                     <div className="absolute inset-0 rounded-full bg-white/20 backdrop-blur-md -m-2"></div>
-                     <div className="w-full h-full rounded-full bg-white p-1.5 shadow-xl relative z-10">
-                        <div className="w-full h-full rounded-full bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden">
-                           <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 tracking-tighter">
-                             {founderInfo.name.split(' ').map(n => n[0]).join('')}
-                           </span>
-                        </div>
-                     </div>
-                     <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-white rounded-full z-20" title="Online"></div>
-                  </div>
-                  
-                  <div className="mt-6">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-1 tracking-tight">{founderInfo.name}</h2>
-                    <p className="text-blue-600 font-semibold mb-6 bg-blue-50 inline-block px-4 py-1.5 rounded-full text-sm">{founderInfo.role}</p>
-                    
-                    <div className="flex items-center justify-center gap-6 text-sm text-slate-600 mb-8 border-y border-slate-100 py-4">
-                      <div className="flex flex-col items-center gap-1">
-                         <MapPin className="w-5 h-5 text-slate-400 mb-1" />
-                         <span className="font-medium">Bangalore</span>
-                      </div>
-                      <div className="w-px h-8 bg-slate-200"></div>
-                      <div className="flex flex-col items-center gap-1">
-                         <Mail className="w-5 h-5 text-slate-400 mb-1" />
-                         <a href={`mailto:${founderInfo.email}`} className="font-medium hover:text-blue-600 transition-colors">Email Me</a>
-                      </div>
-                      <div className="w-px h-8 bg-slate-200"></div>
-                      <div className="flex flex-col items-center gap-1">
-                         <Code className="w-5 h-5 text-slate-400 mb-1" />
-                         <span className="font-medium">7+ Yrs Exp</span>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <a 
-                        href={founderInfo.linkedin} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex-1 py-3 px-4 bg-[#0077b5] text-white rounded-xl font-bold hover:bg-[#006399] transition-all shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/btn"
-                      >
-                        <Linkedin className="w-5 h-5" />
-                        <span>Connect</span>
-                      </a>
-                      <a 
-                        href={founderInfo.github} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex-1 py-3 px-4 bg-[#24292e] text-white rounded-xl font-bold hover:bg-[#1b1f23] transition-all shadow-lg shadow-slate-300 hover:shadow-slate-400 hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                      >
-                        <Github className="w-5 h-5" />
-                        <span>Follow</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Founder Bio & Experience */}
-            <div className="w-full lg:w-2/3">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <h4 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-2">The Visionary</h4>
-                <h2 className="text-3xl font-bold text-slate-900 mb-6">Building Solutions for a Better Future</h2>
-                <p className="text-slate-600 leading-relaxed mb-8 text-lg">
-                  {founderInfo.summary}
-                </p>
-                <p className="text-slate-600 leading-relaxed mb-12">
-                  I realized that quality resources for career growth and financial planning were often locked behind paywalls. BCVWorld is my answer to that—a comprehensive, free platform designed to empower students, professionals, and investors alike.
-                </p>
-
-                <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-blue-600" />
-                  Professional Journey
-                </h3>
-                
-                <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                  {experience.map((exp, index) => (
-                    <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-50 group-[.is-active]:bg-blue-600 text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                         <Building className="w-5 h-5" />
-                      </div>
-                      <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <h4 className="font-bold text-slate-900 text-lg">{exp.company}</h4>
-                          <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full shrink-0">{exp.period}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Features Section */}
       <section className="py-16 lg:py-24">

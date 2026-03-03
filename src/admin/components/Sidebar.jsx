@@ -61,6 +61,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {isAdmin && (
                         <>
                             <li className="nav-item">
+                                <Link className={`nav-link ${isActive('/admin/study-plan') ? 'active' : ''}`} to="/admin/study-plan">
+                                    <FaThLarge className="sidebar-icon" />
+                                    <span>90-Day Study Plan</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
                                 <Link className={`nav-link ${isActive('/admin/upload-news') ? 'active' : ''}`} to="/admin/upload-news">
                                     <FaNewspaper className="sidebar-icon" />
                                     <span>Upload News</span>

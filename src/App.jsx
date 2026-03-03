@@ -48,6 +48,7 @@ const BCVWorldAuth = lazy(() => import('./admin/pages/BCVWorldAuth'));
 const Dashboard = lazy(() => import('./admin/pages/Dashboard'));
 const JobUploadForm = lazy(() => import('./admin/components/JobUploadForm'));
 const NewsUpload = lazy(() => import('./admin/pages/NewsUpload'));
+const StudyPlanAdmin = lazy(() => import('./admin/pages/StudyPlanAdmin'));
 
 // Loading Component
 const PageLoader = () => (
@@ -383,6 +384,7 @@ function App() {
               <Route path="messages" element={<MessagesSuggestions />} />
               <Route path="comments" element={<CommentsManagement />} />
               <Route path="mentorship" element={<MentorshipAdmin />} />
+              <Route path="study-plan" element={<StudyPlanAdmin />} />
               
               <Route path="upload-news" element={<NewsUpload />} />
               <Route path="govt-jobs-upload" element={<div className="p-4"><h2>Government Jobs (Placeholder)</h2></div>} />
