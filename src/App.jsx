@@ -34,6 +34,8 @@ const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
 const JavaLearning = lazy(() => import('./portal/pages/JavaLearning'));
 const ImportantQuestions = lazy(() => import('./portal/pages/ImportantQuestions'));
 const TcsNqtSyllabus = lazy(() => import('./portal/pages/TcsNqtSyllabus'));
+const FreshersJobTracker = lazy(() => import('./portal/pages/FreshersJobTracker'));
+const StudyPlan = lazy(() => import('./portal/pages/StudyPlan'));
 
 // Admin Pages
 const JobManagement = lazy(() => import('./admin/pages/JobManagement'));
@@ -408,8 +410,11 @@ function App() {
                 <Route path="/news/cognizant-25k-freshers-2026" element={<NewsCognizantFreshers2026 />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/java-learning" element={<JavaLearning />} />
+                <Route path="/study-plan" element={<StudyPlan />} />
                 <Route path="/important-questions-solutions" element={<ImportantQuestions />} />
                 <Route path="/tcs-nqt-syllabus" element={<TcsNqtSyllabus />} />
+                <Route path="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" element={<FreshersJobTracker />} />
+                <Route path="/freshers-job-tracker" element={<Navigate to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" replace />} />
                 <Route path="/mentorship" element={<Mentorship />} />
                 <Route path="/suggestion" element={<Suggestion />} />
                 <Route path="/work-from-home" element={<WorkFromHome />} />

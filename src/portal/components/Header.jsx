@@ -131,6 +131,8 @@ export default function Header() {
                 {isLearningOpen && (
                   <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 z-50">
                     <Link to="/java-learning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Java Learning</Link>
+                    <Link to="/study-plan" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Study Plan</Link>
+                    <Link to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Freshers AI Report</Link>
                     <Link to="/important-questions-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Important Questions</Link>
                   </div>
                 )}
@@ -263,6 +265,8 @@ export default function Header() {
                   <span className="block mb-2 font-medium">Learning</span>
                   <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                       <Link to="/java-learning" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Java Learning</Link>
+                      <Link to="/study-plan" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Study Plan</Link>
+                      <Link to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Freshers AI Report</Link>
                       <Link to="/important-questions-solutions" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Important Questions</Link>
                   </div>
               </div>
