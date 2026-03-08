@@ -8,7 +8,7 @@ import api from '../../api/general';
 
 const StickyAd = ({ slot, position }) => (
   <div className={`hidden lg:flex fixed ${position === 'left' ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 w-[160px] flex-col justify-center z-50`}>
-      <GoogleAd slot={slot} format="auto" fullWidthResponsive="true" minHeight="600px" immediate={true} />
+      <GoogleAd slot={slot} format="vertical" fullWidthResponsive="false" style={{ height: '600px' }} immediate={true} />
   </div>
 );
 
@@ -105,9 +105,9 @@ const FreshersJobTracker = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
       <SEO 
-        title="AI Automation Report: Freshers Jobs 2026 (IT & Non-IT) | BCVWorld"  
-        description="Download the AI Automation Report for Freshers Jobs 2026. Covers IT, Non-IT, BPO, and all roles. Updated daily with direct application links."
-        keywords="AI automation report, freshers jobs 2026, IT jobs, Non-IT jobs, all roles, BPO jobs, trainee engineer, off campus drive, job tracker"
+        title="Freshers Jobs 2026: AI Automation Job Report (IT, Non-IT & BPO) | BCVWorld"  
+        description="Find the latest Freshers Jobs 2026 in IT, Non-IT, and BPO. Download the free AI Automation Job Tracker Report with direct application links for Off Campus Drives, Walk-ins, and Work from Home roles."
+        keywords="freshers jobs 2026, off campus drive 2026, it jobs for freshers, non it jobs for freshers, bpo jobs, work from home for freshers, trainee engineer, recruitment 2026, job tracker, entry level jobs, software engineer freshers, latest job updates, bcvworld jobs, freshers hiring, walk in interview"
         type="website"
       />
 
@@ -228,6 +228,11 @@ const FreshersJobTracker = () => {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* New Autorelaxed Ad */}
+        <div className="w-full flex justify-center my-6">
+           <GoogleAd slot="1059387337" format="autorelaxed" fullWidthResponsive="true" immediate={true} minHeight="280px" />
         </div>
 
         {/* Sheets Guide */}
