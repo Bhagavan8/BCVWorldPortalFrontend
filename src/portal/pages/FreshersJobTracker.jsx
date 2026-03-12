@@ -65,21 +65,22 @@ const FreshersJobTracker = () => {
 
   const summaryData = [
     { label: 'Last 24h Jobs', value: 16, icon: FaBolt, color: 'text-yellow-500', bg: 'bg-yellow-50' },
-    { label: 'Last 36h Jobs', value: 11, icon: FaClock, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { label: 'Last 36h Jobs', value: 6, icon: FaClock, color: 'text-blue-500', bg: 'bg-blue-50' },
     { label: 'Company Pages', value: 51, icon: FaBuilding, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-    { label: 'Total Unique', value: 75, icon: FaCheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { label: 'Total Unique', value: 69, icon: FaCheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50' },
   ];
 
   const categoryData = [
-    { category: 'Software Development', count: 42, icon: FaLaptopCode, color: 'text-blue-600' },
+    { category: 'Software Development', count: 41, icon: FaLaptopCode, color: 'text-blue-600' },
     { category: 'BPO / Customer Service', count: 8, icon: FaHeadset, color: 'text-orange-500' },
-    { category: 'General / Others', count: 7, icon: FaFolderOpen, color: 'text-gray-500' },
-    { category: 'Finance & Accounts', count: 6, icon: FaCalculator, color: 'text-green-600' },
-    { category: 'Sales & Business Dev', count: 4, icon: FaChartLine, color: 'text-purple-600' },
-    { category: 'Web Development', count: 3, icon: FaLaptopCode, color: 'text-cyan-600' },
+    { category: 'Finance & Accounts', count: 5, icon: FaCalculator, color: 'text-green-600' },
+    { category: 'General / Others', count: 4, icon: FaFolderOpen, color: 'text-gray-500' },
+    { category: 'Sales & Business Dev', count: 3, icon: FaChartLine, color: 'text-purple-600' },
+    { category: 'Web Development', count: 2, icon: FaLaptopCode, color: 'text-cyan-600' },
     { category: 'Marketing & Content', count: 2, icon: FaBullhorn, color: 'text-pink-500' },
-    { category: 'Data & Analytics', count: 1, icon: FaDatabase, color: 'text-teal-600' },
+    { category: 'Data & Analytics', count: 2, icon: FaDatabase, color: 'text-teal-600' },
     { category: 'HR & Recruitment', count: 1, icon: FaUsers, color: 'text-rose-500' },
+    { category: 'AI / ML / Data Science', count: 1, icon: FaDatabase, color: 'text-sky-600' },
   ];
 
   const sheetsData = [
@@ -130,7 +131,7 @@ const FreshersJobTracker = () => {
           </div>
           <div className="p-8 md:p-12 text-center relative z-10">
             <div className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-bold tracking-widest uppercase mb-4 border border-blue-500/30">
-              Updated: 2026-03-08
+              Updated: 2026-03-09
             </div>
             
             {AuthService.isAdmin() && (
