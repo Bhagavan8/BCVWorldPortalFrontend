@@ -36,6 +36,7 @@ const ImportantQuestions = lazy(() => import('./portal/pages/ImportantQuestions'
 const TcsNqtSyllabus = lazy(() => import('./portal/pages/TcsNqtSyllabus'));
 const FreshersJobTracker = lazy(() => import('./portal/pages/FreshersJobTracker'));
 const StudyPlan = lazy(() => import('./portal/pages/StudyPlan'));
+const JavaInterviewQuestions = lazy(() => import('./portal/pages/JavaInterviewQuestions'));
 
 // Admin Pages
 const JobManagement = lazy(() => import('./admin/pages/JobManagement'));
@@ -414,6 +415,7 @@ function App() {
                 <Route path="/important-questions-solutions" element={<ImportantQuestions />} />
                 <Route path="/tcs-nqt-syllabus" element={<TcsNqtSyllabus />} />
                 <Route path="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" element={<FreshersJobTracker />} />
+                <Route path="/java-interview-questions-for-freshers" element={<JavaInterviewQuestions />} />
                 <Route path="/freshers-job-tracker" element={<Navigate to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" replace />} />
                 <Route path="/mentorship" element={<Mentorship />} />
                 <Route path="/suggestion" element={<Suggestion />} />

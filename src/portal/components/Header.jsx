@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BiChevronDown, BiMenu, BiUser, BiLogIn, BiLogOut, BiGridAlt, BiBriefcase, BiEnvelope } from 'react-icons/bi';
-import { PushService } from '../services/PushService';
-import toast from 'react-hot-toast';
 
 export default function Header() {
   const location = useLocation();
@@ -13,9 +11,6 @@ export default function Header() {
   const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [pushEnabled, setPushEnabled] = useState(false);
-  const [isPushModalOpen, setIsPushModalOpen] = useState(false);
-  const [pushActionLoading, setPushActionLoading] = useState(false);
 
   const authRef = useRef(null);
   const profileRef = useRef(null);
@@ -59,24 +54,6 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const isJobDetailsPage = location.pathname === '/job' || location.pathname === '/job/';
-  const isJobsPage = location.pathname === '/jobs' || location.pathname.startsWith('/jobs/');
-  const isIndexPage = location.pathname === '/' || location.pathname === '/home';
-  const showEnableNotifications = isIndexPage || isJobsPage || isJobDetailsPage;
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      const enabled = await PushService.isEnabled();
-      if (!mounted) return;
-      setPushEnabled(enabled);
-      if (showEnableNotifications && !enabled) {
-        setIsPushModalOpen(true);
-      }
-    })();
-    return () => { mounted = false; };
-  }, [location.pathname]);
 
   const getUserInitial = () => {
     if (user && user.name) {
@@ -131,6 +108,7 @@ export default function Header() {
                 {isLearningOpen && (
                   <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 z-50">
                     <Link to="/java-learning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Java Learning</Link>
+                    <Link to="/java-interview-questions-for-freshers" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Java Interview Questions</Link>
                     <Link to="/study-plan" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Study Plan</Link>
                     <Link to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Freshers AI Report</Link>
                     <Link to="/important-questions-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setIsLearningOpen(false)}>Important Questions</Link>
@@ -265,6 +243,7 @@ export default function Header() {
                   <span className="block mb-2 font-medium">Learning</span>
                   <div className="pl-4 space-y-2 border-l-2 border-gray-100">
                       <Link to="/java-learning" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Java Learning</Link>
+                      <Link to="/java-interview-questions-for-freshers" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Java Interview Questions</Link>
                       <Link to="/study-plan" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Study Plan</Link>
                       <Link to="/freshers-jobs-ai-automation-report-it-non-it-all-roles-2026" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Freshers AI Report</Link>
                       <Link to="/important-questions-solutions" onClick={() => setIsMobileNavOpen(false)} className="block text-sm text-gray-600 hover:text-blue-600">Important Questions</Link>
@@ -290,59 +269,6 @@ export default function Header() {
         )}
       </div>
     </header>
-    <PushPermissionModal
-      open={isPushModalOpen}
-      loading={pushActionLoading}
-      onClose={() => { if (!pushActionLoading) setIsPushModalOpen(false); }}
-      onAllow={async () => {
-        if (pushActionLoading) return;
-        setPushActionLoading(true);
-        try {
-          const res = await PushService.enableNotifications();
-          if (res.ok) {
-            toast.success('Notifications enabled');
-            setPushEnabled(true);
-            setIsPushModalOpen(false);
-            void PushService.testSend();
-          } else {
-            toast.error(res.error || 'Failed to enable notifications');
-          }
-        } finally {
-          setPushActionLoading(false);
-        }
-      }}
-    />
     </>
-  );
-}
-
-function PushPermissionModal({ open, onClose, onAllow, loading }) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl border border-gray-200 w-[90%] max-w-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-2">Would you like to receive Push Notifications?</h3>
-        <p className="text-sm text-gray-600 mb-6">
-          We promise to only send you relevant content and give you updates on your transactions.
-        </p>
-        <div className="flex items-center justify-end gap-3">
-          <button
-            onClick={onClose}
-            className={`px-4 py-2 rounded-lg border border-gray-300 text-gray-700 transition ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-gray-50'}`}
-            disabled={!!loading}
-          >
-            No thanks
-          </button>
-          <button
-            onClick={onAllow}
-            className={`px-4 py-2 rounded-lg text-white transition ${loading ? 'bg-blue-400 opacity-90 cursor-wait' : 'bg-blue-600 hover:bg-blue-700'}`}
-            disabled={!!loading}
-          >
-            {loading ? 'Enabling…' : 'Allow'}
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }

@@ -27,13 +27,22 @@ const UsersManagement = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [roleFilter, setRoleFilter] = useState('all');
+    const [stateFilter, setStateFilter] = useState('all');
+
+    const INDIAN_STATES = [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
+        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", 
+        "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", 
+        "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", 
+        "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+    ];
 
     // Display 10 items per page
     const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
         fetchUsers();
-    }, [currentPage, searchTerm, statusFilter, roleFilter]);
+    }, [currentPage, searchTerm, statusFilter, roleFilter, stateFilter]);
 
     const fetchUsers = useCallback(async () => {
         setLoading(true);
@@ -43,7 +52,8 @@ const UsersManagement = () => {
                 ITEMS_PER_PAGE, 
                 searchTerm, 
                 statusFilter, 
-                roleFilter
+                roleFilter,
+                stateFilter
             );
             
             // Assuming standard Spring Boot Page<User> response
@@ -63,7 +73,7 @@ const UsersManagement = () => {
         } finally {
             setLoading(false);
         }
-    }, [currentPage, searchTerm, statusFilter, roleFilter]);
+    }, [currentPage, searchTerm, statusFilter, roleFilter, stateFilter]);
 
     const handlePageChange = (newPage) => {
         if (newPage >= 0 && newPage < totalPages) {
@@ -221,6 +231,18 @@ const UsersManagement = () => {
                                     <option value="employer">Employer</option>
                                 </select>
                             </div>
+                            <div style={{minWidth: '150px'}}>
+                                <select 
+                                    className="form-select bg-light border-0" 
+                                    value={stateFilter}
+                                    onChange={(e) => setStateFilter(e.target.value)}
+                                >
+                                    <option value="all">All States</option>
+                                    {INDIAN_STATES.map(state => (
+                                        <option key={state} value={state}>{state}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,6 +256,7 @@ const UsersManagement = () => {
                                     <th className="text-uppercase small fw-bold">Email</th>
                                     <th className="text-uppercase small fw-bold">Mobile</th>
                                     <th className="text-uppercase small fw-bold">DOB</th>
+                                    <th className="text-uppercase small fw-bold">State</th>
                                     <th className="text-uppercase small fw-bold">Role</th>
                                     <th className="text-uppercase small fw-bold">Status</th>
                                     <th className="text-end pe-4 text-uppercase small fw-bold">Actions</th>
@@ -242,7 +265,7 @@ const UsersManagement = () => {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="6" className="text-center py-4">
+                                        <td colSpan="8" className="text-center py-4">
                                             <div className="spinner-border text-primary" role="status">
                                                 <span className="visually-hidden">Loading...</span>
                                             </div>
@@ -250,7 +273,7 @@ const UsersManagement = () => {
                                     </tr>
                                 ) : users.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" className="text-center py-5 text-muted">
+                                        <td colSpan="8" className="text-center py-5 text-muted">
                                             No users found matching your criteria.
                                         </td>
                                     </tr>
@@ -271,6 +294,7 @@ const UsersManagement = () => {
                                             <td data-label="Email">{user.email}</td>
                                             <td data-label="Mobile">{user.mobile || user.phone || 'N/A'}</td>
                                             <td data-label="DOB">{formatDate(user.dob)}</td>
+                                            <td data-label="State">{user.state || 'N/A'}</td>
                                             <td data-label="Role">{getRoleBadge(user.role)}</td>
                                             <td data-label="Status">{getStatusBadge(user.status)}</td>
                                             <td className="text-end pe-4">

@@ -10,13 +10,14 @@ class UserService {
         return { Authorization: `Bearer ${token}` };
     }
 
-    getAllUsers(page = 0, size = 10, search = '', status = 'all', role = 'all') {
+    getAllUsers(page = 0, size = 10, search = '', status = 'all', role = 'all', state = 'all') {
         const params = {
             page,
             size,
             search,
             status: status !== 'all' ? status : null,
-            role: role !== 'all' ? role : null
+            role: role !== 'all' ? role : null,
+            state: state !== 'all' ? state : null
         };
         
         // Remove null/undefined keys
@@ -44,6 +45,10 @@ class UserService {
 
     updateUserStatus(id, status) {
         return axios.patch(`${API_URL}/${id}/status`, { status }, { headers: this.getAuthHeader() });
+    }
+
+    getUniqueStates() {
+        return axios.get(`${API_URL}/states`, { headers: this.getAuthHeader() });
     }
 }
 

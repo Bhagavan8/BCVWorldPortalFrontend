@@ -1095,11 +1095,35 @@ export default function JobDetails() {
   return (
     <>
       <SEO
-        title={job ? job.jobTitle : "Job Details"}
-        description={job ? `Apply for ${job.jobTitle} at ${job.companyName || 'BCVWORLD'}. View details, salary, and eligibility.` : "Job Details"}
-        keywords={job ? `${job.jobTitle}, ${job.companyName}, ${job.jobCategory}, jobs in ${job.locations ? job.locations.join(' ') : ''}, hiring, vacancy` : "jobs, hiring, vacancy"}
+        title={`${job.jobTitle} at ${job.companyName} - Freshers Jobs 2026 | BCVWorld`}
+        description={`Apply for ${job.jobTitle} at ${job.companyName}. Find the latest freshers jobs, off-campus drives, and entry-level developer roles in US, UK, Australia, and India for 2026.`}
+        keywords={`${job.jobTitle}, ${job.companyName} careers, fresher jobs 2026, software engineer freshers, off campus drive 2026, entry level jobs US UK Australia India, bcvworld jobs`}
         image={job ? (job.companyLogoUrl || undefined) : undefined}
       />
+      {/* Structured Data for Google Job Search */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "JobPosting",
+          "title": job.jobTitle,
+          "description": job.description,
+          "datePosted": job.postedDate,
+          "hiringOrganization": {
+            "@type": "Organization",
+            "name": job.companyName,
+            "logo": job.companyLogoUrl
+          },
+          "jobLocation": job.locations.map(loc => ({
+            "@type": "Place",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": loc,
+              "addressCountry": "Global"
+            }
+          })),
+          "employmentType": job.employmentType || "FULL_TIME"
+        })}
+      </script>
       {/* Reading Progress Bar */}
       <div id="readingProgress" className="reading-progress-bar"></div>
 
